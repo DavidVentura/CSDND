@@ -11,8 +11,8 @@ namespace DND
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Engine engine = new Engine();
-        Player player = new Player();
+		Camera c = new Camera(new Vector2(0,0));
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -40,7 +40,7 @@ namespace DND
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            engine.LoadContent(Content);
+            Engine.LoadContent(Content);
             // TODO: use this.Content to load your game content here
         }
 
@@ -50,7 +50,6 @@ namespace DND
         /// </summary>
         protected override void UnloadContent()
         {
-            engine.UnloadContent();
             // TODO: Unload any non ContentManager content here
         }
 
@@ -64,7 +63,9 @@ namespace DND
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            player.c.Update(gameTime);
+            
+			Engine.Update(gameTime);
+			c.Update(gameTime);
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -80,7 +81,7 @@ namespace DND
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-                engine.Draw(spriteBatch,(int)player.c.position.X);
+                Engine.Draw(spriteBatch,c.position);
             spriteBatch.End();
             base.Draw(gameTime);
         }

@@ -7,7 +7,6 @@ namespace DND
 {
 	public static class TextureManager
 	{
-		private static List<int> allTextures = new List<int>();
 		private static List<Textura> textures = new List<Textura>();
 
 		public struct Textura

@@ -5,34 +5,41 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Data;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace DND
 {
-    class Engine
+    static class Engine
     {
 		const string connectionString = "URI=file:database.db";
-
         public const int tileHeight = 32;
         public const int tileWidth = 32;
 		private const int MAPID = 1;
-		private List<int> textures = new List<int>();
-
-		Map map;
-        ContentManager content;
+		private static List<int> textures = new List<int>();
+		public static List<Player> players = new List<Player>();
+		static Map map;
         
-
-        public void Draw(SpriteBatch sb, int cameraX)
+        public static void Draw(SpriteBatch sb, Vector2 camera)
         {
-            map.Draw(sb, cameraX);
+            map.Draw(sb, camera);
+			foreach(Player p in players)
+				p.Draw(sb,camera);
         }
-        public void LoadContent(ContentManager c)
+        public static void LoadContent(ContentManager c)
         {
-            content = c;
 			LoadDatabase();
 			TextureManager.LoadTextures(textures,c);
-            map.LoadContent(c);
+			players.Add(new Player(new Vector2(3,3), c.Load<Texture2D>("player"),true));
+			players.Add(new Player(new Vector2(4,2), c.Load<Texture2D>("player2"),false));
+			textures.Clear();
         }
-		private void LoadDatabase ()
+
+		public static void Update(GameTime gameTime) {
+			foreach(Player p in players)
+				p.Update(gameTime);
+		}
+		private static void LoadDatabase ()
 		{
 			IDbConnection dbcon;
 			IDataReader reader;
@@ -71,7 +78,7 @@ namespace DND
 			dbcon = null;
 		}
 
-		private MapLayer parseMapLayer (int id, int blocking, int width, int height, string parseData)
+		private static MapLayer parseMapLayer (int id, int blocking, int width, int height, string parseData)
 		{
 			int[,] data = new int[width, height];
 			string[] rows = parseData.Split ('|');
@@ -80,20 +87,12 @@ namespace DND
 				cols = rows[y].Split(',');
 				for (int x = 0; x < cols.Length;x++) {
 					data[x,y] = Int16.Parse(cols[x]);
-					addTexture(data[x,y]);
+					if (!textures.Contains(data[x,y]))
+						textures.Add (data[x,y]);
 				}
 			}
-
 			return new MapLayer(id,width,height,data);
 		}
-        public void UnloadContent()
-        {
-            content.Unload();
-        }
 
-		private void addTexture(int id){
-			if (!textures.Contains(id))
-				textures.Add (id);
-		}
     }
 }

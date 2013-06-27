@@ -10,7 +10,7 @@ namespace DND
         private Tile[,] tiles;
 		private int id;//sorting
 
-        public MapLayer(int id,int width, int height, int[,] textures)
+        public MapLayer(int id,int width, int height, int[,] tiledata)
         {
 			this.id =id;
             tiles = new Tile[width, height];
@@ -18,7 +18,7 @@ namespace DND
             {
                 for (int x = 0; x < width; x++)
                 {
-                    tiles[x, y] = new Tile(textures[x,y]);
+                    tiles[x, y] = new Tile(tiledata[x,y]);
                 }
             }
             
