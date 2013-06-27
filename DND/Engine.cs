@@ -96,8 +96,13 @@ namespace DND
 
 		public static bool validPosition (Vector2 position)
 		{
-			if (position.X < 0 || position.Y <0 || position.X >= map.Width || position.Y >= map.Height)
+			if (!map.withinBounds(position))
 				return false;
+
+			foreach(Player p in players)
+				if (p.position==position && !p.isLocal)
+					return false;
+
 			foreach(MapLayer l in map.Layers)
 				if (l.isBlocking && l.TileAt(position).TextureNumber>0)
 					return false;

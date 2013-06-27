@@ -14,17 +14,22 @@ namespace DND
 		public Texture2D texture;
 		public double lastKeyPress;
 		public bool isLocal=false;
+		private Rectangle drawRect;
+
 		public Player(Vector2 pos, Texture2D text, bool isLocal) {
 			this.position=pos;
 			this.texture=text;
 			this.isLocal=isLocal;
-
+			drawRect = new Rectangle((int)(position.X*Engine.tileWidth),(int)((1+position.Y)*Engine.tileHeight)-texture.Height,texture.Width,texture.Height);
 		}
+
 		public void Update (GameTime gameTime)
 		{
-			if (!isLocal) return;
+			if (!isLocal)
+				return;
 			double curTime = gameTime.TotalGameTime.TotalMilliseconds;
-			if (curTime-lastKeyPress < 80) return;
+			if (curTime - lastKeyPress < 80)
+				return;
 			Vector2 lastPos = position;
 			if (Keyboard.GetState ().IsKeyDown (Keys.Right)) {
 				lastKeyPress = curTime;
@@ -42,12 +47,15 @@ namespace DND
 				lastKeyPress = curTime;
 				position.Y += 1;
 			}
-			if (!Engine.validPosition(position))
-				position = lastPos;
+			if (position != lastPos) {
+				if (!Engine.validPosition (position)) {
+					position = lastPos;
+				} else 
+					drawRect = new Rectangle ((int)(position.X * Engine.tileWidth), (int)((1 + position.Y) * Engine.tileHeight) - texture.Height, texture.Width, texture.Height);
+			}
 		}
 		public void Draw(SpriteBatch sb, Vector2 camera) {
-			sb.Draw (texture,new Rectangle((int)(position.X*32),(int)((1+position.Y)*32)-texture.Height,texture.Width,texture.Height),Color.White);
-
+			sb.Draw (texture,drawRect,Color.White);
 		}
 
     }
