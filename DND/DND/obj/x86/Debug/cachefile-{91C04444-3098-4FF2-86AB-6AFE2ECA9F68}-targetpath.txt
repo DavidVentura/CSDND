@@ -1,2 +1,0 @@
-Content\t.xnb
-Content\t2.xnb

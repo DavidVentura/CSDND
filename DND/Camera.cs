@@ -14,10 +14,9 @@ namespace DND
         Rectangle viewPort;
         int speed = 1;
 
-        public Camera(/*Rectangle viewPortRectangle, */Vector2 pos)
+        public Camera(Vector2 pos)
         {
             position = pos;
-            //viewPort = viewPortRectangle;
         }
         public void Update(GameTime gameTime)
         {

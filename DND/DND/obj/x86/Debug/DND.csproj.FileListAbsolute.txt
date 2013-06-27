@@ -1,8 +1,0 @@
-C:\Users\David\Documents\Visual Studio 2010\Projects\DND\DND\DND\obj\x86\Debug\DND.csprojResolveAssemblyReference.cache
-C:\Users\David\Documents\Visual Studio 2010\Projects\DND\DND\DND\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Users\David\Documents\Visual Studio 2010\Projects\DND\DND\DND\bin\x86\Debug\DND.exe
-C:\Users\David\Documents\Visual Studio 2010\Projects\DND\DND\DND\bin\x86\Debug\DND.pdb
-C:\Users\David\Documents\Visual Studio 2010\Projects\DND\DND\DND\obj\x86\Debug\DND.exe
-C:\Users\David\Documents\Visual Studio 2010\Projects\DND\DND\DND\obj\x86\Debug\DND.pdb
-C:\Users\David\Documents\Visual Studio 2010\Projects\DND\DND\DND\bin\x86\Debug\Content\t.xnb
-C:\Users\David\Documents\Visual Studio 2010\Projects\DND\DND\DND\bin\x86\Debug\Content\t2.xnb
