@@ -11,8 +11,8 @@ namespace DND
     class Camera
     {
         public Vector2 position;
-        Rectangle viewPort;
-        int speed = 1;
+        /*Rectangle viewPort;
+        int speed = 1;*/
 
         public Camera(Vector2 pos)
         {
@@ -30,7 +30,7 @@ namespace DND
             else
                 if (InputHandler.KeyDown(Keys.Down))
                     position.Y += speed;*/
-            position.X -= 0.1F;
+            
         }
     }
 }

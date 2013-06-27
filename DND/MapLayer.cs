@@ -8,9 +8,11 @@ namespace DND
     class MapLayer
     {
         private Tile[,] tiles;
+		private int id;//sorting
 
-        public MapLayer(int width, int height, int[,] textures)
+        public MapLayer(int id,int width, int height, int[,] textures)
         {
+			this.id =id;
             tiles = new Tile[width, height];
             for (int y = 0; y < height; y++)
             {
