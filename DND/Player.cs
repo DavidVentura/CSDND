@@ -25,6 +25,7 @@ namespace DND
 			if (!isLocal) return;
 			double curTime = gameTime.TotalGameTime.TotalMilliseconds;
 			if (curTime-lastKeyPress < 80) return;
+			Vector2 lastPos = position;
 			if (Keyboard.GetState ().IsKeyDown (Keys.Right)) {
 				lastKeyPress = curTime;
 				position.X += 1;
@@ -41,9 +42,11 @@ namespace DND
 				lastKeyPress = curTime;
 				position.Y += 1;
 			}
+			if (!Engine.validPosition(position))
+				position = lastPos;
 		}
 		public void Draw(SpriteBatch sb, Vector2 camera) {
-			sb.Draw (texture,new Rectangle((int)(position.X*32),(int)(position.Y*32)-texture.Height,texture.Width,texture.Height),Color.White);
+			sb.Draw (texture,new Rectangle((int)(position.X*32),(int)((1+position.Y)*32)-texture.Height,texture.Width,texture.Height),Color.White);
 
 		}
 

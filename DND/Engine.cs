@@ -91,8 +91,20 @@ namespace DND
 						textures.Add (data[x,y]);
 				}
 			}
-			return new MapLayer(id,width,height,data);
+			return new MapLayer(id,width,height,data,blocking==1);
+		}		
+
+		public static bool validPosition (Vector2 position)
+		{
+			if (position.X < 0 || position.Y <0 || position.X >= map.Width || position.Y >= map.Height)
+				return false;
+			foreach(MapLayer l in map.Layers)
+				if (l.isBlocking && l.TileAt(position).TextureNumber>0)
+					return false;
+			return true;
+
 		}
+
 
     }
 }

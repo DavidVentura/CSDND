@@ -10,12 +10,19 @@ namespace DND
 {
     class Map
     {
+		public float Width {
+			get { return width;}
+		}
+		public float Height {
+			get { return height;}
+		}
+
         int height, width;
 
         static List<MapLayer> layers = new List<MapLayer>();
-        public static List<MapLayer> Layers
+        public List<MapLayer> Layers
         {
-            get { return layers; }
+			get { return layers; }
         }
 		int text_tile;
 
@@ -40,8 +47,9 @@ namespace DND
                         	sb.Draw(TextureManager.getTexture(text_tile), 
 						        	new Rectangle(x*Engine.tileWidth-(int)camera.X,y*Engine.tileHeight-(int)camera.Y,Engine.tileWidth,Engine.tileHeight),
 						        	Color.White);
-                    }
-       	}
+				}
+       	}		
+
 
         
     }
