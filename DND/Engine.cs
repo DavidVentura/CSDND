@@ -12,38 +12,41 @@ namespace DND
 {
     static class Engine
     {
-		const string connectionString = "URI=file:database.db";
-        public const int tileHeight = 32;
-        public const int tileWidth = 32;
+		const string ConnectionString = "URI=file:database.db";
+        public const int TileHeight = 32;
+        public const int TileWidth = 32;
 		private const int MAPID = 1;
 		private static List<int> textures = new List<int>();
-		public static List<Player> players = new List<Player>();
+		public static List<Player> Players = new List<Player>();
 		static Map map;
         
-        public static void Draw(SpriteBatch sb, Vector2 camera)
+
+
+        public static void Draw(ref SpriteBatch sb, Vector2 camera)
         {
-            map.Draw(sb, camera);
-			foreach(Player p in players)
-				p.Draw(sb,camera);
+            map.Draw(ref sb, camera);
+
         }
         public static void LoadContent(ContentManager c)
         {
 			LoadDatabase();
 			TextureManager.LoadTextures(textures,c);
-			players.Add(new Player(new Vector2(3,3), c.Load<Texture2D>("player"),true));
-			players.Add(new Player(new Vector2(4,2), c.Load<Texture2D>("player2"),false));
+			Players.Add(new Player(new Vector2(3,3), c.Load<Texture2D>("player"),true));
+			Players.Add(new Player(new Vector2(4,2), c.Load<Texture2D>("player2"),false));
 			textures.Clear();
         }
 
-		public static void Update(GameTime gameTime) {
-			foreach(Player p in players)
-				p.Update(gameTime);
+		public static void Update (GameTime gameTime)
+		{
+			foreach (Player p in Players)
+				p.Update (gameTime);
+
 		}
 		private static void LoadDatabase ()
 		{
 			IDbConnection dbcon;
 			IDataReader reader;
-			dbcon = (IDbConnection)new SqliteConnection (connectionString);
+			dbcon = (IDbConnection)new SqliteConnection (ConnectionString);
 			dbcon.Open ();
 			IDbCommand dbcmd = dbcon.CreateCommand ();
 
@@ -58,7 +61,7 @@ namespace DND
 			dbcmd.CommandText = "SELECT ID,BLOCKING,DATA FROM LAYERS WHERE MAPID=" + MAPID;
 			reader = dbcmd.ExecuteReader ();
 			while (reader.Read ()) {
-				map.addLayer (parseMapLayer (reader.GetInt16 (0), reader.GetInt16 (1), 6, 6, reader.GetString (2)));
+				map.addLayer (ParseMapLayer (reader.GetInt16 (0), reader.GetInt16 (1), 6, 6, reader.GetString (2)));
 			}
 			
 			dbcmd.Dispose ();
@@ -78,7 +81,7 @@ namespace DND
 			dbcon = null;
 		}
 
-		private static MapLayer parseMapLayer (int id, int blocking, int width, int height, string parseData)
+		private static MapLayer ParseMapLayer (int id, int blocking, int width, int height, string parseData)
 		{
 			int[,] data = new int[width, height];
 			string[] rows = parseData.Split ('|');
@@ -94,12 +97,12 @@ namespace DND
 			return new MapLayer(id,width,height,data,blocking==1);
 		}		
 
-		public static bool validPosition (Vector2 position)
+		public static bool ValidPosition (Vector2 position)
 		{
 			if (!map.withinBounds(position))
 				return false;
 
-			foreach(Player p in players)
+			foreach(Player p in Players)
 				if (p.position==position && !p.isLocal)
 					return false;
 

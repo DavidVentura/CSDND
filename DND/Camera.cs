@@ -10,13 +10,13 @@ namespace DND
 {
     class Camera
     {
-        public Vector2 position;
+        public Vector2 Position;
         /*Rectangle viewPort;
         int speed = 1;*/
 
         public Camera(Vector2 pos)
         {
-            position = pos;
+            Position = pos;
         }
         public void Update(GameTime gameTime)
         {

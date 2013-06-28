@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +20,7 @@ namespace DND
 			this.position=pos;
 			this.texture=text;
 			this.isLocal=isLocal;
-			drawRect = new Rectangle((int)(position.X*Engine.tileWidth),(int)((1+position.Y)*Engine.tileHeight)-texture.Height,texture.Width,texture.Height);
+			drawRect = new Rectangle((int)(position.X*Engine.TileWidth),(int)((1+position.Y)*Engine.TileHeight)-texture.Height,texture.Width,texture.Height);
 		}
 
 		public void Update (GameTime gameTime)
@@ -28,7 +28,7 @@ namespace DND
 			if (!isLocal)
 				return;
 			double curTime = gameTime.TotalGameTime.TotalMilliseconds;
-			if (curTime - lastKeyPress < 80)
+			if (curTime - lastKeyPress < 120)
 				return;
 			Vector2 lastPos = position;
 			if (Keyboard.GetState ().IsKeyDown (Keys.Right)) {
@@ -48,10 +48,10 @@ namespace DND
 				position.Y += 1;
 			}
 			if (position != lastPos) {
-				if (!Engine.validPosition (position)) {
+				if (!Engine.ValidPosition (position)) {
 					position = lastPos;
 				} else 
-					drawRect = new Rectangle ((int)(position.X * Engine.tileWidth), (int)((1 + position.Y) * Engine.tileHeight) - texture.Height, texture.Width, texture.Height);
+					drawRect = new Rectangle ((int)(position.X * Engine.TileWidth), (int)((1 + position.Y) * Engine.TileHeight) - texture.Height, texture.Width, texture.Height);
 			}
 		}
 		public void Draw(SpriteBatch sb, Vector2 camera) {

@@ -12,6 +12,8 @@ namespace DND
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 		Camera c = new Camera(new Vector2(0,0));
+		int curFrames = 0;
+		double lastCheck = 0;
 
         public Game1()
         {
@@ -66,8 +68,13 @@ namespace DND
             
 			Engine.Update(gameTime);
 			c.Update(gameTime);
-            // TODO: Add your update logic here
+			curFrames++;
+			if (gameTime.TotalGameTime.TotalMilliseconds-lastCheck > 1000) {
+				lastCheck = gameTime.TotalGameTime.TotalMilliseconds;
+				this.Window.Title=curFrames.ToString();
+				curFrames=0;
 
+			}
             base.Update(gameTime);
         }
 
@@ -81,7 +88,7 @@ namespace DND
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-                Engine.Draw(spriteBatch,c.position);
+                Engine.Draw(ref spriteBatch,c.Position);
             spriteBatch.End();
             base.Draw(gameTime);
         }
