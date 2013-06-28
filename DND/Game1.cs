@@ -71,9 +71,8 @@ namespace DND
 			curFrames++;
 			if (gameTime.TotalGameTime.TotalMilliseconds-lastCheck > 1000) {
 				lastCheck = gameTime.TotalGameTime.TotalMilliseconds;
-				this.Window.Title=curFrames.ToString();
+				this.Window.Title= curFrames.ToString();
 				curFrames=0;
-
 			}
             base.Update(gameTime);
         }

@@ -24,19 +24,25 @@ namespace DND
         public static void Draw(ref SpriteBatch sb)
         {
             Map.Draw(ref sb);
+			GUI.Draw(sb);
         }
         public static void LoadContent(ContentManager c)
         {
 			LoadDatabase();
+			TextureManager.addTexture(999,"mouse");
+			textures.Add(999);
 			TextureManager.LoadTextures(textures,c);
 			Players.Add(new Player(new Vector2(3,3), c.Load<Texture2D>("player"),true));
 			Players.Add(new Player(new Vector2(4,2), c.Load<Texture2D>("player2"),false));
+
+
 			textures.Clear();
         }
 
 		public static void Update (GameTime gameTime)
 		{
 			Camera.Update(gameTime);
+			GUI.Update(gameTime);
 			foreach (Player p in Players)
 				p.Update (gameTime);
 
