@@ -11,7 +11,6 @@ namespace DND
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-		Camera c = new Camera(new Vector2(0,0));
 		int curFrames = 0;
 		double lastCheck = 0;
 
@@ -30,7 +29,8 @@ namespace DND
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+			IsMouseVisible=true;
+			Camera.Initialize(new Vector2(0,0));
             base.Initialize();
         }
 
@@ -67,7 +67,7 @@ namespace DND
                 this.Exit();
             
 			Engine.Update(gameTime);
-			c.Update(gameTime);
+			Camera.Update(gameTime);
 			curFrames++;
 			if (gameTime.TotalGameTime.TotalMilliseconds-lastCheck > 1000) {
 				lastCheck = gameTime.TotalGameTime.TotalMilliseconds;
@@ -88,7 +88,7 @@ namespace DND
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-                Engine.Draw(ref spriteBatch,c.Position);
+                Engine.Draw(ref spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
         }

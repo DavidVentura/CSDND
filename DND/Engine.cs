@@ -18,14 +18,12 @@ namespace DND
 		private const int MAPID = 1;
 		private static List<int> textures = new List<int>();
 		public static List<Player> Players = new List<Player>();
-		static Map map;
-        
+      
 
 
-        public static void Draw(ref SpriteBatch sb, Vector2 camera)
+        public static void Draw(ref SpriteBatch sb)
         {
-            map.Draw(ref sb, camera);
-
+            Map.Draw(ref sb);
         }
         public static void LoadContent(ContentManager c)
         {
@@ -38,6 +36,7 @@ namespace DND
 
 		public static void Update (GameTime gameTime)
 		{
+			Camera.Update(gameTime);
 			foreach (Player p in Players)
 				p.Update (gameTime);
 
@@ -53,15 +52,15 @@ namespace DND
 			dbcmd.CommandText = "SELECT WIDTH,HEIGHT FROM MAP WHERE ID=" + MAPID;
 			reader = dbcmd.ExecuteReader ();
 			if (reader.Read ()) {
-				map = new Map (reader.GetInt16 (0), reader.GetInt16 (1));
+				Map.Initialize(reader.GetInt16 (0), reader.GetInt16 (1));
 			} else {
 				return; //die
 			}
 			dbcmd.Dispose ();
-			dbcmd.CommandText = "SELECT ID,BLOCKING,DATA FROM LAYERS WHERE MAPID=" + MAPID;
+			dbcmd.CommandText = "SELECT ID,BLOCKING,GROUND,DATA FROM LAYERS WHERE MAPID=" + MAPID;
 			reader = dbcmd.ExecuteReader ();
 			while (reader.Read ()) {
-				map.addLayer (ParseMapLayer (reader.GetInt16 (0), reader.GetInt16 (1), 6, 6, reader.GetString (2)));
+				Map.AddLayer (ParseMapLayer (reader.GetInt16 (0), reader.GetInt16 (1),reader.GetInt16 (2), 6, 6, reader.GetString (3)));
 			}
 			
 			dbcmd.Dispose ();
@@ -81,7 +80,7 @@ namespace DND
 			dbcon = null;
 		}
 
-		private static MapLayer ParseMapLayer (int id, int blocking, int width, int height, string parseData)
+		private static MapLayer ParseMapLayer (int id, int blocking, int ground, int width, int height, string parseData)
 		{
 			int[,] data = new int[width, height];
 			string[] rows = parseData.Split ('|');
@@ -94,24 +93,10 @@ namespace DND
 						textures.Add (data[x,y]);
 				}
 			}
-			return new MapLayer(id,width,height,data,blocking==1);
+			return new MapLayer(id,width,height,data,blocking==1,ground==1);
 		}		
 
-		public static bool ValidPosition (Vector2 position)
-		{
-			if (!map.withinBounds(position))
-				return false;
 
-			foreach(Player p in Players)
-				if (p.position==position && !p.isLocal)
-					return false;
-
-			foreach(MapLayer l in map.Layers)
-				if (l.isBlocking && l.TileAt(position).TextureNumber>0)
-					return false;
-			return true;
-
-		}
 
 
     }

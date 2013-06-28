@@ -8,28 +8,39 @@ using Microsoft.Xna.Framework.Input;
 
 namespace DND
 {
-    class Camera
+    static class Camera
     {
-        public Vector2 Position;
+		private static double lastKeyPress=0;
+		private static double curTime=0;
+        public static Vector2 Position;
         /*Rectangle viewPort;
         int speed = 1;*/
 
-        public Camera(Vector2 pos)
+        public static void Initialize(Vector2 pos)
         {
             Position = pos;
         }
-        public void Update(GameTime gameTime)
+        public static void Update(GameTime gameTime)
         {
-          /*  if (InputHandler.KeyDown(Keys.Left))
-                position.X -= speed;
-            else
-                if (InputHandler.KeyDown(Keys.Right))
-                    position.X += speed;
-            if (InputHandler.KeyDown(Keys.Up))
-                position.Y -= speed;
-            else
-                if (InputHandler.KeyDown(Keys.Down))
-                    position.Y += speed;*/
+			curTime=gameTime.ElapsedGameTime.TotalMilliseconds;
+			if (curTime - lastKeyPress > 120)
+				return;
+          if (Keyboard.GetState ().IsKeyDown (Keys.W)) {
+				lastKeyPress = curTime;
+				Position.Y-=3;
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.S)) {
+				lastKeyPress = curTime;
+				Position.Y+=3;
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.A)) {
+				lastKeyPress = curTime;
+				Position.X-=3;
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.D)) {
+				lastKeyPress = curTime;
+				Position.X +=3;
+			}
             
         }
     }
