@@ -8,24 +8,15 @@ namespace DND
 {
     class MapLayer
     {
-		public bool isGround {
-			get { return IsGround; }
-		}
-
-		private bool IsGround = false;
-		private bool isblocking=false;
-		public bool isBlocking {
-			get { return isblocking; }
-		}
-
         private Tile[,] tiles;
-		private int id;//sorting
+		public LayerType Type;
+		public LayerType type {
+			get { return Type; }
+		}
 
-        public MapLayer(int id,int width, int height, int[,] tiledata, bool blocking, bool isGround)
+        public MapLayer(LayerType type, int width, int height, int[,] tiledata)
         {
-			this.id =id;
-			this.isblocking = blocking;
-			this.IsGround = isGround;
+			Type = type;
             tiles = new Tile[width, height];
             for (int y = 0; y < height; y++)
             	for (int x = 0; x < width; x++)

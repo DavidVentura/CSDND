@@ -45,6 +45,7 @@
       <Private>False</Private>
       <Package>monogame</Package>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="TextureManager.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="GUI.cs" />
+    <Compile Include="Network.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

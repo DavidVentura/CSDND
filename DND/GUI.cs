@@ -9,6 +9,8 @@ namespace DND
 	{
 		private static MouseState oldMouse;
 		private static Vector2 MouseCoords;
+
+		private static double lastKeyPress;
 		public static void Initialize()
 		{
 
@@ -17,11 +19,31 @@ namespace DND
 		public static void Update(GameTime gameTime) {
 			oldMouse=Mouse.GetState();
 			MouseCoords=GetMouseMapCoord((int)(oldMouse.X+Camera.Position.X),(int)(oldMouse.Y+Camera.Position.Y));
+			double curTime = gameTime.TotalGameTime.TotalMilliseconds;
+			if (curTime - lastKeyPress < 120)
+				return;
+			if (Keyboard.GetState ().IsKeyDown (Keys.Right)) {
+				lastKeyPress = curTime;
+				Network.SendData("MOVE1,0");
+
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.Left)) {
+				lastKeyPress = curTime;
+				Network.SendData("MOVE-1,0");
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.Up)) {
+				lastKeyPress = curTime;
+				Network.SendData("MOVE0,-1");
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.Down)) {
+				lastKeyPress = curTime;
+				Network.SendData("MOVE0,1");
+			}
 		}
 
 		public static void Draw(SpriteBatch sb) {
-			if (MouseCoords.X>=0)
-				sb.Draw (TextureManager.getTexture(999), GetMouseDrawRect(),Color.White);
+//			if (MouseCoords.X>=0)
+//				sb.Draw (TextureManager.getTexture(999), GetMouseDrawRect(),Color.White);
 		}
 		private static Rectangle GetMouseDrawRect ()
 		{

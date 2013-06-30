@@ -1,6 +1,11 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Net.Sockets;
+using System.Net;
+using System.Text;
+using System.Windows.Forms;
 
 namespace DND
 {
@@ -26,11 +31,15 @@ namespace DND
         /// related content.  Calling base.Initialize will enumerate through any components
         /// and initialize them as well.
         /// </summary>
-        protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
-			IsMouseVisible=true;
-			Camera.Initialize(new Vector2(0,0));
+        protected override void Initialize ()
+		{
+			// TODO: Add your initialization logic here
+			IsMouseVisible = true;
+			if (Engine.Initialize () == -1) {
+				MessageBox.Show ("Something borked");
+				Environment.Exit(1);
+			}
+
             base.Initialize();
         }
 
@@ -62,12 +71,8 @@ namespace DND
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-            
 			Engine.Update(gameTime);
-			Camera.Update(gameTime);
+
 			curFrames++;
 			if (gameTime.TotalGameTime.TotalMilliseconds-lastCheck > 1000) {
 				lastCheck = gameTime.TotalGameTime.TotalMilliseconds;
@@ -91,5 +96,13 @@ namespace DND
             spriteBatch.End();
             base.Draw(gameTime);
         }
+		protected override void OnExiting(Object sender, EventArgs args)
+		{
+			Network.Unload();
+		    base.OnExiting(sender, args);
+
+		    // Stop the threads
+		}
+
     }
 }
