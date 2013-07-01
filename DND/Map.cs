@@ -14,7 +14,7 @@ namespace DND
 		static int height, width;
 		static MapLayer GroundLayer;
 		static MapLayer ObjectLayer;
-		static int text_tile;
+		static int text_tile,y = 0, x = 0, xpos = 0, ypos;
 
 		public static void Initialize (int w, int h)
 		{
@@ -25,6 +25,7 @@ namespace DND
 		public static void Draw (ref SpriteBatch sb)
 		{
 			if(GroundLayer==null||ObjectLayer==null)return;
+
 			DrawLayer (ref sb, GroundLayer);
 			DrawLayer (ref sb, ObjectLayer);
 
@@ -32,29 +33,30 @@ namespace DND
 
 		static void DrawLayer (ref SpriteBatch sb, MapLayer layer)
 		{
-			int y = 0, x = 0, xpos = 0, ypos;
+
 			for (y = 0; y < height; y++)
 				for (x = 0; x < width; x++) {
 					text_tile = layer.TileAt (x, y).TextureNumber;
-					if (text_tile > 0) { //"empty"
+					if (text_tile > 0) { //not "empty"
 						auxtext = TextureManager.getTexture (text_tile);
 						if(auxtext==null) continue;
-						xpos = x * Engine.TileWidth - (int)Camera.Position.X;
+						xpos = x * Engine.TileWidth - Camera.Position.X;
 						if (layer.Type!= LayerType.Ground) 
 							xpos -= (auxtext.Width - Engine.TileWidth) / 2;
 						
-						ypos = (y * Engine.TileHeight) - (int)Camera.Position.Y - (auxtext.Height - Engine.TileHeight);
+						ypos = (y * Engine.TileHeight) - Camera.Position.Y - (auxtext.Height - Engine.TileHeight);
 						sb.Draw (auxtext, new Rectangle (xpos, ypos, auxtext.Width, auxtext.Height), Color.White);
 					}
-					if (layer.Type==LayerType.Ground)
-						foreach (Player p in Engine.Players) {
+					if (layer.Type==LayerType.Object){
+						foreach (Player p in Engine.Players)
 							if (p.position.X == x && p.position.Y == y)
 								p.Draw (sb);
-						}
-						Engine.LocalPlayer.Draw(sb);
+						if(Engine.LocalPlayer.position.X ==x && Engine.LocalPlayer.position.Y==y)
+							Engine.LocalPlayer.Draw(sb);
+					}
 				}
 		}
-		public static bool withinBounds (Vector2 position)
+		public static bool withinBounds (Coord position)
 		{
 			if (position.X < 0 || position.Y < 0 || position.X >= width || position.Y >= height)
 				return false;

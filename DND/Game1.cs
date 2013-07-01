@@ -39,7 +39,9 @@ namespace DND
 				MessageBox.Show ("Something borked");
 				Environment.Exit(1);
 			}
-
+			graphics.SynchronizeWithVerticalRetrace=true;
+			graphics.PreferredBackBufferHeight=230;
+			graphics.PreferredBackBufferWidth=230;
             base.Initialize();
         }
 

@@ -8,7 +8,7 @@ namespace DND
 	public static class GUI
 	{
 		private static MouseState oldMouse;
-		private static Vector2 MouseCoords;
+		private static Coord MouseCoords;
 
 		private static double lastKeyPress;
 		public static void Initialize()
@@ -18,7 +18,7 @@ namespace DND
 
 		public static void Update(GameTime gameTime) {
 			oldMouse=Mouse.GetState();
-			MouseCoords=GetMouseMapCoord((int)(oldMouse.X+Camera.Position.X),(int)(oldMouse.Y+Camera.Position.Y));
+			MouseCoords=GetMouseMapCoord(oldMouse.X+Camera.Position.X,oldMouse.Y+Camera.Position.Y);
 			double curTime = gameTime.TotalGameTime.TotalMilliseconds;
 			if (curTime - lastKeyPress < 120)
 				return;
@@ -47,7 +47,7 @@ namespace DND
 		}
 		private static Rectangle GetMouseDrawRect ()
 		{
-			return new Rectangle((int)(MouseCoords.X*Engine.TileWidth - Camera.Position.X), (int)(MouseCoords.Y*Engine.TileHeight-Camera.Position.Y),Engine.TileWidth,Engine.TileHeight);
+			return new Rectangle(MouseCoords.X*Engine.TileWidth - Camera.Position.X, MouseCoords.Y*Engine.TileHeight-Camera.Position.Y,Engine.TileWidth,Engine.TileHeight);
 		}
 
 		/// <summary>
@@ -62,10 +62,10 @@ namespace DND
 		/// <param name='y'>
 		/// Y.
 		/// </param>
-		private static Vector2 GetMouseMapCoord(int x, int y) {
-			Vector2 ret = new Vector2((x-(x%Engine.TileWidth))/Engine.TileWidth,(y-(y%Engine.TileHeight))/Engine.TileHeight);
+		private static Coord GetMouseMapCoord(int x, int y) {
+			Coord ret = new Coord((x-(x%Engine.TileWidth))/Engine.TileWidth,(y-(y%Engine.TileHeight))/Engine.TileHeight);
 			if (!Map.withinBounds(ret))
-				return new Vector2(-1,-1);
+				return new Coord(-1,-1);
 			return ret;
 		}
 	}

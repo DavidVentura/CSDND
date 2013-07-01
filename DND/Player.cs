@@ -10,16 +10,24 @@ namespace DND
 {
     class Player
     {
-		public Vector2 position;
-		public Texture2D texture;
+		public int ID,texture;
+		public Coord position;
 		private Rectangle drawRect;
-		private static Vector2 lastCameraPosition;
-		Vector2 lastPos;
-		public Player(Vector2 pos, Texture2D text) {
+		private Coord lastCameraPosition;
+		private Texture2D t;
+		Coord lastPos;
+		private int textureHeight,textureWidth;
+
+		public Player(Coord pos, int text, int id) {
 			this.position=pos;
 			this.texture=text;
+			this.ID =id;
 			lastPos = position;
-			drawRect = new Rectangle((int)(position.X*Engine.TileWidth),(int)((1+position.Y)*Engine.TileHeight)-texture.Height,texture.Width,texture.Height);
+			t=TextureManager.getTexture(texture);
+			textureHeight=t.Height;
+			textureWidth=t.Width;
+
+			drawRect = new Rectangle(position.X*Engine.TileWidth,(1+position.Y)*Engine.TileHeight-textureHeight,textureWidth,textureHeight);
 		}
 
 		public void Update (GameTime gameTime)
@@ -36,12 +44,13 @@ namespace DND
 		}
 		public void UpdateDrawRect ()
 		{
-			drawRect = new Rectangle ((int)(position.X * Engine.TileWidth)-(int)Camera.Position.X, 
-					                          (int)((1 + position.Y) * Engine.TileHeight) - texture.Height-(int)Camera.Position.Y,
-					                          texture.Width, texture.Height);
+
+			drawRect = new Rectangle (position.X * Engine.TileWidth-Camera.Position.X, 
+					                          (1 + position.Y) * Engine.TileHeight - textureHeight-Camera.Position.Y,
+					                          textureWidth, textureHeight);
 		}
 		public void Draw(SpriteBatch sb) {
-			sb.Draw (texture,drawRect,Color.White);
+			sb.Draw (t,drawRect,Color.White);
 		}
 
     }

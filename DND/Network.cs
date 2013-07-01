@@ -48,7 +48,7 @@ namespace DND
 			while (true) {
 				try {
 				bytes = new byte[client.ReceiveBufferSize];
-				clientStream.Read (bytes, 0, (int)client.ReceiveBufferSize);
+				clientStream.Read (bytes, 0, client.ReceiveBufferSize);
 				} catch (Exception) {
 					clientStream.Close();
 					return;
@@ -65,7 +65,7 @@ namespace DND
 					args = data.Substring (4).Split(',');
 					switch(header){
 					case "POSI":
-						Engine.LocalPlayer.position=new Vector2(Int32.Parse(args[0]),Int32.Parse(args[1]));
+						Engine.LocalPlayer.position=new Coord(Int32.Parse(args[0]),Int32.Parse(args[1]));
 						break;
 					case "LAYR":
 						int width=Int32.Parse(args[0]);
@@ -78,13 +78,22 @@ namespace DND
 							{
 								textures[x,y]=Int32.Parse(args[3+x].Split ('-')[y]);
 							}
-
 						Map.AddLayer(new MapLayer(type,width,height,textures));
 						break;
 					case "TXTR":
 						for (int j=0;j<args.Length;j++)
 							TextureManager.addTexture(Int32.Parse(args[j]));
 						Engine.TexturesNotReady=false;
+						break;
+					case "NPLR": //new player
+						//ID,X,Y,Texture
+						Engine.AddPlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]),Int32.Parse(args[3]));
+						break;
+					case "MPLR": //move player: ID,X,Y
+						Engine.MovePlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]));
+						break;
+					case "RPLR": //remove Player: id
+						Engine.RemovePlayer(Int32.Parse(args[0]));
 						break;
 					}
 				}

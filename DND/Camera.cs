@@ -12,11 +12,11 @@ namespace DND
     {
 		private static double lastKeyPress=0;
 		private static double curTime=0;
-        public static Vector2 Position;
+        public static Coord Position;
         /*Rectangle viewPort;
         int speed = 1;*/
 
-        public static void Initialize(Vector2 pos)
+        public static void Initialize(Coord pos)
         {
             Position = pos;
         }

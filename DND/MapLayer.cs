@@ -27,9 +27,9 @@ namespace DND
         {
             return tiles[x, y];
         }
-		internal Tile TileAt(Vector2 v)
+		internal Tile TileAt(Coord v)
         {
-            return tiles[(int)v.X, (int)v.Y];
+            return tiles[v.X, v.Y];
         }
     }
 }

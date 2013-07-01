@@ -8,6 +8,7 @@ namespace DND
 	public static class TextureManager
 	{
 		private static List<Textura> textures = new List<Textura>();
+		private static ContentManager c;
 
 		public struct Textura
 		{
@@ -17,6 +18,11 @@ namespace DND
 			}
 			public int id;
 			public Texture2D tex;
+		}
+
+		public static void Initialize (ContentManager content)
+		{
+			c=content;
 		}
 
 		public static Texture2D getTexture(int p)
@@ -35,24 +41,15 @@ namespace DND
 			textures.Add (new Textura(id));
 		}
 
-		public static void LoadTextures (int[] textureID, ContentManager c)
-		{
-			foreach (int t in textureID) {
-				for(int i=0;i<textures.Count;i++){
-					if (t==textures[i].id){
-						Textura temp = textures[i];
-						temp.tex = c.Load<Texture2D>(textures[i].id.ToString());
-						textures[i] = temp;
-					}
-				}
-			}
-		}
-		public static void LoadTextures (ContentManager c)
+
+		public static void LoadTextures ()
 		{
 			for (int i=0; i<textures.Count; i++) {
 				Textura temp = textures [i];
-				temp.tex = c.Load<Texture2D> (textures [i].id.ToString ());
-				textures [i] = temp;
+				if (temp.tex==null){
+					temp.tex = c.Load<Texture2D> (textures [i].id.ToString ());
+					textures [i] = temp;
+				}
 			}
 
 		}
