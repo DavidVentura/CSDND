@@ -53,12 +53,11 @@ namespace DND
 					return;
 				}
 
-				data=encoder.GetString (bytes);
-				allData=new string[]{data};
-				if (!data.EndsWith("|"))
-					allData=data.Split('|');
+				data=encoder.GetString (bytes).TrimEnd ('\0');
+				allData=data.Split('|');
 				for (int i=0; i<allData.Length;i++){
 					data =allData[i];
+
 					if (data.Length<4) continue;
 					header = data.Substring (0,4);
 					args = data.Substring (4).Split(',');
