@@ -44,7 +44,7 @@ namespace DND
 		{
 			byte[] bytes;
 			string data,header;
-			string[] args;
+			string[] args,allData;
 			while (true) {
 				try {
 				bytes = new byte[client.ReceiveBufferSize];
@@ -53,15 +53,16 @@ namespace DND
 					clientStream.Close();
 					return;
 				}
-				int n=0;
-				string[] allData=encoder.GetString (bytes).Split('|');
+
+				data=encoder.GetString (bytes);
+				allData=new string[]{data};
+				if (!data.EndsWith("|"))
+					allData=data.Split('|');
 				for (int i=0; i<allData.Length;i++){
-					n++;
 					data =allData[i];
 					if (data.Length<4) continue;
 					header = data.Substring (0,4);
 					args = data.Substring (4).Split(',');
-					Console.WriteLine(n+": "+data);
 					switch(header){
 					case "POSI":
 						Engine.LocalPlayer.position=new Vector2(Int32.Parse(args[0]),Int32.Parse(args[1]));
