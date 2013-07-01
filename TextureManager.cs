@@ -49,7 +49,7 @@ namespace DND
 			for (int i=0; i<textures.Count; i++) {
 				temp = textures [i];
 				if (temp.tex==null){
-					temp.tex = content.Load<Texture2D>(i.ToString());
+					temp.tex = c.Load<Texture2D>(temp.id.ToString());
 					textures [i] = temp;
 				}
 			}
