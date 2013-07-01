@@ -101,6 +101,11 @@ namespace DND
 					return;
 				}
 		}
+		public static void AddText (string str)
+		{
+			Console.WriteLine(str);
+		}
+
 
     }
 }

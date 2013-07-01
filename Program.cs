@@ -9,7 +9,6 @@ namespace DND
 {
 	static class Program
 	{
-		private static Game1 game;
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -17,8 +16,8 @@ namespace DND
 		[STAThread]
 		static void Main ()
 		{
-			game = new Game1 ();
-			game.Run ();
+            Game1 game = new Game1();
+            game.Run();            
 		}
 	}
 }

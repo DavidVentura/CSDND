@@ -94,6 +94,9 @@ namespace DND
 					case "RPLR": //remove Player: id
 						Engine.RemovePlayer(Int32.Parse(args[0]));
 						break;
+					case "TALK": //gets message
+						Engine.AddText(args[0]+"> " + args[1]);
+						break;
 					}
 				}
 			}

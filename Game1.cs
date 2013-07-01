@@ -14,6 +14,7 @@ namespace DND
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 		int curFrames = 0;
@@ -22,6 +23,7 @@ namespace DND
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+
             Content.RootDirectory = "Content";
         }
 
@@ -113,7 +115,6 @@ namespace DND
 		   this.TargetElapsedTime = TimeSpan.FromMilliseconds(dt);
 		   manager.ApplyChanges();
 		}
-
 
     }
 }

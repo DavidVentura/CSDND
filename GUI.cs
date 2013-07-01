@@ -9,6 +9,7 @@ namespace DND
 	{
 		private static MouseState oldMouse;
 		private static Coord MouseCoords;
+		private static string message="";
 
 		private static double lastKeyPress;
 		public static void Initialize()
@@ -38,6 +39,15 @@ namespace DND
 			if (Keyboard.GetState ().IsKeyDown (Keys.Down)) {
 				lastKeyPress = curTime;
 				Network.SendData("MOVE0,1");
+			}
+			foreach(Keys k in Keyboard.GetState().GetPressedKeys()){
+				message+=k.ToString();
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.J)) {
+
+				lastKeyPress = curTime;
+				Network.SendData("TALK"+message);
+				message="";
 			}
 		}
 
