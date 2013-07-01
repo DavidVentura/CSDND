@@ -45,7 +45,7 @@ namespace DND
 		public static bool TexturesNotReady=true;
 		public static int Initialize ()
 		{
-			if (Network.Initialize()==-1) return -1;
+
 			Camera.Initialize(new Coord(0,0));
 			return 0;
 		}
@@ -57,12 +57,12 @@ namespace DND
         }
         public static void LoadContent (ContentManager c)
 		{
-			TextureManager.Initialize(c);
+			TextureManager.Initialize(c); //todo: move
+			if (Network.Initialize()==-1) return;
+
 			TextureManager.addTexture (999);
 			TextureManager.addTexture (6);
-			while (TexturesNotReady) {
-				System.Threading.Thread.Sleep(100);
-			}
+
 			TextureManager.LoadTextures();
 			LocalPlayer= new Player(new Coord(3,3), 6,0);
         }

@@ -39,6 +39,7 @@ namespace DND
 				MessageBox.Show ("Something borked");
 				Environment.Exit(1);
 			}
+			SetFrameRate(graphics,30);
 			graphics.SynchronizeWithVerticalRetrace=true;
 			graphics.PreferredBackBufferHeight=230;
 			graphics.PreferredBackBufferWidth=230;
@@ -105,6 +106,14 @@ namespace DND
 
 		    // Stop the threads
 		}
+		public void SetFrameRate(GraphicsDeviceManager manager, int frames)
+		{
+		   double dt = (double)1000 / (double)frames;
+		   manager.SynchronizeWithVerticalRetrace = false;
+		   this.TargetElapsedTime = TimeSpan.FromMilliseconds(dt);
+		   manager.ApplyChanges();
+		}
+
 
     }
 }

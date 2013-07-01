@@ -14,6 +14,7 @@ namespace DND
 		static NetworkStream clientStream;
 		static ASCIIEncoding encoder = new ASCIIEncoding();
 		public static Thread receiver;
+		private static byte[] buffer;
 
 		public static int Initialize ()
 		{
@@ -27,17 +28,15 @@ namespace DND
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
 			SendData("INIP3,3");
-
 			return 0;
 		}
 
 		public static void SendData(string data){
 			data+="|";
-			byte[] buffer = encoder.GetBytes(data);
-
+			buffer = encoder.GetBytes(data);
 			clientStream.Write(buffer, 0 , buffer.Length);
 			clientStream.Flush();
-			Thread.Sleep (20);
+			Thread.Sleep (2);
 		}
 
 		private static void GetData ()
