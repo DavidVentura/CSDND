@@ -16,22 +16,33 @@ namespace DND
 		private Coord lastCameraPosition;
 		private Texture2D t;
 		Coord lastPos;
-		private int textureHeight,textureWidth;
+		private int textureHeight=0,textureWidth=0;
 
-		public Player(Coord pos, int text, int id) {
-			this.position=pos;
-			this.texture=text;
-			this.ID =id;
+		public Player (Coord pos, int text, int id)
+		{
+			this.position = pos;
+			this.texture = text;
+			this.ID = id;
 			lastPos = position;
-			t=TextureManager.getTexture(texture);
-			textureHeight=t.Height;
-			textureWidth=t.Width;
-
+			t = TextureManager.getTexture (texture);
+			if (t != null) {
+				textureHeight = t.Height;
+				textureWidth = t.Width;
+			}
 			drawRect = new Rectangle(position.X*Engine.TileWidth,(1+position.Y)*Engine.TileHeight-textureHeight,textureWidth,textureHeight);
 		}
 
 		public void Update (GameTime gameTime)
 		{
+			if (t == null) {
+				t=TextureManager.getTexture (texture);
+
+			}
+			if (t != null && textureHeight==0) {
+				textureHeight = t.Height;
+				textureWidth = t.Width;
+				UpdateDrawRect();
+			}
 			if (lastCameraPosition != Camera.Position) {
 				lastCameraPosition = Camera.Position;
 				UpdateDrawRect ();
@@ -50,7 +61,8 @@ namespace DND
 					                          textureWidth, textureHeight);
 		}
 		public void Draw(SpriteBatch sb) {
-			sb.Draw (t,drawRect,Color.White);
+			if(t!=null)
+				sb.Draw (t,drawRect,Color.White);
 		}
 
     }

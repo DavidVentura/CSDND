@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
+using System.Windows.Forms;
 
 namespace DND
 {
@@ -35,6 +36,7 @@ namespace DND
 
     static class Engine
     {
+		private static ContentManager content;
 
         public const int TileHeight = 32;
         public const int TileWidth = 32;
@@ -57,18 +59,20 @@ namespace DND
         }
         public static void LoadContent (ContentManager c)
 		{
+			content =c;
 			TextureManager.Initialize(c); //todo: move
 			if (Network.Initialize()==-1) return;
 
 			TextureManager.addTexture (999);
 			TextureManager.addTexture (6);
 
-			TextureManager.LoadTextures();
-			LocalPlayer= new Player(new Coord(3,3), 6,0);
+			TextureManager.Update();
+			LocalPlayer= new Player(new Coord(3,3), 6,0);//TODO: move to database
         }
 
 		public static void Update (GameTime gameTime)
 		{
+			TextureManager.Update();
 			Camera.Update(gameTime);
 			GUI.Update(gameTime);
 			LocalPlayer.Update(gameTime);
@@ -82,10 +86,10 @@ namespace DND
 				if (p.ID == id)
 					return;
 			TextureManager.addTexture(texture);
-			TextureManager.LoadTextures();
 			Players.Add (new Player(new Coord(x,y),texture,id));
 
 		}
+
 		public static void MovePlayer (int id, int x, int y)
 		{
 			foreach (Player p in Players)
@@ -105,7 +109,6 @@ namespace DND
 		{
 			Console.WriteLine(str);
 		}
-
 
     }
 }

@@ -9,6 +9,7 @@ namespace DND
 	{
 		private static List<Textura> textures = new List<Textura>();
 		private static ContentManager c;
+		private static Textura temp;
 
 		public struct Textura
 		{
@@ -42,16 +43,19 @@ namespace DND
 		}
 
 
-		public static void LoadTextures ()
+		private static void LoadTextures ()
 		{
+
 			for (int i=0; i<textures.Count; i++) {
-				Textura temp = textures [i];
+				temp = textures [i];
 				if (temp.tex==null){
-					temp.tex = c.Load<Texture2D> (textures [i].id.ToString ());
+					temp.tex = content.Load<Texture2D>(i.ToString());
 					textures [i] = temp;
 				}
 			}
-
+		}
+		public static void Update() {
+			LoadTextures ();
 		}
 	}
 }
