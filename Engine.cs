@@ -1,13 +1,11 @@
-﻿using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-
-using System;
+﻿using System;
 using System.Data;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
-using System.Windows.Forms;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DND
 {
@@ -24,13 +22,9 @@ namespace DND
 			X=x;
 			Y=y;
 		}
-		public static bool operator ==(Coord c, Coord c2){
-			return (c.X==c2.X && c.Y==c2.Y);
+		public bool Equals(Coord o){
+			return (this.X == o.X && this.Y == o.Y);
 		}
-		public static bool operator !=(Coord c, Coord c2){
-			return (c.X!=c2.X || c.Y!=c2.Y);
-		}
-
 	}
 
     static class Engine

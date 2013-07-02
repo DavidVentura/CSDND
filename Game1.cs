@@ -1,17 +1,18 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
-using System.Net.Sockets;
-using System.Net;
 using System.Text;
 using System.Windows.Forms;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DND
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
+	/// 
+
+
     public class Game1 : Microsoft.Xna.Framework.Game
     {
 
@@ -24,24 +25,21 @@ namespace DND
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+
+
+            Content.RootDirectory = "Content";
+        }
+
+        protected override void Initialize ()
+		{
 			double dt = (double)1000 / (double)FRAMERATE;
 			graphics.SynchronizeWithVerticalRetrace = false;
 			this.TargetElapsedTime = TimeSpan.FromMilliseconds(dt);
 			graphics.PreferredBackBufferHeight=230;
 			graphics.PreferredBackBufferWidth=230;
+			Window.AllowUserResizing=true;
+			
 			graphics.ApplyChanges();
-            Content.RootDirectory = "Content";
-        }
-
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
-        protected override void Initialize ()
-		{
-			// TODO: Add your initialization logic here
 			IsMouseVisible = true;
 			if (Engine.Initialize () == -1) {
 				MessageBox.Show ("Something borked");
@@ -112,6 +110,7 @@ namespace DND
 
 		    // Stop the threads
 		}
+
 
 
     }

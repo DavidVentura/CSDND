@@ -43,11 +43,11 @@ namespace DND
 				textureWidth = t.Width;
 				UpdateDrawRect();
 			}
-			if (lastCameraPosition != Camera.Position) {
+			if (!lastCameraPosition.Equals(Camera.Position)) {
 				lastCameraPosition = Camera.Position;
 				UpdateDrawRect ();
 			}
-			if (position != lastPos) {
+			if (!position.Equals(lastPos)) {
 				lastPos=position;
 				UpdateDrawRect ();
 			}
