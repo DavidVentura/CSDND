@@ -1,5 +1,4 @@
-﻿using Mono.Data.Sqlite;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 using System;
@@ -47,7 +46,6 @@ namespace DND
 		public static bool TexturesNotReady=true;
 		public static int Initialize ()
 		{
-
 			Camera.Initialize(new Coord(0,0));
 			return 0;
 		}

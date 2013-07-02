@@ -10,7 +10,7 @@ namespace DND
 	public static class Network
 	{
 		static TcpClient client = new TcpClient();
-		static IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("10.16.16.88"), 3000);
+		static IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3000);
 		static NetworkStream clientStream;
 		static ASCIIEncoding encoder = new ASCIIEncoding();
 		public static Thread receiver;
@@ -19,6 +19,7 @@ namespace DND
 		public static int Initialize ()
 		{
 			try {
+				
 				client.Connect (serverEndPoint);
 			} catch (Exception e) {
 				Console.WriteLine(e.Message);

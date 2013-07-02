@@ -17,13 +17,19 @@ namespace DND
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+		const int FRAMERATE = 30;
 		int curFrames = 0;
 		double lastCheck = 0;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-
+			double dt = (double)1000 / (double)FRAMERATE;
+			graphics.SynchronizeWithVerticalRetrace = false;
+			this.TargetElapsedTime = TimeSpan.FromMilliseconds(dt);
+			graphics.PreferredBackBufferHeight=230;
+			graphics.PreferredBackBufferWidth=230;
+			graphics.ApplyChanges();
             Content.RootDirectory = "Content";
         }
 
@@ -41,10 +47,7 @@ namespace DND
 				MessageBox.Show ("Something borked");
 				Environment.Exit(1);
 			}
-			SetFrameRate(graphics,30);
-			graphics.SynchronizeWithVerticalRetrace=true;
-			graphics.PreferredBackBufferHeight=230;
-			graphics.PreferredBackBufferWidth=230;
+
             base.Initialize();
         }
 
@@ -66,6 +69,7 @@ namespace DND
         /// </summary>
         protected override void UnloadContent()
         {
+			Content.Unload ();
             // TODO: Unload any non ContentManager content here
         }
 
@@ -108,13 +112,7 @@ namespace DND
 
 		    // Stop the threads
 		}
-		public void SetFrameRate(GraphicsDeviceManager manager, int frames)
-		{
-		   double dt = (double)1000 / (double)frames;
-		   manager.SynchronizeWithVerticalRetrace = false;
-		   this.TargetElapsedTime = TimeSpan.FromMilliseconds(dt);
-		   manager.ApplyChanges();
-		}
+
 
     }
 }

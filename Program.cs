@@ -16,8 +16,10 @@ namespace DND
 		[STAThread]
 		static void Main ()
 		{
-            using(Game1 game = new Game1())
-            	game.Run();
+			using (Game1 game = new Game1()) {
+				game.Run ();
+			}
+			Environment.Exit (0);
 		}
 	}
 }
