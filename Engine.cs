@@ -59,10 +59,9 @@ namespace DND
 		{
 			content =c;
 			TextureManager.Initialize(c); //todo: move
-			if (Network.Initialize()==-1) return;
-
 			TextureManager.addTexture (999);
 			TextureManager.addTexture (6);
+			if (Network.Initialize()==-1) return;
 
 			TextureManager.Update();
 			LocalPlayer= new Player(new Coord(3,3), 6,0);//TODO: move to database

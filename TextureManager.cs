@@ -34,7 +34,7 @@ namespace DND
 			return null;
         }
 
-		public static void addTexture (int id)
+		public static void addTexture (int id) //todo: thread safe
 		{
 			foreach(Textura tex in textures)
 				if (tex.id == id)
