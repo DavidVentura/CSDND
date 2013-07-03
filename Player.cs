@@ -65,6 +65,11 @@ namespace DND
 		public void Draw(SpriteBatch sb) {
 			if(t!=null)
 				sb.Draw (t,drawRect,Color.White);
+
+			sb.DrawString (TextureManager.Font, name, new Vector2 (DrawPos.X+(Engine.TileWidth/2)-(NameWidth/2)-1, DrawPos.Y + textureHeight), Color.Black);
+			sb.DrawString (TextureManager.Font, name, new Vector2 (DrawPos.X+(Engine.TileWidth/2)-(NameWidth/2)+1, DrawPos.Y + textureHeight), Color.Black);
+			sb.DrawString (TextureManager.Font, name, new Vector2 (DrawPos.X+(Engine.TileWidth/2)-(NameWidth/2), DrawPos.Y-1 + textureHeight), Color.Black);
+			sb.DrawString (TextureManager.Font, name, new Vector2 (DrawPos.X+(Engine.TileWidth/2)-(NameWidth/2), DrawPos.Y+1 + textureHeight), Color.Black);
 			sb.DrawString (TextureManager.Font, name, new Vector2 (DrawPos.X+(Engine.TileWidth/2)-(NameWidth/2), DrawPos.Y + textureHeight), Color.White);
 		}
 
