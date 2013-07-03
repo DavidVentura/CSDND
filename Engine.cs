@@ -52,9 +52,8 @@ namespace DND
         public static void LoadContent (ContentManager c)
 		{
 			content =c;
-			TextureManager.Initialize(c); //todo: move
-			TextureManager.addTexture (999);
-			TextureManager.addTexture (6);
+			TextureManager.Initialize(c); //TODO: move
+			TextureManager.addTexture (999); //TODO: Mouse
 			if (Network.Initialize()==-1) return;
 
 			while (LocalPlayer==null)
@@ -63,6 +62,7 @@ namespace DND
         }
 
 		public static void Login(Coord pos, int texture, int id, string name) {
+			TextureManager.addTexture(texture);
 			LocalPlayer = new Player (pos, texture, id, name);
 		}
 		public static void Update (GameTime gameTime)

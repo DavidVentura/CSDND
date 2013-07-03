@@ -55,7 +55,7 @@ namespace DND
 					return;
 				}
 
-				data=encoder.GetString (bytes).TrimEnd ('\0');
+				data=encoder.GetString (bytes).TrimEnd ('\0');//Some versions fill the string with nulls
 				allData=data.Split('|');
 				for (int i=0; i<allData.Length;i++){
 					data =allData[i];
@@ -75,9 +75,8 @@ namespace DND
 						int[,] textures = new int[width,height];
 						for (int x=0; x<width;x++)
 							for(int y=0;y<height;y++)
-							{
 								textures[x,y]=Int32.Parse(args[3+x].Split ('-')[y]);
-							}
+
 						Map.AddLayer(new MapLayer(type,width,height,textures));
 						break;
 					case "TXTR":
@@ -85,8 +84,7 @@ namespace DND
 							TextureManager.addTexture(Int32.Parse(args[j]));
 						Engine.TexturesNotReady=false;
 						break;
-					case "NPLR": //new player
-						//ID,X,Y,Texture,Name
+					case "NPLR": //new player: ID,X,Y,Texture,Name
 						Engine.AddPlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]),Int32.Parse(args[3]),args[4]);
 						break;
 					case "MPLR": //move player: ID,X,Y
