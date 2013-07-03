@@ -13,8 +13,7 @@ namespace DND
 		private static double lastKeyPress=0;
 		private static double curTime=0;
         public static Coord Position;
-        /*Rectangle viewPort;
-        int speed = 1;*/
+        private const int speed = 10;
 
         public static void Initialize(Coord pos)
         {
@@ -27,19 +26,19 @@ namespace DND
 				return;
           if (Keyboard.GetState ().IsKeyDown (Keys.W)) {
 				lastKeyPress = curTime;
-				Position.Y-=3;
+				Position.Y-=speed;
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.S)) {
 				lastKeyPress = curTime;
-				Position.Y+=3;
+				Position.Y+=speed;
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.A)) {
 				lastKeyPress = curTime;
-				Position.X-=3;
+				Position.X-=speed;
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.D)) {
 				lastKeyPress = curTime;
-				Position.X +=3;
+				Position.X +=speed;
 			}
             
         }
