@@ -10,67 +10,46 @@ namespace DND
 {
     class Player
     {
-		public int ID,texture;
+		public int ID,texture,NameOffset=0;
 		public Coord position;
-		private Rectangle drawRect;
-		private Coord lastCameraPosition;
-		private Texture2D t;
-		Coord lastPos;
-		private int textureHeight=0,textureWidth=0,NameWidth=0;
 		private string name;
-		private Coord DrawPos;
+		public Animation animation;
+		double lastAnimation=0;
+		Vector2 DrawPos;
 
-		public Player (Coord pos, int text, int id, string Name)
+		public Player (Coord pos, int texture, int id, string Name)
 		{
 			this.position = pos;
-			this.texture = text;
+			this.texture = texture;
 			this.ID = id;
 			name = Name;
-			lastPos = position;
-			t = TextureManager.getTexture (texture);
-			if (t != null) {
-				textureHeight = t.Height;
-				textureWidth = t.Width;
-			}
-			NameWidth = (int)TextureManager.Font.MeasureString (name).X;
-			UpdateDrawRect ();
+			this.animation = new Animation ();
+
+			animation.Texture = TextureManager.getTexture (texture);
+			NameOffset = (Engine.TileWidth/2) -((int)TextureManager.Font.MeasureString (name).X)/2;
 		}
 
 		public void Update (GameTime gameTime)
 		{
-			if (t == null) {
-				t=TextureManager.getTexture (texture);
-
+			if (animation.Texture == null) {
+				animation.Texture=TextureManager.getTexture (texture);
 			}
-			if (t != null && textureHeight==0) {
-				textureHeight = t.Height;
-				textureWidth = t.Width;
-				UpdateDrawRect();
+			if (gameTime.TotalGameTime.TotalMilliseconds - lastAnimation > 50) {
+				lastAnimation = gameTime.TotalGameTime.TotalMilliseconds;
+				animation.Update ();
 			}
-			if (!lastCameraPosition.Equals(Camera.Position)) {
-				lastCameraPosition = Camera.Position;
-				UpdateDrawRect ();
-			}
-			if (!position.Equals(lastPos)) {
-				lastPos=position;
-				UpdateDrawRect ();
-			}
-
 		}
-		public void UpdateDrawRect ()
-		{
-			DrawPos = new Coord (position.X * Engine.TileWidth - Camera.Position.X, (1 + position.Y) * Engine.TileHeight - textureHeight - Camera.Position.Y);
-			drawRect = new Rectangle (DrawPos.X, DrawPos.Y,textureWidth, textureHeight);
-		}
+
 		public void Draw(SpriteBatch sb) {
-			if(t!=null)
-				sb.Draw (t,drawRect,Color.White);
-
-			sb.DrawString (TextureManager.Font, name, new Vector2 (DrawPos.X+(Engine.TileWidth/2)-(NameWidth/2)-1, DrawPos.Y + textureHeight), Color.Black);
-			sb.DrawString (TextureManager.Font, name, new Vector2 (DrawPos.X+(Engine.TileWidth/2)-(NameWidth/2)+1, DrawPos.Y + textureHeight), Color.Black);
-			sb.DrawString (TextureManager.Font, name, new Vector2 (DrawPos.X+(Engine.TileWidth/2)-(NameWidth/2), DrawPos.Y-1 + textureHeight), Color.Black);
-			sb.DrawString (TextureManager.Font, name, new Vector2 (DrawPos.X+(Engine.TileWidth/2)-(NameWidth/2), DrawPos.Y+1 + textureHeight), Color.Black);
-			sb.DrawString (TextureManager.Font, name, new Vector2 (DrawPos.X+(Engine.TileWidth/2)-(NameWidth/2), DrawPos.Y + textureHeight), Color.White);
+			if (animation.Texture != null)
+				animation.Draw (sb,position.X,position.Y);
+			DrawPos = new Vector2 (position.X * Engine.TileWidth - Camera.Position.X + NameOffset, 
+			                       (1 + position.Y) * Engine.TileHeight - Camera.Position.Y);
+			sb.DrawString (TextureManager.Font, name, new Vector2(DrawPos.X+1,DrawPos.Y), Color.Black);
+			sb.DrawString (TextureManager.Font, name, new Vector2(DrawPos.X-1,DrawPos.Y), Color.Black);
+			sb.DrawString (TextureManager.Font, name, new Vector2(DrawPos.X,DrawPos.Y+1), Color.Black);
+			sb.DrawString (TextureManager.Font, name, new Vector2(DrawPos.X,DrawPos.Y-1), Color.Black);
+			sb.DrawString (TextureManager.Font, name, DrawPos, Color.White);
 		}
 
     }

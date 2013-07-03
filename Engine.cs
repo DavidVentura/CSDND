@@ -25,6 +25,9 @@ namespace DND
 		public bool Equals(Coord o){
 			return (this.X == o.X && this.Y == o.Y);
 		}
+		public static Coord operator -(Coord c, Coord c2){
+			return new Coord (c.X - c2.X, c.Y - c2.Y);
+		}
 	}
 
     static class Engine
@@ -87,9 +90,21 @@ namespace DND
 
 		public static void MovePlayer (int id, int x, int y)
 		{
+			Coord newCoord = new Coord (x, y);
+
 			foreach (Player p in Players)
 				if (p.ID == id) {
-				p.position= new Coord(x,y);
+					Coord diff = newCoord - p.position;
+					if (diff.X > 0)
+						p.animation.SwitchDirection (Direction.Right);
+					if (diff.X < 0)
+						p.animation.SwitchDirection (Direction.Left);
+					if (diff.Y > 0)
+						p.animation.SwitchDirection (Direction.Down);
+					if (diff.Y < 0)
+						p.animation.SwitchDirection (Direction.Up);
+					p.position = newCoord;
+					return;
 				}
 		}
 		public static void RemovePlayer (int i)

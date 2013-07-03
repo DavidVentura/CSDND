@@ -26,19 +26,26 @@ namespace DND
 			if (Keyboard.GetState ().IsKeyDown (Keys.Right)) {
 				lastKeyPress = curTime;
 				Network.SendData("MOVE1,0");
-
+				Engine.LocalPlayer.animation.SwitchDirection (Direction.Right);
+				return;
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.Left)) {
 				lastKeyPress = curTime;
 				Network.SendData("MOVE-1,0");
+				Engine.LocalPlayer.animation.SwitchDirection (Direction.Left);
+				return;
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.Up)) {
 				lastKeyPress = curTime;
 				Network.SendData("MOVE0,-1");
+				Engine.LocalPlayer.animation.SwitchDirection (Direction.Up);
+				return;
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.Down)) {
 				lastKeyPress = curTime;
 				Network.SendData("MOVE0,1");
+				Engine.LocalPlayer.animation.SwitchDirection (Direction.Down);
+				return;
 			}
 			foreach(Keys k in Keyboard.GetState().GetPressedKeys()){
 				message+=k.ToString();
