@@ -10,7 +10,10 @@ namespace DND
 		private static List<Textura> textures = new List<Textura>();
 		private static ContentManager c;
 		private static Textura temp;
-
+		private static SpriteFont font;
+		public static SpriteFont Font {
+			get { return font; }
+		}
 		public struct Textura
 		{
 			public Textura(int id) {
@@ -24,6 +27,8 @@ namespace DND
 		public static void Initialize (ContentManager content)
 		{
 			c=content;
+			font = c.Load<SpriteFont> ("Arial"); 
+			
 		}
 
 		public static Texture2D getTexture(int p)

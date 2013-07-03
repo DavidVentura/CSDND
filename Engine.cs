@@ -57,10 +57,14 @@ namespace DND
 			TextureManager.addTexture (6);
 			if (Network.Initialize()==-1) return;
 
+			while (LocalPlayer==null)
+				System.Threading.Thread.Sleep (100);
 			TextureManager.Update();
-			LocalPlayer= new Player(new Coord(3,3), 6,0);//TODO: move to database
         }
 
+		public static void Login(Coord pos, int texture, int id, string name) {
+			LocalPlayer = new Player (pos, texture, id, name);
+		}
 		public static void Update (GameTime gameTime)
 		{
 			TextureManager.Update();
@@ -71,13 +75,13 @@ namespace DND
 				p.Update (gameTime);
 
 		}
-		public static void AddPlayer (int id, int x, int y, int texture)
+		public static void AddPlayer (int id, int x, int y, int texture, string name)
 		{
 			foreach (Player p in Players)
 				if (p.ID == id)
 					return;
 			TextureManager.addTexture(texture);
-			Players.Add (new Player(new Coord(x,y),texture,id));
+			Players.Add (new Player(new Coord(x,y),texture,id,name));
 
 		}
 

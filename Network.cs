@@ -28,7 +28,7 @@ namespace DND
 			clientStream = client.GetStream();
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
-			SendData("INIP3,3");
+			SendData("LOGINombre");//TODO: ask for name
 			return 0;
 		}
 
@@ -49,7 +49,8 @@ namespace DND
 				try {
 				bytes = new byte[client.ReceiveBufferSize];
 				clientStream.Read (bytes, 0, client.ReceiveBufferSize);
-				} catch (Exception) {
+				} catch (Exception e) {
+					Console.WriteLine (e.Message);
 					clientStream.Close();
 					return;
 				}
@@ -85,8 +86,8 @@ namespace DND
 						Engine.TexturesNotReady=false;
 						break;
 					case "NPLR": //new player
-						//ID,X,Y,Texture
-						Engine.AddPlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]),Int32.Parse(args[3]));
+						//ID,X,Y,Texture,Name
+						Engine.AddPlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]),Int32.Parse(args[3]),args[4]);
 						break;
 					case "MPLR": //move player: ID,X,Y
 						Engine.MovePlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]));
@@ -96,6 +97,9 @@ namespace DND
 						break;
 					case "TALK": //gets message
 						Engine.AddText(args[0]+"> " + args[1]);
+						break;
+					case "LOGI"://log in: x,y,texture,id,name
+						Engine.Login (new Coord (Int32.Parse (args [0]), Int32.Parse (args [1])), Int32.Parse (args [2]), Int32.Parse (args [3]), args [4]);
 						break;
 					}
 				}
