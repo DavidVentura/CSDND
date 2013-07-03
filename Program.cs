@@ -19,6 +19,7 @@ namespace DND
 			using (Game1 game = new Game1()) {
 				game.Run ();
 			}
+
 			Environment.Exit (0);
 		}
 	}

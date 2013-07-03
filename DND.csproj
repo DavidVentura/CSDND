@@ -11,11 +11,12 @@
     <RootNamespace>DND</RootNamespace>
     <MonoGamePlatform>Linux</MonoGamePlatform>
     <AssemblyName>DND</AssemblyName>
+    <StartupObject>DND.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -39,7 +40,6 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="MonoGame.Framework, Version=3.0.1.0, Culture=neutral">
       <Private>False</Private>
-      <SpecificVersion>False</SpecificVersion>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -62,5 +62,4 @@
   <ItemGroup>
     <Folder Include="Content\" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
