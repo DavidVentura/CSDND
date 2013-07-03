@@ -28,7 +28,7 @@ namespace DND
 			clientStream = client.GetStream();
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
-			SendData("LOGINombre");//TODO: ask for name
+			SendData("LOGINombre2");//TODO: ask for name
 			return 0;
 		}
 

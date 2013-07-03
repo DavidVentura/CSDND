@@ -8,6 +8,8 @@ namespace DND
 	public static class TextureManager
 	{
 		private static List<Textura> textures = new List<Textura>();
+		private static List<Textura> sprites = new List<Textura>();
+
 		private static ContentManager c;
 		private static Textura temp;
 		private static SpriteFont font;
@@ -32,6 +34,14 @@ namespace DND
 			
 		}
 
+		public static Texture2D getSprites(int p)
+        {
+            foreach(Textura t in sprites)
+				if (t.id==p) return t.tex;
+
+			return null;
+        }
+
 		public static Texture2D getTexture(int p)
         {
             foreach(Textura t in textures)
@@ -47,7 +57,13 @@ namespace DND
 					return;
 			textures.Add (new Textura(id));
 		}
-
+		public static void addSprites (int id) //TODO: thread safe
+		{
+			foreach(Textura tex in sprites)
+				if (tex.id == id)
+					return;
+			sprites.Add (new Textura(id));
+		}
 
 		private static void LoadTextures ()
 		{
@@ -55,13 +71,25 @@ namespace DND
 			for (int i=0; i<textures.Count; i++) {
 				temp = textures [i];
 				if (temp.tex==null){
-					temp.tex = c.Load<Texture2D>(temp.id.ToString());
+					temp.tex = c.Load<Texture2D>("Textures/"+temp.id.ToString());
 					textures [i] = temp;
+				}
+			}
+		}
+		private static void LoadSprites ()
+		{
+
+			for (int i=0; i<sprites.Count; i++) {
+				temp = sprites [i];
+				if (temp.tex==null){
+					temp.tex = c.Load<Texture2D>("Sprites/"+temp.id.ToString());
+					sprites [i] = temp;
 				}
 			}
 		}
 		public static void Update() {
 			LoadTextures ();
+			LoadSprites ();
 		}
 	}
 }

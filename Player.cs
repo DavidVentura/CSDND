@@ -22,14 +22,14 @@ namespace DND
 			this.texture = texture;
 			this.ID = id;
 			name = Name;
-			animation.Texture = TextureManager.getTexture (texture);
+			animation.Sprite = TextureManager.getSprites (texture);
 			NameOffsetX = (Engine.TileWidth/2) -((int)TextureManager.Font.MeasureString (name).X)/2;
 		}
 
 		public void Update (GameTime gameTime)
 		{
-			if (animation.Texture == null) {
-				animation.Texture=TextureManager.getTexture (texture);
+			if (animation.Sprite == null) {
+				animation.Sprite=TextureManager.getSprites (texture);
 			}
 			if (gameTime.TotalGameTime.TotalMilliseconds - lastAnimation > (Engine.MovementTime/Animation.Frames)) {
 				lastAnimation = gameTime.TotalGameTime.TotalMilliseconds;
@@ -39,7 +39,7 @@ namespace DND
 
 		public void Draw (SpriteBatch sb)
 		{
-			if (animation.Texture != null)
+			if (animation.Sprite != null)
 				animation.Draw (sb, position.X, position.Y);
 			animation.DrawName(sb,name,NameOffsetX);
 

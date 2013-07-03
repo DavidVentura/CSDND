@@ -18,7 +18,7 @@ namespace DND
 		Direction CurDir=Direction.Down;
 		public Rectangle SrcRect;
 		private Texture2D text;
-		public Texture2D Texture{
+		public Texture2D Sprite{
 			get { return text; }
 			set {
 				if (value == null)
@@ -79,7 +79,7 @@ namespace DND
 			DrawRect = new Rectangle(OffsetDestRect.X + x * Engine.TileWidth - Camera.Position.X,
 			                         OffsetDestRect.Y + (1 + y) * Engine.TileHeight - FrameHeight - Camera.Position.Y,
 			                         FrameWidth,FrameHeight);
-			sb.Draw (Texture, DrawRect, SrcRect, Color.White);
+			sb.Draw (Sprite, DrawRect, SrcRect, Color.White);
 		}
 		public void DrawName (SpriteBatch sb, string name,int NameOffsetX)
 		{
