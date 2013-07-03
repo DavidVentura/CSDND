@@ -33,7 +33,7 @@ namespace DND
     static class Engine
     {
 		private static ContentManager content;
-
+		public const int MovementTime = 120;
         public const int TileHeight = 32;
         public const int TileWidth = 32;
 
@@ -52,16 +52,16 @@ namespace DND
             Map.Draw(ref sb);
 			GUI.Draw(sb);
         }
-        public static void LoadContent (ContentManager c)
+        public static int LoadContent (ContentManager c)
 		{
 			content =c;
-			TextureManager.Initialize(c); //TODO: move
-			TextureManager.addTexture (999); //TODO: Mouse
-			if (Network.Initialize()==-1) return;
+			TextureManager.LoadContent(c);
+			if (Network.Initialize()==-1) return -1;
 
 			while (LocalPlayer==null)
 				System.Threading.Thread.Sleep (100);
 			TextureManager.Update();
+			return 0;
         }
 
 		public static void Login(Coord pos, int texture, int id, string name) {
@@ -91,10 +91,10 @@ namespace DND
 		public static void MovePlayer (int id, int x, int y)
 		{
 			Coord newCoord = new Coord (x, y);
-
+			Coord diff;
 			foreach (Player p in Players)
 				if (p.ID == id) {
-					Coord diff = newCoord - p.position;
+					diff = newCoord - p.position;
 					if (diff.X > 0)
 						p.animation.SwitchDirection (Direction.Right);
 					if (diff.X < 0)
@@ -106,6 +106,17 @@ namespace DND
 					p.position = newCoord;
 					return;
 				}
+
+			diff = newCoord - LocalPlayer.position;
+			if (diff.X > 0)
+				LocalPlayer.animation.SwitchDirection (Direction.Right);
+			if (diff.X < 0)
+				LocalPlayer.animation.SwitchDirection (Direction.Left);
+			if (diff.Y > 0)
+				LocalPlayer.animation.SwitchDirection (Direction.Down);
+			if (diff.Y < 0)
+				LocalPlayer.animation.SwitchDirection (Direction.Up);
+			LocalPlayer.position = newCoord;
 		}
 		public static void RemovePlayer (int i)
 		{

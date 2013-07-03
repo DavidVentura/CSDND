@@ -64,9 +64,6 @@ namespace DND
 					header = data.Substring (0,4);
 					args = data.Substring (4).Split(',');
 					switch(header){
-					case "POSI":
-						Engine.LocalPlayer.position=new Coord(Int32.Parse(args[0]),Int32.Parse(args[1]));
-						break;
 					case "LAYR":
 						int width=Int32.Parse(args[0]);
 						int height=Int32.Parse(args[1]);
@@ -98,6 +95,9 @@ namespace DND
 						break;
 					case "LOGI"://log in: x,y,texture,id,name
 						Engine.Login (new Coord (Int32.Parse (args [0]), Int32.Parse (args [1])), Int32.Parse (args [2]), Int32.Parse (args [3]), args [4]);
+						break;
+					default:
+						Console.WriteLine(data);
 						break;
 					}
 				}

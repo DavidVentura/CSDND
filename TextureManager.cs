@@ -24,9 +24,10 @@ namespace DND
 			public Texture2D tex;
 		}
 
-		public static void Initialize (ContentManager content)
+		public static void LoadContent (ContentManager content)
 		{
 			c=content;
+			addTexture(999); //Mouse
 			font = c.Load<SpriteFont> ("Arial"); 
 			
 		}
@@ -39,7 +40,7 @@ namespace DND
 			return null;
         }
 
-		public static void addTexture (int id) //todo: thread safe
+		public static void addTexture (int id) //TODO: thread safe
 		{
 			foreach(Textura tex in textures)
 				if (tex.id == id)

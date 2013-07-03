@@ -33,8 +33,8 @@ namespace DND
 			double dt = (double)1000 / (double)FRAMERATE;
 			graphics.SynchronizeWithVerticalRetrace = false;
 			this.TargetElapsedTime = TimeSpan.FromMilliseconds(dt);
-			graphics.PreferredBackBufferHeight=640;
-			graphics.PreferredBackBufferWidth=480;
+			graphics.PreferredBackBufferHeight=200;
+			graphics.PreferredBackBufferWidth=200;
 			Window.AllowUserResizing=true;
 			
 			graphics.ApplyChanges();
@@ -47,10 +47,13 @@ namespace DND
             base.Initialize();
         }
 
-        protected override void LoadContent()
-        {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            Engine.LoadContent(Content);
+        protected override void LoadContent ()
+		{
+			spriteBatch = new SpriteBatch (GraphicsDevice);
+			if (Engine.LoadContent (Content) == -1) {
+				MessageBox.Show ("Something borked");
+				Environment.Exit(1);
+			}
         }
 
         protected override void UnloadContent()

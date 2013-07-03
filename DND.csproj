@@ -41,6 +41,10 @@
     <Reference Include="MonoGame.Framework, Version=3.0.1.0, Culture=neutral">
       <Private>False</Private>
     </Reference>
+    <Reference Include="MonoGame.Framework.Linux, Version=2.5.1.0, Culture=neutral">
+      <Private>False</Private>
+      <Package>monogame</Package>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
