@@ -37,7 +37,7 @@ namespace DND
 			buffer = encoder.GetBytes(data);
 			clientStream.Write(buffer, 0 , buffer.Length);
 			clientStream.Flush();
-			Thread.Sleep (1);
+			Thread.Sleep (10);
 		}
 
 		private static void GetData ()
