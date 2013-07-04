@@ -28,7 +28,7 @@ namespace DND
 			clientStream = client.GetStream();
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
-			SendData("LOGINombre2");//TODO: ask for name
+			SendData("LOGINombre");//TODO: ask for name
 			return 0;
 		}
 
@@ -37,7 +37,7 @@ namespace DND
 			buffer = encoder.GetBytes(data);
 			clientStream.Write(buffer, 0 , buffer.Length);
 			clientStream.Flush();
-			Thread.Sleep (10);
+			//Thread.Sleep (10);
 		}
 
 		private static void GetData ()
