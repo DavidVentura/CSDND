@@ -37,7 +37,7 @@ namespace DND
 			buffer = encoder.GetBytes(data);
 			clientStream.Write(buffer, 0 , buffer.Length);
 			clientStream.Flush();
-			Thread.Sleep (2);
+			Thread.Sleep (1);
 		}
 
 		private static void GetData ()
@@ -46,12 +46,15 @@ namespace DND
 			string data,header;
 			string[] args,allData;
 			while (true) {
+				if (!client.Connected)
+					return;
 				try {
 				bytes = new byte[client.ReceiveBufferSize];
 				clientStream.Read (bytes, 0, client.ReceiveBufferSize);
 				} catch (Exception e) {
 					Console.WriteLine (e.Message);
 					clientStream.Close();
+					Unload();
 					return;
 				}
 
@@ -95,6 +98,9 @@ namespace DND
 						break;
 					case "LOGI"://log in: x,y,texture,id,name
 						Engine.Login (new Coord (Int32.Parse (args [0]), Int32.Parse (args [1])), Int32.Parse (args [2]), Int32.Parse (args [3]), args [4]);
+						break;
+					case "ERRO": //error loggin in, disconnect
+						client.Close();
 						break;
 					default:
 						Console.WriteLine(data);

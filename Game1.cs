@@ -30,9 +30,15 @@ namespace DND
 
         protected override void Initialize ()
 		{
+
+#if FPS30
 			double dt = (double)1000 / (double)FRAMERATE;
 			graphics.SynchronizeWithVerticalRetrace = false;
 			this.TargetElapsedTime = TimeSpan.FromMilliseconds(dt);
+#else
+			graphics.SynchronizeWithVerticalRetrace = true;
+#endif
+
 			graphics.PreferredBackBufferHeight=200;
 			graphics.PreferredBackBufferWidth=200;
 			Window.AllowUserResizing=true;
@@ -40,7 +46,7 @@ namespace DND
 			graphics.ApplyChanges();
 			IsMouseVisible = true;
 			if (Engine.Initialize () == -1) {
-				MessageBox.Show ("Something borked");
+				MessageBox.Show ("Something borked while initializing");
 				Environment.Exit(1);
 			}
 
@@ -51,7 +57,7 @@ namespace DND
 		{
 			spriteBatch = new SpriteBatch (GraphicsDevice);
 			if (Engine.LoadContent (Content) == -1) {
-				MessageBox.Show ("Something borked");
+				MessageBox.Show ("Something borked while loading content");
 				Environment.Exit(1);
 			}
         }

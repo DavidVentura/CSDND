@@ -32,7 +32,6 @@ namespace DND
 
     static class Engine
     {
-		private static ContentManager content;
 		public const int MovementTime = 120;
         public const int TileHeight = 32;
         public const int TileWidth = 32;
@@ -54,12 +53,16 @@ namespace DND
         }
         public static int LoadContent (ContentManager c)
 		{
-			content =c;
-			TextureManager.LoadContent(c);
-			if (Network.Initialize()==-1) return -1;
+			TextureManager.LoadContent (c);
+			if (Network.Initialize () == -1)
+				return -1;
 
-			while (LocalPlayer==null)
+			while (LocalPlayer==null) {
+				if (Network.receiver.ThreadState != System.Threading.ThreadState.Running){
+					return -1;
+				}
 				System.Threading.Thread.Sleep (100);
+			}
 			TextureManager.Update();
 			return 0;
         }
