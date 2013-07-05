@@ -28,6 +28,9 @@ namespace DND
 		public static Coord operator -(Coord c, Coord c2){
 			return new Coord (c.X - c2.X, c.Y - c2.Y);
 		}
+		public static Double Distance (Coord c1, Coord c2) {
+			return Math.Sqrt(((c1.X - c2.X)*(c1.X - c2.X))+((c1.Y - c2.Y)*(c1.Y - c2.Y)));
+		}
 	}
 
     static class Engine
@@ -67,9 +70,9 @@ namespace DND
 			return 0;
         }
 
-		public static void Login(Coord pos, int sprite, int id, string name) {
+		public static void Login(Coord pos, int sprite, int id, string name, int visionRange) {
 			TextureManager.addSprites(sprite);
-			LocalPlayer = new Player (pos, sprite, id, name);
+			LocalPlayer = new Player (pos, sprite, id, name,visionRange);
 		}
 		public static void Update (GameTime gameTime)
 		{
@@ -97,7 +100,7 @@ namespace DND
 			Coord diff;
 			foreach (Player p in Players)
 				if (p.ID == id) {
-					diff = newCoord - p.position;
+					diff = newCoord - p.Position;
 					if (diff.X > 0)
 						p.animation.SwitchDirection (Direction.Right);
 					if (diff.X < 0)
@@ -106,11 +109,11 @@ namespace DND
 						p.animation.SwitchDirection (Direction.Down);
 					if (diff.Y < 0)
 						p.animation.SwitchDirection (Direction.Up);
-					p.position = newCoord;
+					p.Position = newCoord;
 					return;
 				}
 
-			diff = newCoord - LocalPlayer.position;
+			diff = newCoord - LocalPlayer.Position;
 			if (diff.X > 0)
 				LocalPlayer.animation.SwitchDirection (Direction.Right);
 			if (diff.X < 0)
@@ -119,7 +122,7 @@ namespace DND
 				LocalPlayer.animation.SwitchDirection (Direction.Down);
 			if (diff.Y < 0)
 				LocalPlayer.animation.SwitchDirection (Direction.Up);
-			LocalPlayer.position = newCoord;
+			LocalPlayer.Position = newCoord;
 		}
 		public static void RemovePlayer (int i)
 		{

@@ -24,6 +24,10 @@ namespace DND
 			double curTime = gameTime.TotalGameTime.TotalMilliseconds;
 			if (curTime - lastKeyPress < Engine.MovementTime + 20)
 				return;
+			if (Keyboard.GetState ().IsKeyDown (Keys.LeftShift)) {
+				lastKeyPress = curTime;
+				Network.SendData ("NOCL"); //noclip
+			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.Right)) {
 				lastKeyPress = curTime;
 				Network.SendData ("MOVE1,0");
@@ -44,11 +48,7 @@ namespace DND
 				Network.SendData ("MOVE0,1");
 				return;
 			}
-			if (Keyboard.GetState ().IsKeyDown (Keys.LeftShift)) {
-				lastKeyPress = curTime;
-				Network.SendData ("NOCL"); //noclip
-				return;
-			}
+
 
 			foreach(Keys k in Keyboard.GetState().GetPressedKeys()){
 				message+=k.ToString();

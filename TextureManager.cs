@@ -7,6 +7,9 @@ namespace DND
 {
 	public static class TextureManager
 	{
+		private static readonly object _lockTexture = new object();
+		private static readonly object _lockSprite = new object();
+
 		private static List<Textura> textures = new List<Textura>();
 		private static List<Textura> sprites = new List<Textura>();
 
@@ -50,19 +53,23 @@ namespace DND
 			return null;
         }
 
-		public static void addTexture (int id) //TODO: thread safe
+		public static void addTexture (int id) 
 		{
-			foreach(Textura tex in textures)
-				if (tex.id == id)
-					return;
-			textures.Add (new Textura(id));
+			lock (_lockTexture) {
+				foreach (Textura tex in textures)
+					if (tex.id == id)
+						return;
+				textures.Add (new Textura (id));
+			}
 		}
-		public static void addSprites (int id) //TODO: thread safe
+		public static void addSprites (int id) 
 		{
-			foreach(Textura tex in sprites)
-				if (tex.id == id)
-					return;
-			sprites.Add (new Textura(id));
+			lock (_lockSprite) {
+				foreach (Textura tex in sprites)
+					if (tex.id == id)
+						return;
+				sprites.Add (new Textura (id));
+			}
 		}
 
 		private static void LoadTextures ()

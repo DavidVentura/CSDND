@@ -25,10 +25,12 @@ namespace DND
         }
         internal Tile TileAt(int x, int y)
         {
+			if (!Map.withinBounds(x,y)) return new Tile(-1);
             return tiles[x, y];
         }
 		internal Tile TileAt(Coord v)
         {
+			if (!Map.withinBounds(v)) return new Tile(-1);
             return tiles[v.X, v.Y];
         }
     }

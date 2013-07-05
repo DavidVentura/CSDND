@@ -39,8 +39,8 @@ namespace DND
 			graphics.SynchronizeWithVerticalRetrace = true;
 #endif
 
-			graphics.PreferredBackBufferHeight=200;
-			graphics.PreferredBackBufferWidth=200;
+			graphics.PreferredBackBufferHeight=400;
+			graphics.PreferredBackBufferWidth=400;
 			Window.AllowUserResizing=true;
 			
 			graphics.ApplyChanges();

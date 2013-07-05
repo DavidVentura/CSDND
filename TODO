@@ -1,8 +1,6 @@
 gtk-interface (spells, initiative, chat)
 login errors
-Players bigger than 1x1
 Multiple players in one client
-no-collision mode
-vision range
+Players bigger than 1x1
+vision range SHADERS (blur/darken)
 dynamic maps
-

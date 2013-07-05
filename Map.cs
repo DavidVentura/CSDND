@@ -33,9 +33,13 @@ namespace DND
 
 		static void DrawLayer (ref SpriteBatch sb, MapLayer layer)
 		{
-
-			for (y = 0; y < height; y++)
-				for (x = 0; x < width; x++) {
+			int minX=Engine.LocalPlayer.Position.X - Engine.LocalPlayer.VisionRange;
+			int minY=Engine.LocalPlayer.Position.Y - Engine.LocalPlayer.VisionRange;
+			int maxX=Engine.LocalPlayer.VisionRange+Engine.LocalPlayer.Position.X;
+			int maxY=Engine.LocalPlayer.VisionRange+Engine.LocalPlayer.Position.Y;
+			for (y = minY; y < maxY; y++)
+				for (x = minX; x < maxX; x++) {
+					if (Coord.Distance(new Coord(x,y), Engine.LocalPlayer.Position) >= Engine.LocalPlayer.VisionRange) continue;
 					text_tile = layer.TileAt (x, y).TextureNumber;
 					if (text_tile > 0) { //not "empty"
 						auxtext = TextureManager.getTexture (text_tile);
@@ -49,9 +53,9 @@ namespace DND
 					}
 					if (layer.Type==LayerType.Object){
 						foreach (Player p in Engine.Players)
-							if (p.position.X == x && p.position.Y == y)
+							if (p.Position.X == x && p.Position.Y == y)
 								p.Draw (sb);
-						if(Engine.LocalPlayer.position.X ==x && Engine.LocalPlayer.position.Y==y)
+						if(Engine.LocalPlayer.Position.X ==x && Engine.LocalPlayer.Position.Y==y)
 							Engine.LocalPlayer.Draw(sb);
 					}
 				}
@@ -62,7 +66,12 @@ namespace DND
 				return false;
 			return true;
 		}
-
+		public static bool withinBounds (int X, int Y)
+		{
+			if (X < 0 || Y < 0 || X >= width || Y >= height)
+				return false;
+			return true;
+		}
 		public static void AddLayer (MapLayer mapLayer)
 		{
 			switch (mapLayer.type) {
