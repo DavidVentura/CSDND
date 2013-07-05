@@ -10,31 +10,35 @@ namespace DND
 {
     class Player
     {
-		public int ID,Texture,NameOffsetX=0;
+		public int ID,Texture,NameOffsetX=0,size;
 		public Coord Position;
 		public int VisionRange;
 		private string name;
 		public Animation animation=new Animation();
 		double lastAnimation=0;
 
-		public Player (Coord pos, int texture, int id, string Name, int visionRange)
+		public Player (Coord pos, int texture, int id, string Name, int visionRange, int size)
 		{
 			VisionRange=visionRange;
 			Position = pos;
 			Texture = texture;
 			ID = id;
 			name = Name;
+			this.size=size;
 			animation.Sprite = TextureManager.getSprites (texture);
-			NameOffsetX = (Engine.TileWidth/2) -((int)TextureManager.Font.MeasureString (name).X)/2;
+			int sizeOffset = (int)(((float)(size-1)/2)*Engine.TileWidth);
+			NameOffsetX = (Engine.TileWidth/2) -((int)TextureManager.Font.MeasureString (name).X)/2+sizeOffset;
 		}
-		public Player (Coord pos, int texture, int id, string Name)
+		public Player (Coord pos, int texture, int id, string Name, int size)
 		{
 			Position = pos;
 			Texture = texture;
 			ID = id;
 			name = Name;
+			this.size=size;
 			animation.Sprite = TextureManager.getSprites (texture);
-			NameOffsetX = (Engine.TileWidth/2) -((int)TextureManager.Font.MeasureString (name).X)/2;
+			int sizeOffset = (int)(((float)(size-1)/2)*Engine.TileWidth);
+			NameOffsetX = (Engine.TileWidth/2) -((int)TextureManager.Font.MeasureString (name).X)/2+sizeOffset;
 		}
 
 		public void Update (GameTime gameTime)
@@ -51,7 +55,7 @@ namespace DND
 		public void Draw (SpriteBatch sb)
 		{
 			if (animation.Sprite != null)
-				animation.Draw (sb, Position.X, Position.Y);
+				animation.Draw (sb, Position.X, Position.Y,size);
 			animation.DrawName(sb,name,NameOffsetX);
 
 		}

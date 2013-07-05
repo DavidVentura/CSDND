@@ -28,7 +28,7 @@ namespace DND
 			clientStream = client.GetStream();
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
-			SendData("LOGINombre");//TODO: ask for name
+			SendData("LOGINombre3");//TODO: ask for name
 			return 0;
 		}
 
@@ -84,8 +84,8 @@ namespace DND
 							TextureManager.addTexture(Int32.Parse(args[j]));
 						Engine.TexturesNotReady=false;
 						break;
-					case "NPLR": //new player: ID,X,Y,Texture,Name
-						Engine.AddPlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]),Int32.Parse(args[3]),args[4]);
+					case "NPLR": //new player: ID,X,Y,Texture,Name,size
+						Engine.AddPlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]),Int32.Parse(args[3]),args[4],Int32.Parse(args[5]));
 						break;
 					case "MPLR": //move player: ID,X,Y
 						Engine.MovePlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]));
@@ -97,7 +97,7 @@ namespace DND
 						Engine.AddText(args[0]+"> " + args[1]);
 						break;
 					case "LOGI"://log in: x,y,texture,id,name,vision range(tiles)
-						Engine.Login (new Coord (Int32.Parse (args [0]), Int32.Parse (args [1])), Int32.Parse (args [2]), Int32.Parse (args [3]), args [4],Int32.Parse (args [5]));
+						Engine.Login (new Coord (Int32.Parse (args [0]), Int32.Parse (args [1])), Int32.Parse (args [2]), Int32.Parse (args [3]), args [4],Int32.Parse (args [5]),Int32.Parse (args [6]));
 						break;
 					case "ERRO": //error loggin in, disconnect
 						client.Close();

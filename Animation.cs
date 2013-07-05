@@ -74,10 +74,10 @@ namespace DND
 			}
 		}
 
-		public void Draw (SpriteBatch sb, int x, int y)
+		public void Draw (SpriteBatch sb, int x, int y, int size)
 		{
 			DrawRect = new Rectangle(OffsetDestRect.X + x * Engine.TileWidth - Camera.Position.X,
-			                         OffsetDestRect.Y + (1 + y) * Engine.TileHeight - FrameHeight - Camera.Position.Y,
+			                         OffsetDestRect.Y + (size + y) * Engine.TileHeight - FrameHeight - Camera.Position.Y,
 			                         FrameWidth,FrameHeight);
 			sb.Draw (Sprite, DrawRect, SrcRect, Color.White);
 		}

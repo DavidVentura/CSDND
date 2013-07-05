@@ -70,9 +70,9 @@ namespace DND
 			return 0;
         }
 
-		public static void Login(Coord pos, int sprite, int id, string name, int visionRange) {
+		public static void Login(Coord pos, int sprite, int id, string name, int visionRange, int size) {
 			TextureManager.addSprites(sprite);
-			LocalPlayer = new Player (pos, sprite, id, name,visionRange);
+			LocalPlayer = new Player (pos, sprite, id, name,visionRange, size);
 		}
 		public static void Update (GameTime gameTime)
 		{
@@ -84,13 +84,13 @@ namespace DND
 				p.Update (gameTime);
 
 		}
-		public static void AddPlayer (int id, int x, int y, int sprite, string name)
+		public static void AddPlayer (int id, int x, int y, int sprite, string name, int size)
 		{
 			foreach (Player p in Players)
 				if (p.ID == id)
 					return;
 			TextureManager.addSprites(sprite);
-			Players.Add (new Player(new Coord(x,y),sprite,id,name));
+			Players.Add (new Player(new Coord(x,y),sprite,id,name,size));
 
 		}
 
