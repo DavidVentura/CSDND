@@ -17,32 +17,39 @@ namespace DND
 
 		}
 
-		public static void Update(GameTime gameTime) {
-			oldMouse=Mouse.GetState();
-			MouseCoords=GetMouseMapCoord(oldMouse.X+Camera.Position.X,oldMouse.Y+Camera.Position.Y);
+		public static void Update (GameTime gameTime)
+		{
+			oldMouse = Mouse.GetState ();
+			MouseCoords = GetMouseMapCoord (oldMouse.X + Camera.Position.X, oldMouse.Y + Camera.Position.Y);
 			double curTime = gameTime.TotalGameTime.TotalMilliseconds;
-			if (curTime - lastKeyPress < Engine.MovementTime+20)
+			if (curTime - lastKeyPress < Engine.MovementTime + 20)
 				return;
 			if (Keyboard.GetState ().IsKeyDown (Keys.Right)) {
 				lastKeyPress = curTime;
-				Network.SendData("MOVE1,0");
+				Network.SendData ("MOVE1,0");
 				return;
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.Left)) {
 				lastKeyPress = curTime;
-				Network.SendData("MOVE-1,0");
+				Network.SendData ("MOVE-1,0");
 				return;
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.Up)) {
 				lastKeyPress = curTime;
-				Network.SendData("MOVE0,-1");
+				Network.SendData ("MOVE0,-1");
 				return;
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.Down)) {
 				lastKeyPress = curTime;
-				Network.SendData("MOVE0,1");
+				Network.SendData ("MOVE0,1");
 				return;
 			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.LeftShift)) {
+				lastKeyPress = curTime;
+				Network.SendData ("NOCL"); //noclip
+				return;
+			}
+
 			foreach(Keys k in Keyboard.GetState().GetPressedKeys()){
 				message+=k.ToString();
 			}
