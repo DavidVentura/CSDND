@@ -1,6 +1,11 @@
-gtk-interface (spells, initiative, chat)
-login errors
+gtk-interface 
+	spells
+		visible selection area
+	initiative
+	chat
+	login errors
+	dynamic maps
+
 Multiple players in one client
 Players bigger than 1x1
 vision range SHADERS (blur/darken)
-dynamic maps
