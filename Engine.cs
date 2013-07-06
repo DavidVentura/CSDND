@@ -33,30 +33,66 @@ namespace DND
 		}
 	}
 
-    static class Engine
+    static class Engine 
     {
+		#region Services
+		private static GameServiceContainer _services;
+    	private static GraphicsDevice _graphicsDevice;
+    	private static ContentManager _content;
+    	private static SpriteBatch _spriteBatch;
+		#endregion
+
 		public const int MovementTime = 120;
         public const int TileHeight = 32;
         public const int TileWidth = 32;
 
 		public static Player LocalPlayer;
 		public static List<Player> Players = new List<Player>();
-
 		public static bool TexturesNotReady=true;
-		public static int Initialize ()
+
+		public static int Initialize (IGraphicsDeviceService graphics)
 		{
+			_services = new GameServiceContainer();
+	        _services.AddService(typeof(IGraphicsDeviceService), graphics);
+
+	        _graphicsDevice = graphics.GraphicsDevice;
+
+	        _content = new ContentManager(_services, "Content");
+	        _spriteBatch = new SpriteBatch(_graphicsDevice);
+			if (LoadContent()==-1)
+				return -1;
+
+			/*
+			#if FPS30
+			double dt = (double)1000 / (double)30;
+			_graphicsDevice.SynchronizeWithVerticalRetrace = false;
+			this.TargetElapsedTime = TimeSpan.FromMilliseconds(dt);
+#else
+			_graphicsDevice.SynchronizeWithVerticalRetrace = true;
+#endif
+
+			_graphicsDevice.DisplayMode =  .PreferredBackBufferHeight=400;
+			_graphicsDevice.PreferredBackBufferWidth=400;
+			Window.AllowUserResizing=true;
+			
+			_graphicsDevice.ApplyChanges();
+			IsMouseVisible = true;*/
+
 			Camera.Initialize(new Coord(0,0));
 			return 0;
 		}
 
-        public static void Draw(ref SpriteBatch sb)
+        public static void Draw(GameTime gt)
         {
-            Map.Draw(ref sb);
-			GUI.Draw(sb);
+			_graphicsDevice.Clear(Color.Black);
+			_spriteBatch.Begin();
+            Map.Draw(_spriteBatch);
+			GUI.Draw(_spriteBatch);
+			_spriteBatch.End();
         }
-        public static int LoadContent (ContentManager c)
+		public static int LoadContent ()
 		{
-			TextureManager.LoadContent (c);
+			TextureManager.LoadContent (_content);
 			if (Network.Initialize () == -1)
 				return -1;
 
@@ -83,6 +119,7 @@ namespace DND
 			foreach (Player p in Players)
 				p.Update (gameTime);
 
+
 		}
 		public static void AddPlayer (int id, int x, int y, int sprite, string name, int size)
 		{
@@ -93,7 +130,6 @@ namespace DND
 			Players.Add (new Player(new Coord(x,y),sprite,id,name,size));
 
 		}
-
 		public static void MovePlayer (int id, int x, int y)
 		{
 			Coord newCoord = new Coord (x, y);
@@ -135,6 +171,9 @@ namespace DND
 		public static void AddText (string str)
 		{
 			Console.WriteLine(str);
+		}
+		public static void Unload() {
+			Network.Unload(); //TODO: call
 		}
 
     }

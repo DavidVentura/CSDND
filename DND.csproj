@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{6C75619C-028B-432B-A0A5-87EB5F21E7AC}</ProjectGuid>
     <ProjectTypeGuids>{9B831FEF-F496-498F-9FE8-180DA5CB4258};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>DND</RootNamespace>
     <MonoGamePlatform>Linux</MonoGamePlatform>
     <AssemblyName>DND</AssemblyName>
@@ -45,26 +45,51 @@
       <Private>False</Private>
       <Package>monogame</Package>
     </Reference>
+    <Reference Include="OpenTK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
+      <Private>False</Private>
+      <Package>opentk</Package>
+    </Reference>
+    <Reference Include="OpenTK.GLControl">
+      <HintPath>..\Binaries\OpenTK\Debug\OpenTK.GLControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="Mono.Posix" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Camera.cs" />
-    <Compile Include="Engine.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapLayer.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="TextureManager.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="GUI.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="Animation.cs" />
+    <Compile Include="GraphicsDeviceControl.cs" />
+    <Compile Include="GraphicsDeviceService.cs" />
+    <Compile Include="ServiceContainer.cs" />
+    <Compile Include="GameControl.cs" />
+    <Compile Include="Engine.cs" />
+    <Compile Include="TextureManager.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\effect1.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="gtk-gui\gui.stetic">
+      <LogicalName>gui.stetic</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

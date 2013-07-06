@@ -15,7 +15,10 @@ namespace DND
 
 		private static ContentManager c;
 		private static Textura temp;
+
 		private static SpriteFont font;
+		static Effect e;
+
 		public static SpriteFont Font {
 			get { return font; }
 		}
@@ -33,6 +36,7 @@ namespace DND
 		{
 			c=content;
 			addTexture(999); //Mouse
+	//		e = c.Load<Effect>("shader1");
 			font = c.Load<SpriteFont> ("Arial"); 
 			
 		}

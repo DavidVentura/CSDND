@@ -28,7 +28,7 @@ namespace DND
 			clientStream = client.GetStream();
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
-			SendData("LOGINombre3");//TODO: ask for name
+			SendData("LOGINombre");//TODO: ask for name
 			return 0;
 		}
 
@@ -111,7 +111,7 @@ namespace DND
 		}
 		public static void Unload ()
 		{
-			if (receiver.IsAlive)
+			if (receiver!=null && receiver.IsAlive)
 				receiver.Abort();
 		}
 

@@ -22,16 +22,16 @@ namespace DND
 			height = h;
 		}
 
-		public static void Draw (ref SpriteBatch sb)
+		public static void Draw (SpriteBatch sb)
 		{
 			if(GroundLayer==null||ObjectLayer==null)return;
 
-			DrawLayer (ref sb, GroundLayer);
-			DrawLayer (ref sb, ObjectLayer);
+			DrawLayer (sb, GroundLayer);
+			DrawLayer (sb, ObjectLayer);
 
 		}
 
-		static void DrawLayer (ref SpriteBatch sb, MapLayer layer)
+		static void DrawLayer (SpriteBatch sb, MapLayer layer)
 		{
 			int minX=Engine.LocalPlayer.Position.X - Engine.LocalPlayer.VisionRange;
 			int minY=Engine.LocalPlayer.Position.Y - Engine.LocalPlayer.VisionRange;

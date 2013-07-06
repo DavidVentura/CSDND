@@ -40,6 +40,7 @@ namespace DND
 			CurDir = d;
 			updateSrcRect ();
 		}
+
 		private void updateSrcRect ()
 		{
 			int xModifier = 0, yModifier=0;
@@ -73,6 +74,8 @@ namespace DND
 				updateSrcRect ();
 			}
 		}
+
+
 
 		public void Draw (SpriteBatch sb, int x, int y, int size)
 		{

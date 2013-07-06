@@ -27,6 +27,7 @@ namespace DND
 			this.size=size;
 			animation.Sprite = TextureManager.getSprites (texture);
 			int sizeOffset = (int)(((float)(size-1)/2)*Engine.TileWidth);
+			if (TextureManager.Font==null) return;
 			NameOffsetX = (Engine.TileWidth/2) -((int)TextureManager.Font.MeasureString (name).X)/2+sizeOffset;
 		}
 		public Player (Coord pos, int texture, int id, string Name, int size)
@@ -56,7 +57,8 @@ namespace DND
 		{
 			if (animation.Sprite != null)
 				animation.Draw (sb, Position.X, Position.Y,size);
-			animation.DrawName(sb,name,NameOffsetX);
+			if (TextureManager.Font!=null) 
+				animation.DrawName(sb,name,NameOffsetX);
 
 		}
 
