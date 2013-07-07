@@ -28,6 +28,12 @@ namespace DND
 		public static Coord operator -(Coord c, Coord c2){
 			return new Coord (c.X - c2.X, c.Y - c2.Y);
 		}
+		public static Coord operator +(Coord c, Coord c2){
+			return new Coord (c.X + c2.X, c.Y + c2.Y);
+		}
+		public static Coord operator /(Coord c, int v){
+			return new Coord (c.X/v, c.Y/v);
+		}
 		public static Double Distance (Coord c1, Coord c2) {
 			return Math.Sqrt(((c1.X - c2.X)*(c1.X - c2.X))+((c1.Y - c2.Y)*(c1.Y - c2.Y)));
 		}
@@ -47,11 +53,13 @@ namespace DND
         public const int TileWidth = 32;
 
 		public static int curCharIndex=0;
+		private static int WindowWidth =0,WindowHeight=0;
 		public static List<Player> LocalPlayers= new List<Player>();
 		public static Player CurPlayer;
 
 		public static List<Player> Players = new List<Player>();
 		public static bool TexturesNotReady=true;
+
 
 		public static int Initialize (IGraphicsDeviceService graphics)
 		{
@@ -80,8 +88,9 @@ namespace DND
 			
 			_graphicsDevice.ApplyChanges();
 			IsMouseVisible = true;*/
-
-			Camera.Initialize(new Coord(0,0));
+			WindowWidth=graphics.GraphicsDevice.Viewport.Width;
+			WindowHeight=graphics.GraphicsDevice.Viewport.Height;
+			Camera.Initialize(new Coord(0,0),WindowWidth/TileWidth,WindowHeight/TileHeight);
 			return 0;
 		}
 
@@ -100,9 +109,8 @@ namespace DND
 				return -1;
 
 			while (LocalPlayers.Count==0) {
-				if (Network.receiver.ThreadState != System.Threading.ThreadState.Running){
-					return -1;
-				}
+				if (Network.receiver.ThreadState != System.Threading.ThreadState.Running)
+					return -1;				
 				System.Threading.Thread.Sleep (100);
 			}
 			CurPlayer=LocalPlayers[curCharIndex];
@@ -123,8 +131,6 @@ namespace DND
 				p.Update(gameTime);
 			foreach (Player p in Players)
 				p.Update (gameTime);
-
-
 		}
 		public static void AddPlayer (int id, int x, int y, int sprite, string name, int size)
 		{
@@ -175,7 +181,7 @@ namespace DND
 		}
 		public static void AddText (string str)
 		{
-			Console.WriteLine(str);
+			Console.WriteLine(str);//TODO: add to interface
 		}
 		public static void Unload() {
 			Network.Unload();
@@ -187,6 +193,11 @@ namespace DND
 				curCharIndex=0;
 			CurPlayer=LocalPlayers[curCharIndex];
 		}
+		public static bool withinSight (Coord c)
+		{
+			return (Coord.Distance(c, CurPlayer.Position) < CurPlayer.VisionRange);
+		}
+
 
     }
 }

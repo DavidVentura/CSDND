@@ -28,6 +28,7 @@ namespace DND
 			clientStream = client.GetStream();
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
+
 			SendData("LOGIPlayer1");//TODO: ask for name
 			return 0;
 		}
@@ -64,7 +65,9 @@ namespace DND
 					data =allData[i];
 
 					if (data.Length<4) continue;
-					Console.WriteLine(data);
+					#if DEBUG 
+						Console.WriteLine(data);
+					#endif
 					header = data.Substring (0,4);
 					args = data.Substring (4).Split(',');
 					switch(header){

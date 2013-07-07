@@ -1,10 +1,10 @@
 gtk-interface 
 	spells
-		visible selection area
+		visible target area
 	initiative
 	chat
 	login errors
 	dynamic maps
 
-Multiple players in one client
+camera should follow the player smoothly
 vision range SHADERS (blur/darken)
