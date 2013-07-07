@@ -28,7 +28,7 @@ namespace DND
 			clientStream = client.GetStream();
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
-			SendData("LOGINombre");//TODO: ask for name
+			SendData("LOGIPlayer1");//TODO: ask for name
 			return 0;
 		}
 
@@ -64,6 +64,7 @@ namespace DND
 					data =allData[i];
 
 					if (data.Length<4) continue;
+					Console.WriteLine(data);
 					header = data.Substring (0,4);
 					args = data.Substring (4).Split(',');
 					switch(header){
@@ -97,10 +98,13 @@ namespace DND
 						Engine.AddText(args[0]+"> " + args[1]);
 						break;
 					case "LOGI"://log in: x,y,texture,id,name,vision range(tiles)
-						Engine.Login (new Coord (Int32.Parse (args [0]), Int32.Parse (args [1])), Int32.Parse (args [2]), Int32.Parse (args [3]), args [4],Int32.Parse (args [5]),Int32.Parse (args [6]));
+						Engine.AddLocalPlayer (new Coord (Int32.Parse (args [0]), Int32.Parse (args [1])), Int32.Parse (args [2]), Int32.Parse (args [3]), args [4],Int32.Parse (args [5]),Int32.Parse (args [6]));
 						break;
 					case "ERRO": //error loggin in, disconnect
 						client.Close();
+						break;
+					case "SWCH": //switch character: args: id of the new current-char
+						Engine.SwitchChar();
 						break;
 					default:
 						Console.WriteLine(data);

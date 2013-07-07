@@ -33,13 +33,13 @@ namespace DND
 
 		static void DrawLayer (SpriteBatch sb, MapLayer layer)
 		{
-			int minX=Engine.LocalPlayer.Position.X - Engine.LocalPlayer.VisionRange;
-			int minY=Engine.LocalPlayer.Position.Y - Engine.LocalPlayer.VisionRange;
-			int maxX=Engine.LocalPlayer.VisionRange+Engine.LocalPlayer.Position.X;
-			int maxY=Engine.LocalPlayer.VisionRange+Engine.LocalPlayer.Position.Y;
+			int minX=Engine.CurPlayer.Position.X - Engine.CurPlayer.VisionRange;
+			int minY=Engine.CurPlayer.Position.Y - Engine.CurPlayer.VisionRange;
+			int maxX=Engine.CurPlayer.VisionRange+Engine.CurPlayer.Position.X;
+			int maxY=Engine.CurPlayer.VisionRange+Engine.CurPlayer.Position.Y;
 			for (y = minY; y < maxY; y++)
 				for (x = minX; x < maxX; x++) {
-					if (Coord.Distance(new Coord(x,y), Engine.LocalPlayer.Position) >= Engine.LocalPlayer.VisionRange) continue;
+					if (Coord.Distance(new Coord(x,y), Engine.CurPlayer.Position) >= Engine.CurPlayer.VisionRange) continue;
 					text_tile = layer.TileAt (x, y).TextureNumber;
 					if (text_tile > 0) { //not "empty"
 						auxtext = TextureManager.getTexture (text_tile);
@@ -55,8 +55,9 @@ namespace DND
 						foreach (Player p in Engine.Players)
 							if (p.Position.X == x && p.Position.Y == y)
 								p.Draw (sb);
-						if(Engine.LocalPlayer.Position.X ==x && Engine.LocalPlayer.Position.Y==y)
-							Engine.LocalPlayer.Draw(sb);
+						foreach (Player p in Engine.LocalPlayers)
+						if(p.Position.X ==x && p.Position.Y==y)
+							p.Draw(sb);
 					}
 				}
 		}

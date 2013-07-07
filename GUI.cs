@@ -27,7 +27,14 @@ namespace DND
 			if (Keyboard.GetState ().IsKeyDown (Keys.LeftShift)) {
 				lastKeyPress = curTime;
 				Network.SendData ("NOCL"); //noclip
+				return;
 			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.Space)) {
+				lastKeyPress = curTime;
+				Network.SendData ("SWCH"); //switch character
+				return;
+			}
+
 			if (Keyboard.GetState ().IsKeyDown (Keys.Right)) {
 				lastKeyPress = curTime;
 				Network.SendData ("MOVE1,0");

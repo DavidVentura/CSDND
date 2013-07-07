@@ -46,6 +46,11 @@ namespace DND
             Engine.Draw(gameTime);
         }
 
+		protected override void OnExiting (object sender, EventArgs args)
+		{
+			Engine.Unload();
+		}
+
 
     }
 }

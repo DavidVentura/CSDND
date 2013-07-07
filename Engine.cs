@@ -46,7 +46,10 @@ namespace DND
         public const int TileHeight = 32;
         public const int TileWidth = 32;
 
-		public static Player LocalPlayer;
+		public static int curCharIndex=0;
+		public static List<Player> LocalPlayers= new List<Player>();
+		public static Player CurPlayer;
+
 		public static List<Player> Players = new List<Player>();
 		public static bool TexturesNotReady=true;
 
@@ -96,26 +99,28 @@ namespace DND
 			if (Network.Initialize () == -1)
 				return -1;
 
-			while (LocalPlayer==null) {
+			while (LocalPlayers.Count==0) {
 				if (Network.receiver.ThreadState != System.Threading.ThreadState.Running){
 					return -1;
 				}
 				System.Threading.Thread.Sleep (100);
 			}
+			CurPlayer=LocalPlayers[curCharIndex];
 			TextureManager.Update();
 			return 0;
         }
 
-		public static void Login(Coord pos, int sprite, int id, string name, int visionRange, int size) {
+		public static void AddLocalPlayer(Coord pos, int sprite, int id, string name, int visionRange, int size) {
 			TextureManager.addSprites(sprite);
-			LocalPlayer = new Player (pos, sprite, id, name,visionRange, size);
+			LocalPlayers.Add(new Player (pos, sprite, id, name,visionRange, size));
 		}
 		public static void Update (GameTime gameTime)
 		{
 			TextureManager.Update();
 			Camera.Update(gameTime);
 			GUI.Update(gameTime);
-			LocalPlayer.Update(gameTime);
+			foreach (Player p in LocalPlayers)
+				p.Update(gameTime);
 			foreach (Player p in Players)
 				p.Update (gameTime);
 
@@ -149,16 +154,16 @@ namespace DND
 					return;
 				}
 
-			diff = newCoord - LocalPlayer.Position;
+			diff = newCoord - CurPlayer.Position;
 			if (diff.X > 0)
-				LocalPlayer.animation.SwitchDirection (Direction.Right);
+				CurPlayer.animation.SwitchDirection (Direction.Right);
 			if (diff.X < 0)
-				LocalPlayer.animation.SwitchDirection (Direction.Left);
+				CurPlayer.animation.SwitchDirection (Direction.Left);
 			if (diff.Y > 0)
-				LocalPlayer.animation.SwitchDirection (Direction.Down);
+				CurPlayer.animation.SwitchDirection (Direction.Down);
 			if (diff.Y < 0)
-				LocalPlayer.animation.SwitchDirection (Direction.Up);
-			LocalPlayer.Position = newCoord;
+				CurPlayer.animation.SwitchDirection (Direction.Up);
+			CurPlayer.Position = newCoord;
 		}
 		public static void RemovePlayer (int i)
 		{
@@ -173,7 +178,14 @@ namespace DND
 			Console.WriteLine(str);
 		}
 		public static void Unload() {
-			Network.Unload(); //TODO: call
+			Network.Unload();
+		}
+
+		public static void SwitchChar() {
+			curCharIndex++;
+			if (curCharIndex>=LocalPlayers.Count)
+				curCharIndex=0;
+			CurPlayer=LocalPlayers[curCharIndex];
 		}
 
     }

@@ -83,6 +83,7 @@ namespace DND
 			                         OffsetDestRect.Y + (size + y) * Engine.TileHeight - FrameHeight - Camera.Position.Y,
 			                         FrameWidth,FrameHeight);
 			sb.Draw (Sprite, DrawRect, SrcRect, Color.White);
+			//TODO: If (IsActive) DrawBorder
 		}
 		public void DrawName (SpriteBatch sb, string name,int NameOffsetX)
 		{
