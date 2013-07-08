@@ -5,6 +5,12 @@ gtk-interface
 	chat
 	login errors
 	dynamic maps
+	dice-roller
+		presets (custom sets with NdM + static bonif)
+	edit map
 
 camera should follow the player smoothly
-vision range SHADERS (blur/darken)
+vision range
+	SHADERS (blur/darken)
+	limited by objects (flood lighting?)
+area of spells
