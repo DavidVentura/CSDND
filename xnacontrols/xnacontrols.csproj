@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0B322042-3170-4C90-9673-3E2734F02502}</ProjectGuid>
+    <ProjectTypeGuids>{9B831FEF-F496-498F-9FE8-180DA5CB4258};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>xnacontrols</RootNamespace>
+    <AssemblyName>xnacontrols</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="OpenTK" />
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\..\..\..\..\..\usr\lib\monodevelop\AddIns\MonoDevelop.MonoGame\assemblies\Linux\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Lidgren.Network" />
+    <Reference Include="Tao.Sdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Game1.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GUIControl.cs" />
+    <Compile Include="GUIManager.cs" />
+    <Compile Include="Controls\Button.cs" />
+    <Compile Include="Controls\Chart.cs" />
+    <Compile Include="Controls\CheckBox.cs" />
+    <Compile Include="Controls\GroupBox.cs" />
+    <Compile Include="Controls\Image.cs" />
+    <Compile Include="Controls\Label.cs" />
+    <Compile Include="Controls\ListBox.cs" />
+    <Compile Include="Controls\Progress.cs" />
+    <Compile Include="Controls\RadioButton.cs" />
+    <Compile Include="Controls\TabControl.cs" />
+    <Compile Include="Controls\TabsContainer.cs" />
+    <Compile Include="Controls\TextArea.cs" />
+    <Compile Include="Controls\TextBox.cs" />
+    <Compile Include="Controls\Window.cs" />
+    <Compile Include="Controls\ExtendedControls\ColorDialog.cs" />
+    <Compile Include="Controls\ExtendedControls\FileDialog.cs" />
+    <Compile Include="Controls\ExtendedControls\MessageBox.cs" />
+    <Compile Include="Other\Extensions.cs" />
+    <Compile Include="Other\GUIList.cs" />
+    <Compile Include="Other\Themes.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icon.png" />
+    <None Include="RamGec XNA Controls.csproj.Debug.cachefile" />
+    <None Include="RamGec XNA Controls.csproj.Release.cachefile" />
+    <None Include="RamGec XNA Controls.csproj.user" />
+    <None Include="Settings.StyleCop" />
+    <None Include="StyleCop.Cache" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
