@@ -51,7 +51,6 @@
     </Reference>
     <Reference Include="OpenTK.GLControl">
       <HintPath>..\Binaries\OpenTK\Debug\OpenTK.GLControl.dll</HintPath>
-      <Package>opentk</Package>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="Mono.Posix" />
@@ -68,10 +67,6 @@
     <Compile Include="GUI.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="Animation.cs" />
-    <Compile Include="GraphicsDeviceControl.cs" />
-    <Compile Include="GraphicsDeviceService.cs" />
-    <Compile Include="ServiceContainer.cs" />
-    <Compile Include="GameControl.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="TextureManager.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -15,8 +15,8 @@ namespace DND
 		private static double curTime=0;
         public static Coord Position;
 		private const int speed = 10;
-		private static int Width,Height,curFrame;
-		private static Coord LastPosition,TargetPosition;
+		//private static int Width,Height,curFrame;
+		//private static Coord LastPosition,TargetPosition;
 
 		/// <summary>
 		/// Initialize the specified pos, w and h.
@@ -33,11 +33,11 @@ namespace DND
         public static void Initialize(Coord pos, int w, int h)
         {
             Position = pos;
-			TargetPosition=pos;
-			LastPosition=pos;
+//			TargetPosition=pos;
+//			LastPosition=pos;
 
-			Width=w;
-			Height=h;
+//			Width=w;
+//			Height=h;
         }
         public static void Update (GameTime gameTime)
 		{
