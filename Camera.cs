@@ -51,8 +51,9 @@ namespace DND
 				}
 			}*/
 
-			if (curTime - lastKeyPress < 120)
+			if (curTime - lastKeyPress < 12)
 				return;
+			/*
 			if (Engine.CurPlayer != null) {
 				if (Keyboard.GetState ().IsKeyDown (Keys.LeftControl)) {//TODO: Smooth movement
 					lastKeyPress = curTime;
@@ -62,7 +63,7 @@ namespace DND
 					TargetPosition.Y = (Engine.CurPlayer.Position.Y - (Height / 2)) * Engine.TileHeight;
 					return;
 				}
-			}
+			}*/
           	if (Keyboard.GetState ().IsKeyDown (Keys.W)) {
 				lastKeyPress = curTime;
 				Position.Y-=speed;

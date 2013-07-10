@@ -28,7 +28,7 @@ namespace DND
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
 
-			SendData("LOGIDM");//TODO: ask for name
+			SendData("LOGICOLORINGA");//TODO: ask for name
 			return 0;
 		}
 
@@ -112,6 +112,9 @@ namespace DND
 						break;
 					case "SOBJ"://id,x,y
 						Map.Modify(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]));
+						break;
+					case "DMOK": //dm rights
+						Engine.isDM=true;
 						break;
 					default:
 						Console.WriteLine(data);

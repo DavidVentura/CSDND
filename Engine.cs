@@ -59,7 +59,7 @@ namespace DND
 
 		public static List<Player> Players = new List<Player>();
 
-		public static bool isDM = true;
+		public static bool isDM = false;
 
 		public static int Initialize (IGraphicsDeviceService graphics)
 		{
