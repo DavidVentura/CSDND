@@ -8,6 +8,8 @@ namespace DND
 {
     class MapLayer
     {
+
+
         private Tile[,] tiles;
 		public LayerType Type;
 		public LayerType type {
@@ -23,7 +25,7 @@ namespace DND
                     tiles[x, y] = new Tile(tiledata[x,y]);
             
         }
-        internal Tile TileAt(int x, int y)
+		internal Tile TileAt(int x, int y)
         {
 			if (!Map.withinBounds(x,y)) return new Tile(-1);
             return tiles[x, y];
@@ -33,5 +35,9 @@ namespace DND
 			if (!Map.withinBounds(v)) return new Tile(-1);
             return tiles[v.X, v.Y];
         }
+		public void Modify (int id, int x, int y)
+		{
+			tiles[x,y]= new Tile(id);
+		}
     }
 }

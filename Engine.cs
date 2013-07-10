@@ -58,7 +58,6 @@ namespace DND
 		public static Player CurPlayer;
 
 		public static List<Player> Players = new List<Player>();
-		public static bool TexturesNotReady=true;
 
 		public static bool isDM = true;
 
@@ -124,8 +123,8 @@ namespace DND
 		public static void AddLocalPlayer(Coord pos, int sprite, int id, string name, int visionRange, int size) {
 			TextureManager.addSprites(sprite);
 			LocalPlayers.Add(new Player (pos, sprite, id, name,visionRange, size));
-			if (CurPlayer==null)
-				CurPlayer=LocalPlayers[0];
+			//if (CurPlayer==null)
+			//	CurPlayer=LocalPlayers[0];
 		}
 		public static void Update (GameTime gameTime)
 		{

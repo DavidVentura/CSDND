@@ -53,7 +53,7 @@ namespace DND
         {
             foreach(Textura t in textures)
 				if (t.id==p) return t.tex;
-
+			addTexture(p);
 			return null;
         }
 

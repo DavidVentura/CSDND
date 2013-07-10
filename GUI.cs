@@ -27,10 +27,29 @@ namespace DND
 
 			if (Keyboard.GetState ().IsKeyDown (Keys.Z)) {
 				lastKeyPress = curTime;
-				Network.SendData (String.Format("SPWN{0},{1},{2}",1,MouseCoords.X,MouseCoords.Y)); //spawn id 1.. interface
+				Network.SendData (String.Format ("SPWN{0},{1},{2}", 1, MouseCoords.X, MouseCoords.Y)); //spawn id 1.. interface
 				return;
 			}
-			if (Engine.LocalPlayers.Count==0) return; //No characters -> no movement
+			if (Keyboard.GetState ().IsKeyDown (Keys.X)) {
+				lastKeyPress = curTime;
+				Network.SendData (String.Format ("SOBJ{0},{1},{2},{3}", 2, 1, MouseCoords.X, MouseCoords.Y)); //spawn obj interface
+				//tileID,blocking,x,y
+				return;
+			}
+			if (Engine.isDM) {
+				if (Keyboard.GetState ().IsKeyDown (Keys.C)) {
+					Engine.curCharIndex = 0;
+					Engine.CurPlayer = null;
+				}
+			}
+
+			if (Keyboard.GetState ().IsKeyDown (Keys.Space)) {
+				lastKeyPress = curTime;
+				Network.SendData ("SWCH"); //switch character
+				return;
+			}
+			if (Engine.CurPlayer == null) return;
+			//No characters -> no movement
 			if (Keyboard.GetState ().IsKeyDown (Keys.LeftShift)) {
 				lastKeyPress = curTime;
 				Network.SendData ("NOCL"); //noclip
@@ -41,11 +60,7 @@ namespace DND
 				Network.SendData ("VISI"); //change visibility
 				return;
 			}
-			if (Keyboard.GetState ().IsKeyDown (Keys.Space)) {
-				lastKeyPress = curTime;
-				Network.SendData ("SWCH"); //switch character
-				return;
-			}
+
 
 			if (Keyboard.GetState ().IsKeyDown (Keys.Right)) {
 				lastKeyPress = curTime;

@@ -85,7 +85,6 @@ namespace DND
 					case "TXTR":
 						for (int j=0;j<args.Length;j++)
 							TextureManager.addTexture(Int32.Parse(args[j]));
-						Engine.TexturesNotReady=false;
 						break;
 					case "NPLR": //new player: ID,X,Y,Texture,Name,size
 						Engine.AddPlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]),Int32.Parse(args[3]),args[4],Int32.Parse(args[5]));
@@ -110,6 +109,9 @@ namespace DND
 						break;
 					case "VISI": //switch character: args: id of the new current-char
 						Engine.ChangeVisibility(Int32.Parse(args[0]));
+						break;
+					case "SOBJ"://id,x,y
+						Map.Modify(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]));
 						break;
 					default:
 						Console.WriteLine(data);

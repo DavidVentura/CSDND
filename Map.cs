@@ -93,7 +93,12 @@ namespace DND
 				ObjectLayer=mapLayer;
 				break;
 			}
-		}		
+		}
+		public static void Modify (int id, int x, int y)
+		{
+			ObjectLayer.Modify(id,x,y);
+		}
+		
 
         
 	}
