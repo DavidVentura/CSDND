@@ -72,7 +72,7 @@ namespace DND
 	        _spriteBatch = new SpriteBatch(_graphicsDevice);
 			if (LoadContent()==-1)
 				return -1;
-
+			GUI.Initialize();
 			/*
 			#if FPS30
 			double dt = (double)1000 / (double)30;
@@ -123,8 +123,6 @@ namespace DND
 		public static void AddLocalPlayer(Coord pos, int sprite, int id, string name, int visionRange, int size) {
 			TextureManager.addSprites(sprite);
 			LocalPlayers.Add(new Player (pos, sprite, id, name,visionRange, size));
-			//if (CurPlayer==null)
-			//	CurPlayer=LocalPlayers[0];
 		}
 		public static void Update (GameTime gameTime)
 		{

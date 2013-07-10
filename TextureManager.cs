@@ -36,6 +36,7 @@ namespace DND
 		{
 			c=content;
 			addTexture(999); //Mouse
+			addTexture(998); //AOE Indicator
 	//		e = c.Load<Effect>("shader1");
 			font = c.Load<SpriteFont> ("Arial"); 
 			

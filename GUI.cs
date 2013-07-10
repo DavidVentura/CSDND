@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace DND
 {
@@ -10,11 +11,17 @@ namespace DND
 		private static MouseState oldMouse;
 		private static Coord MouseCoords;
 		private static string message="";
+		private static List<Coord> tiles2 = new List<Coord>();
+		private static List<Coord> tiles = new List<Coord>();
+		private static int radius=0;
 
 		private static double lastKeyPress;
 		public static void Initialize()
 		{
-
+			tiles.Add (new Coord (0, 0));
+			tiles.Add (new Coord (0, 1));
+			tiles.Add (new Coord (1, 0));
+			tiles.Add (new Coord (1, 1));
 		}
 
 		public static void Update (GameTime gameTime)
@@ -48,6 +55,35 @@ namespace DND
 				Network.SendData ("SWCH"); //switch character
 				return;
 			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.D1)) {
+				radius=1;
+				return;
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.D2)) {
+				radius=2;
+				return;
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.D3)) {
+				radius=3;
+				return;
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.D4)) {
+				radius=4;
+				return;
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.D5)) {
+				radius=5;
+				return;
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.D6)) {
+				radius=6;
+				return;
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.D0)) {
+				radius=0;
+				return;
+			}
+
 			if (Engine.CurPlayer == null) return;
 			//No characters -> no movement
 			if (Keyboard.GetState ().IsKeyDown (Keys.LeftShift)) {
@@ -60,7 +96,6 @@ namespace DND
 				Network.SendData ("VISI"); //change visibility
 				return;
 			}
-
 
 			if (Keyboard.GetState ().IsKeyDown (Keys.Right)) {
 				lastKeyPress = curTime;
@@ -83,27 +118,65 @@ namespace DND
 				return;
 			}
 
-
 			foreach(Keys k in Keyboard.GetState().GetPressedKeys()){
 				message+=k.ToString();
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.J)) {
-
 				lastKeyPress = curTime;
 				Network.SendData("TALK"+message);
 				message="";
 			}
 		}
 
-		public static void Draw(SpriteBatch sb) {
-			if (MouseCoords.X>=0)
-				sb.Draw (TextureManager.getTexture(999), GetMouseDrawRect(),Color.White);
+		public static void Draw (SpriteBatch sb)
+		{
+			if (MouseCoords.X >= 0) {
+				if (radius > 0) {
+					GetAOETiles ();
+					foreach (Coord c in tiles2)
+						sb.Draw (TextureManager.getTexture (998), new Rectangle (c.X * Engine.TileWidth - Camera.Position.X, c.Y * Engine.TileHeight - Camera.Position.Y, 32, 32), new Color (0, 0, 0, 200));
+				} else
+					sb.Draw (TextureManager.getTexture (999), GetMouseDrawRect (), Color.White);
+			}
+		}
+		private static void GetAOETiles ()
+		{
+			tiles2.Clear ();
+			if (radius == 1) {
+				foreach (Coord c in tiles)
+					tiles2.Add(MouseCoords+c);
+				return;
+			}
+			bool invalido = false;
+			int esquinas;
+			Coord curCoord;
+			for (int x =MouseCoords.X-(radius-1); x <= MouseCoords.X+radius; x++) {
+				for (int y =MouseCoords.Y-(radius-1); y <= MouseCoords.Y+radius; y++) {
+					curCoord = new Coord (x, y);
+					invalido = false;
+					foreach (Coord c in tiles) {
+						if (Coord.Distance (c+ MouseCoords, curCoord) > radius * 1.12f) {
+							invalido = true;
+							break;
+						}
+					}
+					if (!invalido){
+						esquinas=0;
+						foreach(Coord c in tiles)
+							if (Coord.Distance(curCoord+c,MouseCoords+new Coord(1,1)) <= radius)
+								esquinas++;
+						if (esquinas>2)
+							tiles2.Add (curCoord);
+					}
+				}
+			}
 		}
 		private static Rectangle GetMouseDrawRect ()
 		{
 			return new Rectangle(MouseCoords.X*Engine.TileWidth - Camera.Position.X, MouseCoords.Y*Engine.TileHeight-Camera.Position.Y,Engine.TileWidth,Engine.TileHeight);
 		}
 		//TODO: Spells: 2x2 block A , add to the list L the tiles T that are within R distance of the furthest tile from A
+
 		/// <summary>
 		/// Gets the mouse map coordinate.
 		/// </summary>

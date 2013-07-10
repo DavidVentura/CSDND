@@ -46,12 +46,12 @@ namespace DND
 			/*if (!Position.Equals(TargetPosition)) { //Smooth camera, good for moving to the player, bad for following him
 				if (curTime - lastKeyPress >= Engine.MovementTime / 4) {
 					lastKeyPress=curTime;
-					Position += (TargetPosition - LastPosition) / 4;
+					Position += (TargetPosition - Position) / 4;
 					return;
 				}
-			}
-*/
-			if (curTime - lastKeyPress < 30)
+			}*/
+
+			if (curTime - lastKeyPress < 120)
 				return;
 			if (Engine.CurPlayer != null) {
 				if (Keyboard.GetState ().IsKeyDown (Keys.LeftControl)) {//TODO: Smooth movement
