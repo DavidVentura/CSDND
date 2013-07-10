@@ -60,6 +60,7 @@ namespace DND
 		public static List<Player> Players = new List<Player>();
 		public static bool TexturesNotReady=true;
 
+		public static bool isDM = true;
 
 		public static int Initialize (IGraphicsDeviceService graphics)
 		{
@@ -108,12 +109,14 @@ namespace DND
 			if (Network.Initialize () == -1)
 				return -1;
 
-			while (LocalPlayers.Count==0) {
+			while (LocalPlayers.Count==0 && !isDM) {
 				if (Network.receiver.ThreadState != System.Threading.ThreadState.Running)
 					return -1;				
 				System.Threading.Thread.Sleep (100);
 			}
-			CurPlayer=LocalPlayers[curCharIndex];
+			if (!isDM)
+				CurPlayer = LocalPlayers [curCharIndex];
+			
 			TextureManager.Update();
 			return 0;
         }
@@ -121,6 +124,8 @@ namespace DND
 		public static void AddLocalPlayer(Coord pos, int sprite, int id, string name, int visionRange, int size) {
 			TextureManager.addSprites(sprite);
 			LocalPlayers.Add(new Player (pos, sprite, id, name,visionRange, size));
+			if (CurPlayer==null)
+				CurPlayer=LocalPlayers[0];
 		}
 		public static void Update (GameTime gameTime)
 		{
@@ -160,6 +165,7 @@ namespace DND
 					return;
 				}
 
+			if (isDM && CurPlayer==null) return;
 			diff = newCoord - CurPlayer.Position;
 			if (diff.X > 0)
 				CurPlayer.animation.SwitchDirection (Direction.Right);
@@ -195,6 +201,7 @@ namespace DND
 		}
 		public static bool withinSight (Coord c)
 		{
+			if (isDM && CurPlayer==null) return true;
 			return (Coord.Distance(c, CurPlayer.Position) < CurPlayer.VisionRange);
 		}
 		public static void ChangeVisibility (int id)

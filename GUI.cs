@@ -24,6 +24,13 @@ namespace DND
 			double curTime = gameTime.TotalGameTime.TotalMilliseconds;
 			if (curTime - lastKeyPress < Engine.MovementTime + 20)
 				return;
+
+			if (Keyboard.GetState ().IsKeyDown (Keys.Z)) {
+				lastKeyPress = curTime;
+				Network.SendData (String.Format("SPWN{0},{1},{2}",1,MouseCoords.X,MouseCoords.Y)); //spawn id 1.. interface
+				return;
+			}
+			if (Engine.LocalPlayers.Count==0) return; //No characters -> no movement
 			if (Keyboard.GetState ().IsKeyDown (Keys.LeftShift)) {
 				lastKeyPress = curTime;
 				Network.SendData ("NOCL"); //noclip

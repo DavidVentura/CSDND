@@ -43,23 +43,25 @@ namespace DND
 		{
 				
 			curTime = gameTime.TotalGameTime.TotalMilliseconds;
-			if (!Position.Equals(TargetPosition)) { //Smooth camera, good for moving to the player, bad for following him
+			/*if (!Position.Equals(TargetPosition)) { //Smooth camera, good for moving to the player, bad for following him
 				if (curTime - lastKeyPress >= Engine.MovementTime / 4) {
 					lastKeyPress=curTime;
 					Position += (TargetPosition - LastPosition) / 4;
 					return;
 				}
 			}
-
-			if (curTime - lastKeyPress < 120)
+*/
+			if (curTime - lastKeyPress < 30)
 				return;
-			if (Keyboard.GetState ().IsKeyDown (Keys.LeftControl)) {//TODO: Smooth movement
-				lastKeyPress = curTime;
-				LastPosition=Position;
-				curFrame=0;
-				TargetPosition.X = (Engine.CurPlayer.Position.X- (Width/2))*Engine.TileWidth;
-				TargetPosition.Y = (Engine.CurPlayer.Position.Y-(Height/2))*Engine.TileHeight;
-				return;
+			if (Engine.CurPlayer != null) {
+				if (Keyboard.GetState ().IsKeyDown (Keys.LeftControl)) {//TODO: Smooth movement
+					lastKeyPress = curTime;
+					LastPosition = Position;
+					curFrame = 0;
+					TargetPosition.X = (Engine.CurPlayer.Position.X - (Width / 2)) * Engine.TileWidth;
+					TargetPosition.Y = (Engine.CurPlayer.Position.Y - (Height / 2)) * Engine.TileHeight;
+					return;
+				}
 			}
           	if (Keyboard.GetState ().IsKeyDown (Keys.W)) {
 				lastKeyPress = curTime;

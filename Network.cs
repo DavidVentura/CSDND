@@ -18,8 +18,7 @@ namespace DND
 
 		public static int Initialize ()
 		{
-			try {
-				
+			try {				
 				client.Connect (serverEndPoint);
 			} catch (Exception e) {
 				Console.WriteLine(e.Message);
@@ -29,7 +28,7 @@ namespace DND
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
 
-			SendData("LOGIPlayer2");//TODO: ask for name
+			SendData("LOGIDM");//TODO: ask for name
 			return 0;
 		}
 
@@ -50,8 +49,8 @@ namespace DND
 				if (!client.Connected)
 					return;
 				try {
-				bytes = new byte[client.ReceiveBufferSize];
-				clientStream.Read (bytes, 0, client.ReceiveBufferSize);
+					bytes = new byte[client.ReceiveBufferSize];
+					clientStream.Read (bytes, 0, client.ReceiveBufferSize);
 				} catch (Exception e) {
 					Console.WriteLine (e.Message);
 					clientStream.Close();

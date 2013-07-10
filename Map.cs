@@ -33,13 +33,22 @@ namespace DND
 
 		static void DrawLayer (SpriteBatch sb, MapLayer layer)
 		{
-			int minX=Engine.CurPlayer.Position.X - Engine.CurPlayer.VisionRange;
-			int minY=Engine.CurPlayer.Position.Y - Engine.CurPlayer.VisionRange;
-			int maxX=Engine.CurPlayer.VisionRange+Engine.CurPlayer.Position.X;
-			int maxY=Engine.CurPlayer.VisionRange+Engine.CurPlayer.Position.Y;
+			int minX, minY, maxX, maxY;
+			if (!Engine.isDM || Engine.CurPlayer!=null) {
+				minX = Engine.CurPlayer.Position.X - Engine.CurPlayer.VisionRange;
+				minY = Engine.CurPlayer.Position.Y - Engine.CurPlayer.VisionRange;
+				maxX = Engine.CurPlayer.VisionRange + Engine.CurPlayer.Position.X;
+				maxY = Engine.CurPlayer.VisionRange + Engine.CurPlayer.Position.Y;
+			} else {
+				minX=0;
+				minY=0;
+				maxX=Map.width;
+				maxY=Map.height;
+			}
 			for (y = minY; y < maxY; y++)
 				for (x = minX; x < maxX; x++) {
-					if (Coord.Distance(new Coord(x,y), Engine.CurPlayer.Position) >= Engine.CurPlayer.VisionRange) continue;
+					if ((!Engine.isDM||Engine.CurPlayer!=null)
+						&& (Coord.Distance(new Coord(x,y), Engine.CurPlayer.Position) >= Engine.CurPlayer.VisionRange)) continue;
 					text_tile = layer.TileAt (x, y).TextureNumber;
 					if (text_tile > 0) { //not "empty"
 						auxtext = TextureManager.getTexture (text_tile);
