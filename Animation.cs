@@ -17,6 +17,9 @@ namespace DND
 		int CurFrame=0;
 		Direction CurDir=Direction.Down;
 		public Rectangle SrcRect;
+		private Color textureColor=Color.White;
+		private Color nameColor=Color.White;
+
 		private Texture2D text;
 		public Texture2D Sprite{
 			get { return text; }
@@ -73,25 +76,34 @@ namespace DND
 				}
 				updateSrcRect ();
 			}
+
 		}
 
 
 
-		public void Draw (SpriteBatch sb, int x, int y, int size)
+		public void Draw (SpriteBatch sb, int x, int y, int size, bool visible)
 		{
+			if (visible)
+				textureColor=Color.White;
+			else
+				textureColor=new Color(255,255,255,150);
 			DrawRect = new Rectangle(OffsetDestRect.X + x * Engine.TileWidth - Camera.Position.X,
 			                         OffsetDestRect.Y + (size + y) * Engine.TileHeight - FrameHeight - Camera.Position.Y,
 			                         FrameWidth,FrameHeight);
-			sb.Draw (Sprite, DrawRect, SrcRect, Color.White);
+			sb.Draw (Sprite, DrawRect, SrcRect, textureColor);
 			//TODO: If (IsActive) DrawBorder
 		}
-		public void DrawName (SpriteBatch sb, string name,int NameOffsetX)
+		public void DrawName (SpriteBatch sb, string name,int NameOffsetX,bool visible)
 		{
+			if (visible)
+				nameColor=Color.White;
+			else
+				nameColor=Color.Cyan;
 			sb.DrawString (TextureManager.Font, name, new Vector2(NameOffsetX+DrawRect.X +1,DrawRect.Y+FrameHeight), Color.Black);
 			sb.DrawString (TextureManager.Font, name, new Vector2(NameOffsetX+DrawRect.X-1,DrawRect.Y+FrameHeight), Color.Black);
 			sb.DrawString (TextureManager.Font, name, new Vector2(NameOffsetX+DrawRect.X,DrawRect.Y+1+FrameHeight), Color.Black);
 			sb.DrawString (TextureManager.Font, name, new Vector2(NameOffsetX+DrawRect.X,DrawRect.Y-1+FrameHeight), Color.Black);
-			sb.DrawString (TextureManager.Font, name, new Vector2(NameOffsetX+DrawRect.X,DrawRect.Y+FrameHeight), Color.White);
+			sb.DrawString (TextureManager.Font, name, new Vector2(NameOffsetX+DrawRect.X,DrawRect.Y+FrameHeight), nameColor);
 		}
 
 	}

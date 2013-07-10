@@ -1,6 +1,5 @@
 gtk-interface 
-	spells
-		visible target area
+	spell lists
 	initiative
 	chat
 	login errors
@@ -13,4 +12,13 @@ camera should follow the player smoothly
 vision range
 	SHADERS (blur/darken)
 	limited by objects (flood lighting?)
+
 area of spells
+	spells in a cone
+DM Mode
+	spawn mobs as his players
+	edit map
+
+GameState
+	create char
+	type name

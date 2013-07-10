@@ -53,8 +53,9 @@ namespace DND
 					}
 					if (layer.Type==LayerType.Object){
 						foreach (Player p in Engine.Players)
-							if (p.Position.X == x && p.Position.Y == y)
-								p.Draw (sb);
+							if (p.visible)
+								if (p.Position.X == x && p.Position.Y == y)
+									p.Draw (sb);
 						foreach (Player p in Engine.LocalPlayers)
 						if(p.Position.X ==x && p.Position.Y==y)
 							p.Draw(sb);

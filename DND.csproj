@@ -51,6 +51,7 @@
     </Reference>
     <Reference Include="OpenTK.GLControl">
       <HintPath>..\Binaries\OpenTK\Debug\OpenTK.GLControl.dll</HintPath>
+      <Package>opentk</Package>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="Mono.Posix" />
@@ -81,10 +82,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Content\effect1.fx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 </Project>

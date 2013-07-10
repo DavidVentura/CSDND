@@ -15,6 +15,7 @@ namespace DND
 		public int VisionRange;
 		private string name;
 		public Animation animation=new Animation();
+		public bool visible=true;
 		double lastAnimation=0;
 
 		public Player (Coord pos, int texture, int id, string Name, int visionRange, int size)
@@ -56,9 +57,9 @@ namespace DND
 		public void Draw (SpriteBatch sb)
 		{
 			if (animation.Sprite != null)
-				animation.Draw (sb, Position.X, Position.Y,size);
+				animation.Draw (sb, Position.X, Position.Y,size,visible);
 			if (TextureManager.Font!=null) 
-				animation.DrawName(sb,name,NameOffsetX);
+				animation.DrawName(sb,name,NameOffsetX,visible);
 
 		}
 

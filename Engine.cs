@@ -197,6 +197,20 @@ namespace DND
 		{
 			return (Coord.Distance(c, CurPlayer.Position) < CurPlayer.VisionRange);
 		}
+		public static void ChangeVisibility (int id)
+		{
+			foreach (Player p in Players)
+				if (p.ID == id) {
+					p.visible = !p.visible;
+					return;
+				}
+			foreach (Player p in LocalPlayers)
+				if (p.ID == id) {
+					p.visible = !p.visible;
+					return;
+				}
+		}
+
 
 
     }

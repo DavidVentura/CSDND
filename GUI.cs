@@ -29,6 +29,11 @@ namespace DND
 				Network.SendData ("NOCL"); //noclip
 				return;
 			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.LeftAlt)) {
+				lastKeyPress = curTime;
+				Network.SendData ("VISI"); //change visibility
+				return;
+			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.Space)) {
 				lastKeyPress = curTime;
 				Network.SendData ("SWCH"); //switch character

@@ -29,7 +29,7 @@ namespace DND
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
 
-			SendData("LOGIPlayer1");//TODO: ask for name
+			SendData("LOGIPlayer2");//TODO: ask for name
 			return 0;
 		}
 
@@ -108,6 +108,9 @@ namespace DND
 						break;
 					case "SWCH": //switch character: args: id of the new current-char
 						Engine.SwitchChar();
+						break;
+					case "VISI": //switch character: args: id of the new current-char
+						Engine.ChangeVisibility(Int32.Parse(args[0]));
 						break;
 					default:
 						Console.WriteLine(data);
