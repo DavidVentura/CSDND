@@ -62,10 +62,6 @@
     <Compile Include="GUI.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="Animation.cs" />
-<<<<<<< Upstream, based on origin/master
-=======
-    <Compile Include="ServiceContainer.cs" />
->>>>>>> ac0be17 Added proyect RamGec XNA Controls (xnacontrolls) for GUI. Added themes and example form.
     <Compile Include="Engine.cs" />
     <Compile Include="TextureManager.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -74,16 +70,38 @@
   <ItemGroup>
     <None Include="Icon.png" />
     <None Include="Content\Arial.xnb" />
-    <None Include="Content\Themes\Default\font.xnb" />
-    <None Include="Content\Themes\Default\skin.xnb" />
-    <None Include="Content\Themes\Default\theme.xml" />
-    <None Include="Content\Themes\DefaultGreen\font.xnb" />
-    <None Include="Content\Themes\DefaultGreen\skin.xnb" />
-    <None Include="Content\Themes\DefaultGreen\theme.xml" />
-    <None Include="Content\demo_window.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />
     <Folder Include="Content\Themes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="xnacontrols\xnacontrols.csproj">
+      <Project>{0B322042-3170-4C90-9673-3E2734F02502}</Project>
+      <Name>xnacontrols</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\demo_window.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\font.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\skin.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\theme.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\DefaultGreen\font.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\DefaultGreen\skin.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\DefaultGreen\theme.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>
