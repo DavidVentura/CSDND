@@ -64,7 +64,7 @@ namespace DND
 					return;
 				}
 			}*/
-          	if (Keyboard.GetState ().IsKeyDown (Keys.W)) {
+          	if (Keyboard.GetState ().IsKeyDown (Keys.Q)) {
 				lastKeyPress = curTime;
 				Position.Y-=speed;
 			}

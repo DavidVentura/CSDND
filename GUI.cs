@@ -10,11 +10,10 @@ namespace DND
 	{
 		private static MouseState oldMouse;
 		private static Coord MouseCoords;
-		private static string message="";
 		private static List<Coord> tiles2 = new List<Coord>();
 		private static List<Coord> tiles = new List<Coord>();
 		private static int radius=0;
-
+		private static ButtonState lastRButtonState = ButtonState.Released;
 		private static double lastKeyPress;
 		public static void Initialize()
 		{
@@ -26,6 +25,8 @@ namespace DND
 
 		public static void Update (GameTime gameTime)
 		{
+
+
 			oldMouse = Mouse.GetState ();
 			MouseCoords = GetMouseMapCoord (oldMouse.X + Camera.Position.X, oldMouse.Y + Camera.Position.Y);
 			double curTime = gameTime.TotalGameTime.TotalMilliseconds;
@@ -43,12 +44,31 @@ namespace DND
 				//tileID,blocking,x,y
 				return;
 			}
-			if (Engine.isDM) {
+
+			//TODO: interface
+			//if (Engine.isDM) {
 				if (Keyboard.GetState ().IsKeyDown (Keys.C)) {
+					lastKeyPress = curTime;
 					Engine.curCharIndex = 0;
 					Engine.CurPlayer = null;
 				}
-			}
+				if (Keyboard.GetState ().IsKeyDown (Keys.I)) {
+					lastKeyPress = curTime;
+					Network.SendData ("INIT");
+				}
+				if (Keyboard.GetState ().IsKeyDown (Keys.R)) {
+					lastKeyPress = curTime;
+					Network.SendData ("REFL");
+				}
+				if (Keyboard.GetState ().IsKeyDown (Keys.F)) {
+					lastKeyPress = curTime;
+					Network.SendData ("FORT");
+				}
+				if (Keyboard.GetState ().IsKeyDown (Keys.W)) {
+					lastKeyPress = curTime;
+					Network.SendData ("WILL");
+				}
+		//	}
 
 			if (Keyboard.GetState ().IsKeyDown (Keys.Space)) {
 				lastKeyPress = curTime;
@@ -117,15 +137,23 @@ namespace DND
 				Network.SendData ("MOVE0,1");
 				return;
 			}
-
-			foreach(Keys k in Keyboard.GetState().GetPressedKeys()){
-				message+=k.ToString();
+			if (Keyboard.GetState ().IsKeyDown (Keys.Down)) {
+				lastKeyPress = curTime;
+				Network.SendData ("MOVE0,1");
+				return;
 			}
+			if (Mouse.GetState ().RightButton == ButtonState.Released && lastRButtonState == ButtonState.Pressed) {
+				foreach (Player p in Engine.LocalPlayers)
+					if (p.Position.Equals(MouseCoords)) {
+					//TODO: switch to player
+					}
+			}
+			lastRButtonState = Mouse.GetState ().RightButton;
+			/*//TODO Interface
 			if (Keyboard.GetState ().IsKeyDown (Keys.J)) {
 				lastKeyPress = curTime;
-				Network.SendData("TALK"+message);
-				message="";
-			}
+				Network.SendData("TALK");
+			}*/
 		}
 
 		public static void Draw (SpriteBatch sb)

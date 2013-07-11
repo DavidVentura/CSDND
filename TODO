@@ -1,12 +1,12 @@
 gtk-interface 
 	spell lists
-	initiative
+	dm
+		initiative-saves button
+		edit maps
 	chat
 	login errors
-	dynamic maps
 	dice-roller
 		presets (custom sets with NdM + static bonif)
-	edit map
 
 camera should follow the player smoothly
 vision range
@@ -15,8 +15,6 @@ vision range
 
 area of spells
 	spells in a cone
-DM Mode
-	edit map
 
 GameState
 	create char
