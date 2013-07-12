@@ -2,6 +2,7 @@ using System;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
+using System.Xml;
 using System.Threading;
 using Microsoft.Xna.Framework;
 
@@ -10,16 +11,32 @@ namespace DND
 	public static class Network
 	{
 		static TcpClient client = new TcpClient();
-		static IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3000);
 		static NetworkStream clientStream;
 		static ASCIIEncoding encoder = new ASCIIEncoding();
 		public static Thread receiver;
 		private static byte[] buffer;
 
 		public static int Initialize ()
-		{
-			try {				
-				client.Connect (serverEndPoint);
+		{	
+
+			string ip="", player="";
+			using (XmlReader reader = XmlReader.Create("Config.xml")) {
+				reader.MoveToContent ();
+				while (reader.Read()) {
+					if (reader.NodeType == XmlNodeType.Element) {
+						if (reader.Name == "IP") {
+							ip = reader.ReadElementContentAsString();
+						}
+					}
+					if (reader.NodeType == XmlNodeType.Element) {
+						if (reader.Name == "PLAYER") {
+							player= reader.ReadElementContentAsString();
+						}
+					}
+				}
+			}
+			try {
+				client.Connect (new IPEndPoint(IPAddress.Parse(ip), 30000));
 			} catch (Exception e) {
 				Console.WriteLine(e.Message);
 				return -1;
@@ -28,7 +45,7 @@ namespace DND
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
 
-			SendData("LOGIDM");//TODO: ask for name
+			SendData("LOGI"+player);
 			return 0;
 		}
 
