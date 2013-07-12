@@ -51,7 +51,7 @@ namespace DND
 				}
 			}*/
 
-			if (curTime - lastKeyPress < 12)
+			if (curTime - lastKeyPress < 12 || GUI.Typing)
 				return;
 			/*
 			if (Engine.CurPlayer != null) {
@@ -64,7 +64,7 @@ namespace DND
 					return;
 				}
 			}*/
-          	if (Keyboard.GetState ().IsKeyDown (Keys.Q)) {
+          	if (Keyboard.GetState ().IsKeyDown (Keys.W)) {
 				lastKeyPress = curTime;
 				Position.Y-=speed;
 			}

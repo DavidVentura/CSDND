@@ -18,11 +18,14 @@ namespace DND
 		private static double lastKeyPress;
 
 		private static Window ChatWindow = new Window (new Rectangle (400, 0, 220, 410));
-		private static TextArea ChatText = new TextArea (new Rectangle (10, 22, 200, 378));
+		private static TextArea ChatText = new TextArea (new Rectangle (10, 22, 200, 358));
+		private static TextBox ChatTextSend = new TextBox (new Rectangle (10, 382, 200, 22));
 
-		private static Window MainWindow = new Window (new Rectangle (650, 0, 150, 400));
+		private static Window MainWindow = new Window (new Rectangle (640, 0, 160, 400));
 		private static TabsContainer TabContainer = new TabsContainer (new Rectangle (5, 25, 150, 350));
 		public static GUIManager guiManager;
+
+		public static bool Typing = false;
 
 		public static void Initialize()
 		{
@@ -36,7 +39,8 @@ namespace DND
 			MainWindow.TitleColor = Color.Black;
 
 			ChatWindow.Controls.Add (ChatText);
-
+			ChatTextSend.OnSubmit+= (GUIControl sender) => { Talk(); } ;
+			ChatWindow.Controls.Add (ChatTextSend);
 			TabControl tctrl = new TabControl ();
 
 			Button b = new Button (new Rectangle (25, 10, 100, 20), "Toggle chat");
@@ -84,24 +88,36 @@ namespace DND
 		private static void DMMode() {
 			Engine.curCharIndex = 0;
 			Engine.CurPlayer = null;
+			Network.SendData ("DMMD"); //dm mode
 		}
+
+		private static void Talk() {
+			Network.SendData ("TALK" + ChatTextSend.Text+"\n");
+			ChatTextSend.Text = "";
+			ChatTextSend.Focused = false;
+		}
+
 		public static void Update (GameTime gameTime)
 		{
 			if (!ChatWindow.IsMouseOver){
 				ChatWindow.Transparency = 0.1F;
 				ChatText.Transparency = 0.1F;
+				ChatTextSend.Transparency = 0.1F;
 			}
 			else
 			{
 				ChatWindow.Transparency = 0.9F;
 				ChatText.Transparency = 0.9F;
+				ChatTextSend.Transparency = 0.9F;
 			}
+
+			Typing = ChatTextSend.Focused;
 
 			guiManager.Update (gameTime);
 			oldMouse = Mouse.GetState ();
 			MouseCoords = GetMouseMapCoord (oldMouse.X + Camera.Position.X, oldMouse.Y + Camera.Position.Y);
 			double curTime = gameTime.TotalGameTime.TotalMilliseconds;
-			if (curTime - lastKeyPress < Engine.MovementTime + 20)
+			if (curTime - lastKeyPress < Engine.MovementTime + 20 || Typing)
 				return;
 
 			if (Keyboard.GetState ().IsKeyDown (Keys.Z)) {
@@ -116,7 +132,9 @@ namespace DND
 				return;
 			}
 
+
 			if (Keyboard.GetState ().IsKeyDown (Keys.Space)) {
+
 				lastKeyPress = curTime;
 				Network.SendData ("SWCH"); //switch character
 				return;
@@ -193,13 +211,15 @@ namespace DND
 		public static void Draw (SpriteBatch sb)
 		{
 			guiManager.Draw (sb);
-			if (MouseCoords.X >= 0) {
-				if (radius > 0) {
-					GetAOETiles ();
-					foreach (Coord c in tiles2)
-						sb.Draw (TextureManager.getTexture (998), new Rectangle (c.X * Engine.TileWidth - Camera.Position.X, c.Y * Engine.TileHeight - Camera.Position.Y, 32, 32), new Color (0, 0, 0, 200));
-				} else
-					sb.Draw (TextureManager.getTexture (999), GetMouseDrawRect (), Color.White);
+			if (!ChatWindow.IsMouseOver && !MainWindow.IsMouseOver) {
+				if (MouseCoords.X >= 0 && MouseCoords.Y >= 0) {
+					if (radius > 0) {
+						GetAOETiles ();
+						foreach (Coord c in tiles2)
+							sb.Draw (TextureManager.getTexture (998), new Rectangle (c.X * Engine.TileWidth - Camera.Position.X, c.Y * Engine.TileHeight - Camera.Position.Y, 32, 32), new Color (0, 0, 0, 200));
+					} else
+						sb.Draw (TextureManager.getTexture (999), GetMouseDrawRect (), Color.White);
+				}
 			}
 		}
 		private static void GetAOETiles ()
@@ -238,7 +258,6 @@ namespace DND
 		{
 			return new Rectangle(MouseCoords.X*Engine.TileWidth - Camera.Position.X, MouseCoords.Y*Engine.TileHeight-Camera.Position.Y,Engine.TileWidth,Engine.TileHeight);
 		}
-		//TODO: Spells: 2x2 block A , add to the list L the tiles T that are within R distance of the furthest tile from A
 
 		/// <summary>
 		/// Gets the mouse map coordinate.

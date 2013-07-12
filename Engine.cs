@@ -186,6 +186,8 @@ namespace DND
 		}
 
 		public static void SwitchChar() {
+			if (LocalPlayers.Count == 0)
+				return;
 			curCharIndex++;
 			if (curCharIndex>=LocalPlayers.Count)
 				curCharIndex=0;

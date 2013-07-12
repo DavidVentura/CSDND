@@ -30,7 +30,6 @@ namespace xnacontrols
         /// </summary>
 		protected override void Initialize ()
 		{
-			// TODO: Add your initialization logic here
 			base.Initialize ();
 				
 		}
@@ -40,10 +39,7 @@ namespace xnacontrols
         /// </summary>
 		protected override void LoadContent ()
 		{
-			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch (GraphicsDevice);
-
-			//TODO: use this.Content to load your game content here 
 		}
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -52,11 +48,6 @@ namespace xnacontrols
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update (GameTime gameTime)
 		{
-			// For Mobile devices, this logic will close the Game when the Back button is pressed
-			if (GamePad.GetState (PlayerIndex.One).Buttons.Back == ButtonState.Pressed) {
-				Exit ();
-			}
-			// TODO: Add your update logic here			
 			base.Update (gameTime);
 		}
         /// <summary>
@@ -65,10 +56,7 @@ namespace xnacontrols
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw (GameTime gameTime)
 		{
-			graphics.GraphicsDevice.Clear (Color.CornflowerBlue);
-		
-			//TODO: Add your drawing code here
-            
+			graphics.GraphicsDevice.Clear (Color.CornflowerBlue);            
 			base.Draw (gameTime);
 		}
 	}
