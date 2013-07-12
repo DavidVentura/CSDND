@@ -181,10 +181,6 @@ namespace DND
 					return;
 				}
 		}
-		public static void AddText (string str)
-		{
-			Console.WriteLine(str);//TODO: add to interface
-		}
 		public static void Unload() {
 			Network.Unload();
 		}

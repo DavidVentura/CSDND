@@ -28,7 +28,7 @@ namespace DND
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
 
-			SendData("LOGICOLORINGA");//TODO: ask for name
+			SendData("LOGIDM");//TODO: ask for name
 			return 0;
 		}
 
@@ -95,8 +95,11 @@ namespace DND
 					case "RPLR": //remove Player: id
 						Engine.RemovePlayer(Int32.Parse(args[0]));
 						break;
-					case "TALK": //gets message
-						Engine.AddText(args[0]+"> " + args[1]);
+					case "TALK": //player talks
+						GUI.AddText(args[0]+"> " + args[1]);
+						break;
+					case "MESS": //gets message
+						GUI.AddText(args[0]);
 						break;
 					case "LOGI"://log in: x,y,texture,id,name,vision range(tiles)
 						Engine.AddLocalPlayer (new Coord (Int32.Parse (args [0]), Int32.Parse (args [1])), Int32.Parse (args [2]), Int32.Parse (args [3]), args [4],Int32.Parse (args [5]),Int32.Parse (args [6]));
@@ -115,6 +118,7 @@ namespace DND
 						break;
 					case "DMOK": //dm rights
 						Engine.isDM=true;
+						GUI.AddDMGUI();
 						break;
 					default:
 						Console.WriteLine(data);

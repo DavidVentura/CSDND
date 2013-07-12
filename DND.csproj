@@ -38,6 +38,12 @@
     <Reference Include="MonoGame.Framework">
       <HintPath>..\..\..\..\..\usr\lib\monodevelop\AddIns\MonoDevelop.MonoGame\assemblies\Linux\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
@@ -52,9 +58,7 @@
     <Compile Include="Network.cs" />
     <Compile Include="Animation.cs" />
     <Compile Include="Engine.cs" />
-    <Compile Include="TextureManager.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    <Compile Include="TextureManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

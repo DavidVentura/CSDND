@@ -13,14 +13,13 @@ namespace DND
     /// </summary>
 	/// 
 
-
 	public class Game1 : Game
     {
 		private GraphicsDeviceManager _graphics;
 		public Game1 ()
 	    {
         	_graphics = new GraphicsDeviceManager(this);
-
+			GUI.guiManager = new RamGecXNAControls.GUIManager (this);
     	}
 
         protected override void Initialize ()
@@ -47,6 +46,7 @@ namespace DND
 		protected override void OnExiting (object sender, EventArgs args)
 		{
 			Engine.Unload();
+			Environment.Exit (0);
 		}
 
 

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using RamGecXNAControls;
 
 namespace DND
 {
@@ -15,18 +16,88 @@ namespace DND
 		private static int radius=0;
 		private static ButtonState lastRButtonState = ButtonState.Released;
 		private static double lastKeyPress;
+
+		private static Window ChatWindow = new Window (new Rectangle (400, 0, 220, 410));
+		private static TextArea ChatText = new TextArea (new Rectangle (10, 22, 200, 378));
+
+		private static Window MainWindow = new Window (new Rectangle (650, 0, 150, 400));
+		private static TabsContainer TabContainer = new TabsContainer (new Rectangle (5, 25, 150, 350));
+		public static GUIManager guiManager;
+
 		public static void Initialize()
 		{
 			tiles.Add (new Coord (0, 0));
 			tiles.Add (new Coord (0, 1));
 			tiles.Add (new Coord (1, 0));
 			tiles.Add (new Coord (1, 1));
+
+			MainWindow.Movable = true;
+			MainWindow.Title = "Titulo";
+			MainWindow.TitleColor = Color.Black;
+
+			ChatWindow.Controls.Add (ChatText);
+
+			TabControl tctrl = new TabControl ();
+
+			Button b = new Button (new Rectangle (25, 10, 100, 20), "Toggle chat");
+			b.OnClick += (GUIControl sender) => { ChatWindow.Visible=!ChatWindow.Visible; };
+			tctrl.Controls.Add (b);
+			b = new Button (new Rectangle (25, 35, 100, 20), "Toggle Visibility");
+			b.OnClick += (GUIControl sender) => { if (Engine.CurPlayer!=null) Network.SendData ("VISI"); };
+			tctrl.Controls.Add (b);
+			b = new Button (new Rectangle (25, 60, 100, 20), "Toggle collision");
+			b.OnClick += (GUIControl sender) => { if (Engine.CurPlayer!=null) Network.SendData ("NOCL"); };
+			tctrl.Controls.Add (b);
+
+
+			tctrl.Text = "Settings";
+			TabContainer.Controls.Add (tctrl);
+
+			MainWindow.Controls.Add (TabContainer);
+			guiManager.Controls.Add (MainWindow);
+			guiManager.Controls.Add (ChatWindow);
 		}
 
+		public static void AddDMGUI() {
+			TabControl tctrl = new TabControl ();
+			tctrl.Text = "DM";
+
+			Button b = new Button (new Rectangle (25, 10, 100, 20), "Initiative");
+			b.OnClick += (GUIControl sender) => { Network.SendData ("INIT"); };
+			tctrl.Controls.Add (b);
+			b = new Button (new Rectangle (25, 35, 100, 20), "Reflexes");
+			b.OnClick += (GUIControl sender) => { Network.SendData ("REFL"); };
+			tctrl.Controls.Add (b);
+			b = new Button (new Rectangle (25, 60, 100, 20), "Fortitude");
+			b.OnClick += (GUIControl sender) => { Network.SendData ("FORT"); };
+			tctrl.Controls.Add (b);
+			b = new Button (new Rectangle (25, 85, 100, 20), "Will");
+			b.OnClick += (GUIControl sender) => { Network.SendData ("WILL"); };
+			tctrl.Controls.Add (b);
+			b = new Button (new Rectangle (25, 110, 100, 20), "DM mode");
+			b.OnClick += (GUIControl sender) => { DMMode(); };
+			tctrl.Controls.Add (b);
+
+			TabContainer.Controls.Add (tctrl);
+		}
+
+		private static void DMMode() {
+			Engine.curCharIndex = 0;
+			Engine.CurPlayer = null;
+		}
 		public static void Update (GameTime gameTime)
 		{
+			if (!ChatWindow.IsMouseOver){
+				ChatWindow.Transparency = 0.1F;
+				ChatText.Transparency = 0.1F;
+			}
+			else
+			{
+				ChatWindow.Transparency = 0.9F;
+				ChatText.Transparency = 0.9F;
+			}
 
-
+			guiManager.Update (gameTime);
 			oldMouse = Mouse.GetState ();
 			MouseCoords = GetMouseMapCoord (oldMouse.X + Camera.Position.X, oldMouse.Y + Camera.Position.Y);
 			double curTime = gameTime.TotalGameTime.TotalMilliseconds;
@@ -44,31 +115,6 @@ namespace DND
 				//tileID,blocking,x,y
 				return;
 			}
-
-			//TODO: interface
-			//if (Engine.isDM) {
-				if (Keyboard.GetState ().IsKeyDown (Keys.C)) {
-					lastKeyPress = curTime;
-					Engine.curCharIndex = 0;
-					Engine.CurPlayer = null;
-				}
-				if (Keyboard.GetState ().IsKeyDown (Keys.I)) {
-					lastKeyPress = curTime;
-					Network.SendData ("INIT");
-				}
-				if (Keyboard.GetState ().IsKeyDown (Keys.R)) {
-					lastKeyPress = curTime;
-					Network.SendData ("REFL");
-				}
-				if (Keyboard.GetState ().IsKeyDown (Keys.F)) {
-					lastKeyPress = curTime;
-					Network.SendData ("FORT");
-				}
-				if (Keyboard.GetState ().IsKeyDown (Keys.W)) {
-					lastKeyPress = curTime;
-					Network.SendData ("WILL");
-				}
-		//	}
 
 			if (Keyboard.GetState ().IsKeyDown (Keys.Space)) {
 				lastKeyPress = curTime;
@@ -106,16 +152,6 @@ namespace DND
 
 			if (Engine.CurPlayer == null) return;
 			//No characters -> no movement
-			if (Keyboard.GetState ().IsKeyDown (Keys.LeftShift)) {
-				lastKeyPress = curTime;
-				Network.SendData ("NOCL"); //noclip
-				return;
-			}
-			if (Keyboard.GetState ().IsKeyDown (Keys.LeftAlt)) {
-				lastKeyPress = curTime;
-				Network.SendData ("VISI"); //change visibility
-				return;
-			}
 
 			if (Keyboard.GetState ().IsKeyDown (Keys.Right)) {
 				lastKeyPress = curTime;
@@ -149,15 +185,14 @@ namespace DND
 					}
 			}
 			lastRButtonState = Mouse.GetState ().RightButton;
-			/*//TODO Interface
-			if (Keyboard.GetState ().IsKeyDown (Keys.J)) {
-				lastKeyPress = curTime;
-				Network.SendData("TALK");
-			}*/
 		}
 
+		public static void AddText(string s) {
+			ChatText.Text += s;
+		}
 		public static void Draw (SpriteBatch sb)
 		{
+			guiManager.Draw (sb);
 			if (MouseCoords.X >= 0) {
 				if (radius > 0) {
 					GetAOETiles ();
