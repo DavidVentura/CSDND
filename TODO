@@ -3,7 +3,6 @@ gtk-interface
 	dm
 		edit maps
 	chat
-	login errors
 	dice-roller
 		presets (custom sets with NdM + static bonif)
 
@@ -17,4 +16,3 @@ area of spells
 
 GameState
 	create char
-	type name
