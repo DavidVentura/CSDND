@@ -35,24 +35,34 @@ namespace DND
 			c=content;
 			addTexture(999); //Mouse
 			addTexture(998); //AOE Indicator
-			font = c.Load<SpriteFont> ("Arial"); 
+			font = c.Load<SpriteFont> ("Arial");
+			LoadTextures ();
 		}
 
-		public static Texture2D getSprites(int p)
-        {
-            foreach(Textura t in sprites)
-				if (t.id==p) return t.tex;
-
+		public static Texture2D getSprites (int p)
+		{
+			foreach (Textura t in sprites)
+				if (t.id == p) {
+					if (t.tex == null)
+						break;
+					return t.tex;
+				}
+			addSprites (p);
+			LoadSprites ();
 			return null;
-        }
+		}
 
-		public static Texture2D getTexture(int p)
-        {
-            foreach(Textura t in textures)
-				if (t.id==p) return t.tex;
-			addTexture(p);
+		public static Texture2D getTexture (int p)
+		{
+			foreach (Textura t in textures)
+				if (t.id == p) {
+					if (t.tex==null) break;
+					return t.tex;
+				}
+			addTexture (p);
+			LoadTextures ();
 			return null;
-        }
+		}
 
 		public static void addTexture (int id) 
 		{
@@ -96,8 +106,7 @@ namespace DND
 			}
 		}
 		public static void Update() {
-			LoadTextures ();
-			LoadSprites ();
+
 		}
 	}
 }
