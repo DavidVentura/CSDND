@@ -57,6 +57,9 @@
     <Compile Include="Animation.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="TextureManager.cs" />
+    <Compile Include="Screen.cs" />
+    <Compile Include="GameScreen.cs" />
+    <Compile Include="MenuScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

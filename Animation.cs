@@ -56,14 +56,14 @@ namespace DND
 			if (CurDir == Direction.Up)
 				yModifier = -1;
 
-			FrameOffsetX = (int)(((float)CurFrame / Frames) * Engine.TileWidth);
-			FrameOffsetY = (int)(((float)CurFrame / Frames) * Engine.TileHeight);
-			OffsetDestRect = new Rectangle (xModifier * FrameOffsetX - xModifier * Engine.TileWidth,
-			                                yModifier * FrameOffsetY - yModifier * Engine.TileHeight,
+			FrameOffsetX = (int)(((float)CurFrame / Frames) * Map.TileWidth);
+			FrameOffsetY = (int)(((float)CurFrame / Frames) * Map.TileHeight);
+			OffsetDestRect = new Rectangle (xModifier * FrameOffsetX - xModifier * Map.TileWidth,
+			                                yModifier * FrameOffsetY - yModifier * Map.TileHeight,
 			                                0, 0);
 			if (!animating) {
-				OffsetDestRect.X += xModifier * Engine.TileWidth;
-				OffsetDestRect.Y += yModifier * Engine.TileWidth;
+				OffsetDestRect.X += xModifier * Map.TileWidth;
+				OffsetDestRect.Y += yModifier * Map.TileWidth;
 			}
 			SrcRect = new Rectangle (FrameWidth*CurFrame, FrameHeight * ((int)CurDir-1), FrameWidth, FrameHeight);
 		}
@@ -87,8 +87,8 @@ namespace DND
 				textureColor=Color.White;
 			else
 				textureColor=new Color(255,255,255,150);
-			DrawRect = new Rectangle(OffsetDestRect.X + x * Engine.TileWidth - Camera.Position.X,
-			                         OffsetDestRect.Y + (size + y) * Engine.TileHeight - FrameHeight - Camera.Position.Y,
+			DrawRect = new Rectangle(OffsetDestRect.X + x * Map.TileWidth - Camera.Position.X,
+			                         OffsetDestRect.Y + (size + y) * Map.TileHeight - FrameHeight - Camera.Position.Y,
 			                         FrameWidth,FrameHeight);
 			sb.Draw (Sprite, DrawRect, SrcRect, textureColor);
 			//TODO: If (IsActive) DrawBorder

@@ -29,6 +29,8 @@ namespace DND
 
 		public static void Initialize()
 		{
+			guiManager.Controls.Clear();
+
 			tiles.Add (new Coord (0, 0));
 			tiles.Add (new Coord (0, 1));
 			tiles.Add (new Coord (1, 0));
@@ -101,7 +103,7 @@ namespace DND
 		{
 			if (!ChatWindow.IsMouseOver){
 				ChatWindow.Transparency = 0.1F;
-				ChatText.Transparency = 0.1F;
+				ChatText.Transparency = 0.4F;
 				ChatTextSend.Transparency = 0.1F;
 			}
 			else
@@ -117,7 +119,7 @@ namespace DND
 			oldMouse = Mouse.GetState ();
 			MouseCoords = GetMouseMapCoord (oldMouse.X + Camera.Position.X, oldMouse.Y + Camera.Position.Y);
 			double curTime = gameTime.TotalGameTime.TotalMilliseconds;
-			if (curTime - lastKeyPress < Engine.MovementTime + 20 || Typing)
+			if (curTime - lastKeyPress < Map.MovementTime + 20 || Typing)
 				return;
 
 			if (Keyboard.GetState ().IsKeyDown (Keys.Z)) {
@@ -133,12 +135,7 @@ namespace DND
 			}
 
 
-			if (Keyboard.GetState ().IsKeyDown (Keys.Space)) {
-
-				lastKeyPress = curTime;
-				Network.SendData ("SWCH"); //switch character
-				return;
-			}
+			//TODO: move to spell list
 			if (Keyboard.GetState ().IsKeyDown (Keys.D1)) {
 				radius=1;
 				return;
@@ -168,6 +165,13 @@ namespace DND
 				return;
 			}
 
+			if (Mouse.GetState ().RightButton == ButtonState.Released && lastRButtonState == ButtonState.Pressed) {
+				foreach (Player p in Map.GetLocalPlayers())
+					if (p.Position.Equals(MouseCoords))
+						Network.SendData("SWCH"+p.ID);
+			}
+			lastRButtonState = Mouse.GetState ().RightButton;
+
 			if (Engine.CurPlayer == null) return;
 			//No characters -> no movement
 
@@ -196,13 +200,7 @@ namespace DND
 				Network.SendData ("MOVE0,1");
 				return;
 			}
-			if (Mouse.GetState ().RightButton == ButtonState.Released && lastRButtonState == ButtonState.Pressed) {
-				foreach (Player p in Engine.LocalPlayers)
-					if (p.Position.Equals(MouseCoords)) {
-					//TODO: switch to player
-					}
-			}
-			lastRButtonState = Mouse.GetState ().RightButton;
+
 		}
 
 		public static void AddText(string s) {
@@ -216,7 +214,7 @@ namespace DND
 					if (radius > 0) {
 						GetAOETiles ();
 						foreach (Coord c in tiles2)
-							sb.Draw (TextureManager.getTexture (998), new Rectangle (c.X * Engine.TileWidth - Camera.Position.X, c.Y * Engine.TileHeight - Camera.Position.Y, 32, 32), new Color (0, 0, 0, 200));
+							sb.Draw (TextureManager.getTexture (998), new Rectangle (c.X * Map.TileWidth - Camera.Position.X, c.Y * Map.TileHeight - Camera.Position.Y, 32, 32), new Color (0, 0, 0, 200));
 					} else
 						sb.Draw (TextureManager.getTexture (999), GetMouseDrawRect (), Color.White);
 				}
@@ -256,7 +254,7 @@ namespace DND
 		}
 		private static Rectangle GetMouseDrawRect ()
 		{
-			return new Rectangle(MouseCoords.X*Engine.TileWidth - Camera.Position.X, MouseCoords.Y*Engine.TileHeight-Camera.Position.Y,Engine.TileWidth,Engine.TileHeight);
+			return new Rectangle(MouseCoords.X*Map.TileWidth - Camera.Position.X, MouseCoords.Y*Map.TileHeight-Camera.Position.Y,Map.TileWidth,Map.TileHeight);
 		}
 
 		/// <summary>
@@ -272,8 +270,8 @@ namespace DND
 		/// Y.
 		/// </param>
 		private static Coord GetMouseMapCoord(int x, int y) {
-			Coord ret = new Coord((x-(x%Engine.TileWidth))/Engine.TileWidth,(y-(y%Engine.TileHeight))/Engine.TileHeight);
-			if (!Map.withinBounds(ret) || !Engine.withinSight(ret))
+			Coord ret = new Coord((x-(x%Map.TileWidth))/Map.TileWidth,(y-(y%Map.TileHeight))/Map.TileHeight);
+			if (!Map.withinBounds(ret) || !Map.withinSight(ret))
 				return new Coord(-1,-1);
 			return ret;
 		}

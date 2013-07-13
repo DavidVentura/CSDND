@@ -12,35 +12,27 @@ namespace DND
     {
 		public int ID,Texture,NameOffsetX=0,size;
 		public Coord Position;
-		public int VisionRange;
+		public int VisionRange=0;
 		private string name;
 		public Animation animation=new Animation();
-		public bool visible=true;
+		public bool visible=true,isLocal=false;
 		double lastAnimation=0;
 
-		public Player (Coord pos, int texture, int id, string Name, int visionRange, int size)
-		{
-			VisionRange=visionRange;
-			Position = pos;
-			Texture = texture;
-			ID = id;
-			name = Name;
-			this.size=size;
-			animation.Sprite = TextureManager.getSprites (texture);
-			int sizeOffset = (int)(((float)(size-1)/2)*Engine.TileWidth);
-			if (TextureManager.Font==null) return;
-			NameOffsetX = (Engine.TileWidth/2) -((int)TextureManager.Font.MeasureString (name).X)/2+sizeOffset;
-		}
-		public Player (Coord pos, int texture, int id, string Name, int size)
+		public Player (Coord pos, int texture, int id, string Name, int size, int visionRange=0)
 		{
 			Position = pos;
 			Texture = texture;
 			ID = id;
 			name = Name;
-			this.size=size;
+			this.size = size;
 			animation.Sprite = TextureManager.getSprites (texture);
-			int sizeOffset = (int)(((float)(size-1)/2)*Engine.TileWidth);
-			NameOffsetX = (Engine.TileWidth/2) -((int)TextureManager.Font.MeasureString (name).X)/2+sizeOffset;
+			int sizeOffset = (int)(((float)(size - 1) / 2) * Map.TileWidth);
+			NameOffsetX = (Map.TileWidth / 2) - ((int)TextureManager.Font.MeasureString (name).X) / 2 + sizeOffset;
+
+			if (visionRange >0) {
+				isLocal = true;
+				VisionRange = visionRange;
+			}
 		}
 
 		public void Update (GameTime gameTime)
@@ -48,7 +40,7 @@ namespace DND
 			if (animation.Sprite == null) {
 				animation.Sprite=TextureManager.getSprites (Texture);
 			}
-			if (gameTime.TotalGameTime.TotalMilliseconds - lastAnimation > (Engine.MovementTime/Animation.Frames)) {
+			if (gameTime.TotalGameTime.TotalMilliseconds - lastAnimation > (Map.MovementTime/Animation.Frames)) {
 				lastAnimation = gameTime.TotalGameTime.TotalMilliseconds;
 				animation.Update ();
 			}

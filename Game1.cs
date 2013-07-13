@@ -16,31 +16,57 @@ namespace DND
 	public class Game1 : Game
     {
 		private GraphicsDeviceManager _graphics;
+		private GraphicsDevice g;
+		private SpriteBatch spriteBatch;
+		private Screen currentScreen;
+		private GameScreen GS;
+		private MenuScreen MS;
+		private ContentManager contentManager;
+
 		public Game1 ()
 	    {
-        	_graphics = new GraphicsDeviceManager(this);
+			_graphics = new GraphicsDeviceManager(this);
+			contentManager = new ContentManager(Services, "Content");
+			g = new Microsoft.Xna.Framework.Graphics.GraphicsDevice();
+			_graphics.PreferredBackBufferHeight=600;
+			spriteBatch = new SpriteBatch(GraphicsDevice);
+			Engine.ParseXML();
+			Window.AllowUserResizing=true;
 			GUI.guiManager = new RamGecXNAControls.GUIManager (this);
+			GS = new GameScreen(ExitGame);
+			MS = new MenuScreen(StartGame);
+			currentScreen = MS;
     	}
-
-        protected override void Initialize ()
+		protected override void LoadContent ()
 		{
-			base.Initialize ();
-			if (Engine.Initialize (_graphics) == -1) {
-				Engine.Unload();
-				Environment.Exit(-1);
+			GS.LoadContent(contentManager);
+			MS.LoadContent(contentManager);
+		}
+		protected void StartGame (object obj, EventArgs e)
+		{
+			if (Network.Initialize () == -1) { //TODO: return -1 on unsuccessful login..
+				MS.LoginError();
+				return; 
 			}
-            
-        }
-
+			currentScreen = GS;
+			GS.Start();
+		}
+		protected void ExitGame (object obj, EventArgs e)
+		{
+			currentScreen = MS;
+		}
 
         protected override void Update(GameTime gameTime)
         {
-			Engine.Update(gameTime);
+			currentScreen.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            Engine.Draw(gameTime);
+			g.Clear(Color.CornflowerBlue);
+			spriteBatch.Begin();
+			currentScreen.Draw(spriteBatch);
+			spriteBatch.End();
         }
 
 		protected override void OnExiting (object sender, EventArgs args)

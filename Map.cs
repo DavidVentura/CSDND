@@ -15,6 +15,12 @@ namespace DND
 		static MapLayer GroundLayer;
 		static MapLayer ObjectLayer;
 		static int text_tile,y = 0, x = 0, xpos = 0, ypos;
+		static List<Player> Players = new List<Player>();
+		static object PlayerLock=new object();
+
+		public const int MovementTime = 120;
+        public const int TileHeight = 32;
+        public const int TileWidth = 32;
 
 		public static void Initialize (int w, int h)
 		{
@@ -31,6 +37,11 @@ namespace DND
 
 		}
 
+		public static void Update (GameTime gameTime)
+		{
+			foreach (Player p in Players)
+				p.Update (gameTime);
+		}
 		static void DrawLayer (SpriteBatch sb, MapLayer layer)
 		{
 			int minX, minY, maxX, maxY;
@@ -53,21 +64,20 @@ namespace DND
 					if (text_tile > 0) { //not "empty"
 						auxtext = TextureManager.getTexture (text_tile);
 						if(auxtext==null) continue;
-						xpos = x * Engine.TileWidth - Camera.Position.X;
+						xpos = x * TileWidth - Camera.Position.X;
 						if (layer.Type!= LayerType.Ground) 
-							xpos -= (auxtext.Width - Engine.TileWidth) / 2;
+							xpos -= (auxtext.Width - TileWidth) / 2;
 						
-						ypos = (y * Engine.TileHeight) - Camera.Position.Y - (auxtext.Height - Engine.TileHeight);
+						ypos = (y * TileHeight) - Camera.Position.Y - (auxtext.Height - TileHeight);
 						sb.Draw (auxtext, new Rectangle (xpos, ypos, auxtext.Width, auxtext.Height), Color.White);
 					}
 					if (layer.Type==LayerType.Object){
-						foreach (Player p in Engine.Players)
-							if (p.visible)
+						//lock (PlayerLock) {
+							foreach (Player p in Players)
 								if (p.Position.X == x && p.Position.Y == y)
-									p.Draw (sb);
-						foreach (Player p in Engine.LocalPlayers)
-						if(p.Position.X ==x && p.Position.Y==y)
-							p.Draw(sb);
+									if (p.isLocal || p.visible)
+										p.Draw (sb);
+						//}
 					}
 				}
 		}
@@ -98,7 +108,65 @@ namespace DND
 		{
 			ObjectLayer.Modify(id,x,y);
 		}
-		
+
+
+		public static void AddPlayer (int id, int x, int y, int sprite, string name, int size, int visionRange=0)
+		{
+			lock (PlayerLock) {
+				foreach (Player p in Players)
+					if (p.ID == id)
+						return;
+				TextureManager.addSprites (sprite);
+				Players.Add (new Player (new Coord (x, y), sprite, id, name, size, visionRange));
+			}
+		}
+		public static void MovePlayer (int id, int x, int y)
+		{
+			Coord newCoord = new Coord (x, y);
+			Coord diff;
+			foreach (Player p in Players)
+				if (p.ID == id) {
+					diff = newCoord - p.Position;
+					if (diff.X > 0)
+						p.animation.SwitchDirection (Direction.Right);
+					if (diff.X < 0)
+						p.animation.SwitchDirection (Direction.Left);
+					if (diff.Y > 0)
+						p.animation.SwitchDirection (Direction.Down);
+					if (diff.Y < 0)
+						p.animation.SwitchDirection (Direction.Up);
+					p.Position = newCoord;
+					return;
+				}
+		}
+		public static void RemovePlayer (int i)
+		{
+			foreach (Player p in Players)
+				if (p.ID == i) {
+					Players.Remove (p);
+					return;
+				}
+		}
+		public static void ChangeVisibility (int id)
+		{
+			foreach (Player p in Players)
+				if (p.ID == id) {
+					p.visible = !p.visible;
+					return;
+				}
+		}
+		public static bool withinSight (Coord c)
+		{
+			if (Engine.isDM && Engine.CurPlayer==null) return true;
+			return (Coord.Distance(c, Engine.CurPlayer.Position) < Engine.CurPlayer.VisionRange);
+		}
+		public static List<Player> GetLocalPlayers ()
+		{
+			List<Player> ret = new List<Player>();
+			foreach (Player p in Players)
+				if (p.isLocal) ret.Add (p);
+			return ret;
+		}
 
         
 	}

@@ -10,33 +10,17 @@ namespace DND
 {
 	public static class Network
 	{
-		static TcpClient client = new TcpClient();
+		static TcpClient client;
 		static NetworkStream clientStream;
 		static ASCIIEncoding encoder = new ASCIIEncoding();
 		public static Thread receiver;
 		private static byte[] buffer;
 
 		public static int Initialize ()
-		{	
-
-			string ip="", player="";
-			using (XmlReader reader = XmlReader.Create("Config.xml")) {
-				reader.MoveToContent ();
-				while (reader.Read()) {
-					if (reader.NodeType == XmlNodeType.Element) {
-						if (reader.Name == "IP") {
-							ip = reader.ReadElementContentAsString();
-						}
-					}
-					if (reader.NodeType == XmlNodeType.Element) {
-						if (reader.Name == "PLAYER") {
-							player= reader.ReadElementContentAsString();
-						}
-					}
-				}
-			}
+		{
+			client = new TcpClient();
 			try {
-				client.Connect (new IPEndPoint(IPAddress.Parse(ip), 30000));
+				client.Connect (new IPEndPoint(IPAddress.Parse(Engine.IP), 30000));
 			} catch (Exception e) {
 				Console.WriteLine(e.Message);
 				return -1;
@@ -44,8 +28,7 @@ namespace DND
 			clientStream = client.GetStream();
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
-
-			SendData("LOGI"+player);
+			SendData("LOGI"+Engine.Username);
 			return 0;
 		}
 
@@ -54,7 +37,6 @@ namespace DND
 			buffer = encoder.GetBytes(data);
 			clientStream.Write(buffer, 0 , buffer.Length);
 			clientStream.Flush();
-			//Thread.Sleep (10);
 		}
 
 		private static void GetData ()
@@ -104,13 +86,13 @@ namespace DND
 							TextureManager.addTexture(Int32.Parse(args[j]));
 						break;
 					case "NPLR": //new player: ID,X,Y,Texture,Name,size
-						Engine.AddPlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]),Int32.Parse(args[3]),args[4],Int32.Parse(args[5]));
+						Map.AddPlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]),Int32.Parse(args[3]),args[4],Int32.Parse(args[5]));
 						break;
 					case "MPLR": //move player: ID,X,Y
-						Engine.MovePlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]));
+						Map.MovePlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]));
 						break;
 					case "RPLR": //remove Player: id
-						Engine.RemovePlayer(Int32.Parse(args[0]));
+						Map.RemovePlayer(Int32.Parse(args[0]));
 						break;
 					case "TALK": //player talks
 						GUI.AddText(args[0]+"> " + args[1]);
@@ -118,17 +100,17 @@ namespace DND
 					case "MESS": //gets message
 						GUI.AddText(args[0]);
 						break;
-					case "LOGI"://log in: x,y,texture,id,name,vision range(tiles)
-						Engine.AddLocalPlayer (new Coord (Int32.Parse (args [0]), Int32.Parse (args [1])), Int32.Parse (args [2]), Int32.Parse (args [3]), args [4],Int32.Parse (args [5]),Int32.Parse (args [6]));
+					case "LOGI"://log in: ID,x,y,texture,name,size,vision range(tiles)
+						Map.AddPlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]),Int32.Parse(args[3]),args[4],Int32.Parse(args[5]),Int32.Parse(args[6]));
 						break;
 					case "ERRO": //error loggin in, disconnect
 						client.Close();
 						break;
 					case "SWCH": //switch character: args: id of the new current-char
-						Engine.SwitchChar();
+						Engine.SwitchChar(Int32.Parse(args[0]));
 						break;
 					case "VISI": //switch character: args: id of the new current-char
-						Engine.ChangeVisibility(Int32.Parse(args[0]));
+						Map.ChangeVisibility(Int32.Parse(args[0]));
 						break;
 					case "SOBJ"://id,x,y
 						Map.Modify(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]));
