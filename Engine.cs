@@ -5,6 +5,11 @@ using System.Xml;
 
 namespace DND
 {
+	public enum State {
+		Waiting=0,
+		Error=1,
+		OK=2
+	}
 	public enum LayerType {
 		Ground=0,
 		Blocking=1,
@@ -37,6 +42,7 @@ namespace DND
 
     static class Engine
     {
+		public static State CurrentState;
 		public static bool isDM = false;
 		public static int curCharIndex=0;
 		public static Player CurPlayer;

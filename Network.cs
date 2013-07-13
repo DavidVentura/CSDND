@@ -16,20 +16,22 @@ namespace DND
 		public static Thread receiver;
 		private static byte[] buffer;
 
-		public static int Initialize ()
+		public static void Initialize ()
 		{
+			Engine.CurrentState = State.Waiting;
 			client = new TcpClient();
 			try {
 				client.Connect (new IPEndPoint(IPAddress.Parse(Engine.IP), 30000));
 			} catch (Exception e) {
+				Engine.CurrentState = State.Error;
 				Console.WriteLine(e.Message);
-				return -1;
+				return;
 			}
 			clientStream = client.GetStream();
 			receiver =new Thread(new ThreadStart(GetData));
 			receiver.Start();
 			SendData("LOGI"+Engine.Username);
-			return 0;
+			return;
 		}
 
 		public static void SendData(string data){
@@ -101,9 +103,11 @@ namespace DND
 						GUI.AddText(args[0]);
 						break;
 					case "LOGI"://log in: ID,x,y,texture,name,size,vision range(tiles)
+						Engine.CurrentState = State.OK;
 						Map.AddPlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]),Int32.Parse(args[3]),args[4],Int32.Parse(args[5]),Int32.Parse(args[6]));
 						break;
 					case "ERRO": //error loggin in, disconnect
+						Engine.CurrentState = State.Error;
 						client.Close();
 						break;
 					case "SWCH": //switch character: args: id of the new current-char
@@ -116,6 +120,7 @@ namespace DND
 						Map.Modify(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]));
 						break;
 					case "DMOK": //dm rights
+						Engine.CurrentState = State.OK;
 						Engine.isDM=true;
 						GUI.AddDMGUI();
 						break;

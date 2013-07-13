@@ -44,9 +44,13 @@ namespace DND
 		}
 		protected void StartGame (object obj, EventArgs e)
 		{
-			if (Network.Initialize () == -1) { //TODO: return -1 on unsuccessful login..
+			Network.Initialize();
+			while (Engine.CurrentState==State.Waiting)
+				System.Threading.Thread.Sleep (200);
+
+			if (Engine.CurrentState == State.Error) {
 				MS.LoginError();
-				return; 
+				return;
 			}
 			currentScreen = GS;
 			GS.Start();
