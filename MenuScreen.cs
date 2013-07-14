@@ -17,10 +17,12 @@ namespace DND
 			mainWindow = new Window(new Rectangle(100,0,300,300), "Login");
 			mainWindow.Transparency=1f;
 			loginText = new TextBox(new Rectangle(100,100,100,20),"");
+			loginText.Focused=true;
+			loginText.OnSubmit+= (sender) => { Login(); };
 			mainWindow.Controls.Add (loginText);
 			loginButton = new Button(new Rectangle(100,130,100,20),"Log in");
 
-			loginButton.OnClick+= (sender) => { Engine.Username=loginText.Text; ScreenEvent.Invoke(this, new EventArgs()); } ; //invoco el evento asignado en el constructor
+			loginButton.OnClick+= (sender) => { Login(); } ; //invoco el evento asignado en el constructor
 
 			mainWindow.Controls.Add (loginButton);
 
@@ -58,7 +60,10 @@ namespace DND
 			ErrorWindow.Visible=true;
 			mainWindow.Visible=false;
 		}
-
+		private void Login() {
+			Engine.Username=loginText.Text;
+			ScreenEvent.Invoke(this, new EventArgs());
+		}
 	}
 }
 

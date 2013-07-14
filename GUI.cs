@@ -54,7 +54,9 @@ namespace DND
 			b = new Button (new Rectangle (25, 60, 100, 20), "Toggle collision");
 			b.OnClick += (GUIControl sender) => { if (Engine.CurPlayer!=null) Network.SendData ("NOCL"); };
 			tctrl.Controls.Add (b);
-
+			b = new Button (new Rectangle (25, 85, 100, 20), "Delay");
+			b.OnClick += (GUIControl sender) => { if (Engine.CurPlayer!=null) Network.SendData ("DELA"); };
+			tctrl.Controls.Add (b);
 
 			tctrl.Text = "Settings";
 			TabContainer.Controls.Add (tctrl);
@@ -83,6 +85,9 @@ namespace DND
 			b = new Button (new Rectangle (25, 110, 100, 20), "DM mode");
 			b.OnClick += (GUIControl sender) => { DMMode(); };
 			tctrl.Controls.Add (b);
+			b = new Button (new Rectangle (25, 135, 100, 20), "Next turn");
+			b.OnClick += (GUIControl sender) => { Network.SendData ("NEXT"); };
+			tctrl.Controls.Add (b);
 
 			TabContainer.Controls.Add (tctrl);
 		}
@@ -94,7 +99,7 @@ namespace DND
 		}
 
 		private static void Talk() {
-			Network.SendData ("TALK" + ChatTextSend.Text+"\n");
+			Network.SendData ("TALK" + ChatTextSend.Text);
 			ChatTextSend.Text = "";
 			ChatTextSend.Focused = false;
 		}
@@ -204,7 +209,7 @@ namespace DND
 		}
 
 		public static void AddText(string s) {
-			ChatText.Text += s;
+			ChatText.Text += s+'\n';
 		}
 		public static void Draw (SpriteBatch sb)
 		{
@@ -219,6 +224,13 @@ namespace DND
 						sb.Draw (TextureManager.getTexture (999), GetMouseDrawRect (), Color.White);
 				}
 			}
+
+			for(int i =0; i<Engine.Initiatives.Count; i++)
+				if (i==Engine.CurrentTurn)
+				sb.DrawString(TextureManager.Font,Engine.Initiatives[i],new Vector2(0,i*20),Color.Red);
+				else
+				sb.DrawString(TextureManager.Font,Engine.Initiatives[i],new Vector2(0,i*20),Color.Yellow);
+
 		}
 		private static void GetAOETiles ()
 		{

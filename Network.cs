@@ -124,6 +124,12 @@ namespace DND
 						Engine.isDM=true;
 						GUI.AddDMGUI();
 						break;
+					case "INIT": //initiative list
+						Engine.SetInitiatives(args);
+						break;
+					case "CURT": //current turn
+						Engine.CurrentTurn=Int32.Parse(args[0]);
+						break;
 					default:
 						Console.WriteLine(data);
 						break;

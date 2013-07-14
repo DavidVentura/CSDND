@@ -47,6 +47,8 @@ namespace DND
 		public static int curCharIndex=0;
 		public static Player CurPlayer;
 		public static string Username,IP;
+		public static List<string> Initiatives= new List<string>();
+		public static int CurrentTurn;
 
 		public static void Unload() {
 			Network.Unload();
@@ -68,5 +70,11 @@ namespace DND
 				}
 			}
 		}
+		public static void SetInitiatives (string[] args)
+		{
+			Initiatives.Clear();
+			Initiatives.AddRange(args);
+		}
+
     }
 }
