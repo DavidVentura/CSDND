@@ -39,7 +39,15 @@ namespace DND
 			return Math.Sqrt(((c1.X - c2.X)*(c1.X - c2.X))+((c1.Y - c2.Y)*(c1.Y - c2.Y)));
 		}
 	}
-
+	public struct Mob {
+		public string name;
+		public int id;
+		public Mob (int id, string name)
+		{
+			this.id=id;
+			this.name=name;
+		}
+	}
     static class Engine
     {
 		public static State CurrentState;
@@ -49,6 +57,7 @@ namespace DND
 		public static string Username,IP;
 		public static List<string> Initiatives= new List<string>();
 		public static int CurrentTurn;
+		public static List <Mob> Mobs = new List<Mob>();
 
 		public static void Unload() {
 			Network.Unload();
@@ -75,6 +84,24 @@ namespace DND
 			Initiatives.Clear();
 			Initiatives.AddRange(args);
 		}
+		public static void ParseMobs (string [] mobs)
+		{
+			foreach (string s in mobs) {
+				if (s.Length==0) continue;
+				string[] mob = s.Split('-');
+				Mobs.Add (new Mob (Int32.Parse (mob[0]), mob[1]));
+				GUI.AddMob(mob[1]);
+			}
+		}
+		public static int MobID (string name)
+		{
+			foreach (Mob s in Mobs)
+				if (s.name==name)
+					return s.id;
+			return -1;
+		}
+
+
 
     }
 }

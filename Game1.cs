@@ -29,6 +29,7 @@ namespace DND
 			contentManager = new ContentManager(Services, "Content");
 			g = new Microsoft.Xna.Framework.Graphics.GraphicsDevice();
 			_graphics.PreferredBackBufferHeight=600;
+			_graphics.PreferredBackBufferWidth=800;
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 			Engine.ParseXML();
 			Window.AllowUserResizing=true;
@@ -65,10 +66,10 @@ namespace DND
 			currentScreen.Update(gameTime);
         }
 
-        protected override void Draw(GameTime gameTime)
-        {
-			g.Clear(Color.CornflowerBlue);
-			spriteBatch.Begin();
+        protected override void Draw (GameTime gameTime)
+		{
+			g.Clear (Color.Black);
+			spriteBatch.Begin ();
 			currentScreen.Draw(spriteBatch);
 			spriteBatch.End();
         }

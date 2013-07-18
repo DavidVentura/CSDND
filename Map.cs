@@ -14,7 +14,7 @@ namespace DND
 		static int height, width;
 		static MapLayer GroundLayer;
 		static MapLayer ObjectLayer;
-		static int text_tile,y = 0, x = 0, xpos = 0, ypos;
+		static int text_tile,y = 0, x = 0, xpos = 0, ypos,i,playercount;
 		static List<Player> Players = new List<Player>();
 		static object PlayerLock=new object();
 
@@ -72,12 +72,11 @@ namespace DND
 						sb.Draw (auxtext, new Rectangle (xpos, ypos, auxtext.Width, auxtext.Height), Color.White);
 					}
 					if (layer.Type==LayerType.Object){
-						//lock (PlayerLock) {
-							foreach (Player p in Players)
-								if (p.Position.X == x && p.Position.Y == y)
-									if (p.isLocal || p.visible)
-										p.Draw (sb);
-						//}
+						playercount=Players.Count;
+						for (i=0; i<playercount;i++)
+								if (Players[i].Position.X == x && Players[i].Position.Y == y)
+									if (Players[i].isLocal || Players[i].visible)
+										Players[i].Draw (sb);
 					}
 				}
 		}

@@ -23,6 +23,8 @@ namespace DND
 
 		private static Window MainWindow = new Window (new Rectangle (640, 0, 160, 400));
 		private static TabsContainer TabContainer = new TabsContainer (new Rectangle (5, 25, 150, 350));
+		private static ListBox MobList = new ListBox ( new Rectangle(5,165,140,160));
+
 		public static GUIManager guiManager;
 
 		public static bool Typing = false;
@@ -66,7 +68,7 @@ namespace DND
 			guiManager.Controls.Add (ChatWindow);
 		}
 
-		public static void AddDMGUI() {
+		public static void AddDMGUI() {//TODO: add combat, objects and mobs tabs
 			TabControl tctrl = new TabControl ();
 			tctrl.Text = "DM";
 
@@ -89,6 +91,7 @@ namespace DND
 			b.OnClick += (GUIControl sender) => { Network.SendData ("NEXT"); };
 			tctrl.Controls.Add (b);
 
+			tctrl.Controls.Add (MobList);
 			TabContainer.Controls.Add (tctrl);
 		}
 
@@ -129,12 +132,14 @@ namespace DND
 
 			if (Keyboard.GetState ().IsKeyDown (Keys.Z)) {
 				lastKeyPress = curTime;
-				Network.SendData (String.Format ("SPWN{0},{1},{2}", 1, MouseCoords.X, MouseCoords.Y)); //spawn id 1.. interface
+				int selected=Engine.MobID(MobList.SelectedString);
+				if (selected>-1)
+				Network.SendData (String.Format ("SPWN{0},{1},{2}",selected, MouseCoords.X, MouseCoords.Y));
 				return;
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.X)) {
 				lastKeyPress = curTime;
-				Network.SendData (String.Format ("SOBJ{0},{1},{2},{3}", 2, 1, MouseCoords.X, MouseCoords.Y)); //spawn obj interface
+				Network.SendData (String.Format ("SOBJ{0},{1},{2},{3}", 2, 1, MouseCoords.X, MouseCoords.Y)); //TODO spawn obj interface
 				//tileID,blocking,x,y
 				return;
 			}
@@ -208,6 +213,10 @@ namespace DND
 
 		}
 
+		public static void AddMob (string name)
+		{
+			MobList.Items.Add(name);
+		}
 		public static void AddText(string s) {
 			ChatText.Text += s+'\n';
 		}

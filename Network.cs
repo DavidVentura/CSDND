@@ -130,6 +130,9 @@ namespace DND
 					case "CURT": //current turn
 						Engine.CurrentTurn=Int32.Parse(args[0]);
 						break;
+					case "MOBS": //mobs list
+						Engine.ParseMobs(args);
+						break;
 					default:
 						Console.WriteLine(data);
 						break;
