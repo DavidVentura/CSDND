@@ -17,13 +17,15 @@ namespace DND
 		private static ButtonState lastRButtonState = ButtonState.Released;
 		private static double lastKeyPress;
 
-		private static Window ChatWindow = new Window (new Rectangle (400, 0, 220, 410));
+		private static Window ChatWindow = new Window (new Rectangle (300, 0, 220, 410));
 		private static TextArea ChatText = new TextArea (new Rectangle (10, 22, 200, 358));
 		private static TextBox ChatTextSend = new TextBox (new Rectangle (10, 382, 200, 22));
 
-		private static Window MainWindow = new Window (new Rectangle (640, 0, 160, 400));
-		private static TabsContainer TabContainer = new TabsContainer (new Rectangle (5, 25, 150, 350));
-		private static ListBox MobList = new ListBox ( new Rectangle(5,165,140,160));
+		private static Window MainWindow = new Window (new Rectangle (540, 0, 260, 400));
+		private static TabsContainer TabContainer = new TabsContainer (new Rectangle (5, 25, 250, 360));
+		private static ListBox MobList = new ListBox ( new Rectangle(5,5,220,260));
+		private static ListBox TileList = new ListBox ( new Rectangle(5,5,220,260));
+		private static ListBox ObjectList = new ListBox ( new Rectangle(5,5,220,260));
 
 		public static GUIManager guiManager;
 
@@ -69,30 +71,58 @@ namespace DND
 		}
 
 		public static void AddDMGUI() {//TODO: add combat, objects and mobs tabs
-			TabControl tctrl = new TabControl ();
-			tctrl.Text = "DM";
+			TabControl tDM = new TabControl ();
+			tDM.Text = "DM";
+			TabsContainer tDMContainer = new TabsContainer(new Rectangle(5,5,240,320));
+
+			TabControl tMisc = new TabControl ();
+			tMisc.Text="Misc";
 
 			Button b = new Button (new Rectangle (25, 10, 100, 20), "Initiative");
 			b.OnClick += (GUIControl sender) => { Network.SendData ("INIT"); };
-			tctrl.Controls.Add (b);
+			tMisc.Controls.Add (b);
 			b = new Button (new Rectangle (25, 35, 100, 20), "Reflexes");
 			b.OnClick += (GUIControl sender) => { Network.SendData ("REFL"); };
-			tctrl.Controls.Add (b);
+			tMisc.Controls.Add (b);
 			b = new Button (new Rectangle (25, 60, 100, 20), "Fortitude");
 			b.OnClick += (GUIControl sender) => { Network.SendData ("FORT"); };
-			tctrl.Controls.Add (b);
+			tMisc.Controls.Add (b);
 			b = new Button (new Rectangle (25, 85, 100, 20), "Will");
 			b.OnClick += (GUIControl sender) => { Network.SendData ("WILL"); };
-			tctrl.Controls.Add (b);
+			tMisc.Controls.Add (b);
 			b = new Button (new Rectangle (25, 110, 100, 20), "DM mode");
 			b.OnClick += (GUIControl sender) => { DMMode(); };
-			tctrl.Controls.Add (b);
+			tMisc.Controls.Add (b);
 			b = new Button (new Rectangle (25, 135, 100, 20), "Next turn");
 			b.OnClick += (GUIControl sender) => { Network.SendData ("NEXT"); };
-			tctrl.Controls.Add (b);
+			tMisc.Controls.Add (b);
 
-			tctrl.Controls.Add (MobList);
-			TabContainer.Controls.Add (tctrl);
+
+			TabControl tSpawn = new TabControl ();
+			tSpawn.Text="Spawn";
+			TabsContainer tSpawnContainer = new TabsContainer(new Rectangle(5,5,230,290));
+			TabControl tc = new TabControl();
+			tc.Text="Tiles";
+			tc.Controls.Add (TileList);
+			tSpawnContainer.Controls.Add (tc);
+
+			tc = new TabControl();
+			tc.Text="Objects";
+			tc.Controls.Add (ObjectList);
+			tSpawnContainer.Controls.Add (tc);
+
+			tc = new TabControl();
+			tc.Text="Mobs";
+			tc.Controls.Add (MobList);
+			tSpawnContainer.Controls.Add (tc);
+
+			tSpawn.Controls.Add (tSpawnContainer);
+
+			tDMContainer.Controls.Add (tMisc);
+			tDMContainer.Controls.Add (tSpawn);
+			tDM.Controls.Add (tDMContainer);
+
+			TabContainer.Controls.Add (tDM);
 		}
 
 		private static void DMMode() {
@@ -217,6 +247,14 @@ namespace DND
 		{
 			MobList.Items.Add(name);
 		}
+		public static void AddTile (string name)
+		{
+			TileList.Items.Add(name);
+		}
+		public static void AddObject (string name)
+		{
+			ObjectList.Items.Add(name);
+		}
 		public static void AddText(string s) {
 			ChatText.Text += s+'\n';
 		}
@@ -228,9 +266,9 @@ namespace DND
 					if (radius > 0) {
 						GetAOETiles ();
 						foreach (Coord c in tiles2)
-							sb.Draw (TextureManager.getTexture (998), new Rectangle (c.X * Map.TileWidth - Camera.Position.X, c.Y * Map.TileHeight - Camera.Position.Y, 32, 32), new Color (0, 0, 0, 200));
+							sb.Draw (TextureManager.getTexture (998,LayerType.GUI), new Rectangle (c.X * Map.TileWidth - Camera.Position.X, c.Y * Map.TileHeight - Camera.Position.Y, 32, 32), new Color (0, 0, 0, 200));
 					} else
-						sb.Draw (TextureManager.getTexture (999), GetMouseDrawRect (), Color.White);
+						sb.Draw (TextureManager.getTexture (999,LayerType.GUI), GetMouseDrawRect (), Color.White);
 				}
 			}
 

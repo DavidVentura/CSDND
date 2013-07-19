@@ -83,9 +83,15 @@ namespace DND
 
 						Map.AddLayer(new MapLayer(type,width,height,textures));
 						break;
+					case "TILE": //tile list for dm
+						Engine.ParseTiles(args);
+						break;
+					case "OBJS": //obj list for dm
+						Engine.ParseObjs(args);
+						break;
 					case "TXTR":
-						for (int j=0;j<args.Length;j++)
-							TextureManager.addTexture(Int32.Parse(args[j]));
+						//for (int j=0;j<args.Length;j++)
+						//	TextureManager.addTexture(Int32.Parse(args[j]));
 						break;
 					case "NPLR": //new player: ID,X,Y,Texture,Name,size
 						Map.AddPlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]),Int32.Parse(args[3]),args[4],Int32.Parse(args[5]));

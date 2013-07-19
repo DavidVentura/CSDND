@@ -12,7 +12,7 @@ namespace DND
 	}
 	public enum LayerType {
 		Ground=0,
-		Blocking=1,
+		GUI=1,
 		Object=2
 	}
 	public struct Coord {
@@ -48,6 +48,17 @@ namespace DND
 			this.name=name;
 		}
 	}
+	public struct MapObject {
+		public string name;
+		public int id;
+		public int type;
+		public MapObject (int id, string name, int type)
+		{
+			this.id=id;
+			this.name=name;
+			this.type=type;
+		}
+	}
     static class Engine
     {
 		public static State CurrentState;
@@ -58,6 +69,7 @@ namespace DND
 		public static List<string> Initiatives= new List<string>();
 		public static int CurrentTurn;
 		public static List <Mob> Mobs = new List<Mob>();
+		public static List<MapObject> MapObjects = new List<MapObject>();
 
 		public static void Unload() {
 			Network.Unload();
@@ -99,6 +111,26 @@ namespace DND
 				if (s.name==name)
 					return s.id;
 			return -1;
+		}
+		public static void ParseTiles (string[] args)
+		{
+			foreach (string s in args) {
+				if (s.Length == 0)
+					continue;
+				string[] tile = s.Split ('-');
+				MapObjects.Add(new MapObject(Int16.Parse(tile[0]),tile[1],0));
+				GUI.AddTile (tile [1]);
+			}
+		}
+		public static void ParseObjs (string[] args)
+		{
+			foreach (string s in args) {
+				if (s.Length == 0)
+					continue;
+				string[] obj = s.Split ('-');
+				MapObjects.Add(new MapObject(Int16.Parse(obj[0]),obj[1],1));
+				GUI.AddObject (obj [1]);
+			}
 		}
 
 

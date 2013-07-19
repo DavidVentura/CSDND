@@ -62,7 +62,7 @@ namespace DND
 						&& (Coord.Distance(new Coord(x,y), Engine.CurPlayer.Position) >= Engine.CurPlayer.VisionRange)) continue;
 					text_tile = layer.TileAt (x, y).TextureNumber;
 					if (text_tile > 0) { //not "empty"
-						auxtext = TextureManager.getTexture (text_tile);
+						auxtext = TextureManager.getTexture (text_tile,layer.type);
 						if(auxtext==null) continue;
 						xpos = x * TileWidth - Camera.Position.X;
 						if (layer.Type!= LayerType.Ground) 
@@ -102,6 +102,7 @@ namespace DND
 				ObjectLayer=mapLayer;
 				break;
 			}
+
 		}
 		public static void Modify (int id, int x, int y)
 		{
