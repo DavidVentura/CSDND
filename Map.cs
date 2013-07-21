@@ -40,7 +40,8 @@ namespace DND
 		public static void Update (GameTime gameTime)
 		{
 			foreach (Player p in Players)
-				p.Update (gameTime);
+				if (p!=null)
+					p.Update (gameTime);
 		}
 		static void DrawLayer (SpriteBatch sb, MapLayer layer)
 		{

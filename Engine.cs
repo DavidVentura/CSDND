@@ -132,6 +132,14 @@ namespace DND
 				GUI.AddObject (obj [1]);
 			}
 		}
+		public static int ObjID (string selectedString)
+		{
+			foreach(MapObject o in MapObjects)
+				if (o.name==selectedString)
+					return o.id;
+				return -1;
+		}
+
 
 
 

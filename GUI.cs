@@ -164,15 +164,24 @@ namespace DND
 				lastKeyPress = curTime;
 				int selected=Engine.MobID(MobList.SelectedString);
 				if (selected>-1)
-				Network.SendData (String.Format ("SPWN{0},{1},{2}",selected, MouseCoords.X, MouseCoords.Y));
+					Network.SendData (String.Format ("SPWN{0},{1},{2}",selected, MouseCoords.X, MouseCoords.Y));
 				return;
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.X)) {
 				lastKeyPress = curTime;
+				int selected=Engine.ObjID(ObjectList.SelectedString);
+				if (selected>-1)
+					Network.SendData (String.Format ("SOBJ{0},{1},{2},{3}", selected, 1, MouseCoords.X, MouseCoords.Y)); //TODO BLOCKING?
+				//OBJID,blocking,x,y
+				return;
+			}
+			/*
+			if (Keyboard.GetState ().IsKeyDown (Keys.B)) { //TODO: toggle Blocking
+				lastKeyPress = curTime;
 				Network.SendData (String.Format ("SOBJ{0},{1},{2},{3}", 2, 1, MouseCoords.X, MouseCoords.Y)); //TODO spawn obj interface
 				//tileID,blocking,x,y
 				return;
-			}
+			}*/
 
 
 			//TODO: move to spell list
@@ -228,11 +237,6 @@ namespace DND
 			if (Keyboard.GetState ().IsKeyDown (Keys.Up)) {
 				lastKeyPress = curTime;
 				Network.SendData ("MOVE0,-1");
-				return;
-			}
-			if (Keyboard.GetState ().IsKeyDown (Keys.Down)) {
-				lastKeyPress = curTime;
-				Network.SendData ("MOVE0,1");
 				return;
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.Down)) {
