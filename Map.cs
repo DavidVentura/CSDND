@@ -105,9 +105,16 @@ namespace DND
 			}
 
 		}
-		public static void Modify (int id, int x, int y)
+		public static void Modify (LayerType type, int id, int x, int y)
 		{
-			ObjectLayer.Modify(id,x,y);
+			switch (type) {
+			case LayerType.Ground:
+				GroundLayer.Modify(id,x,y);
+				break;
+			case LayerType.Object:
+				ObjectLayer.Modify (id, x, y);
+				break;
+			}
 		}
 
 

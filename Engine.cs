@@ -48,10 +48,23 @@ namespace DND
 			this.name=name;
 		}
 	}
+
 	public struct MapObject {
 		public string name;
 		public int id;
 		public int type;
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DND.MapObject"/> struct.
+		/// </summary>
+		/// <param name='id'>
+		/// Identifier.
+		/// </param>
+		/// <param name='name'>
+		/// Name.
+		/// </param>
+		/// <param name='type'>
+		/// Type. 0 for tiles, 1 for objects
+		/// </param>
 		public MapObject (int id, string name, int type)
 		{
 			this.id=id;
@@ -135,11 +148,19 @@ namespace DND
 		public static int ObjID (string selectedString)
 		{
 			foreach(MapObject o in MapObjects)
-				if (o.name==selectedString)
-					return o.id;
+				if (o.type==1) //object
+					if (o.name==selectedString)
+						return o.id;
 				return -1;
 		}
-
+		public static int TileID (string selectedString)
+		{
+			foreach(MapObject o in MapObjects)
+				if (o.type==0) //tile
+					if (o.name==selectedString)
+						return o.id;
+				return -1;
+		}
 
 
 

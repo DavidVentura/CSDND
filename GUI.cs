@@ -25,7 +25,8 @@ namespace DND
 		private static TabsContainer TabContainer = new TabsContainer (new Rectangle (5, 25, 250, 360));
 		private static ListBox MobList = new ListBox ( new Rectangle(5,5,220,260));
 		private static ListBox TileList = new ListBox ( new Rectangle(5,5,220,260));
-		private static ListBox ObjectList = new ListBox ( new Rectangle(5,5,220,260));
+		private static ListBox ObjectList = new ListBox ( new Rectangle(5,25,220,240));
+		private static CheckBox Blocking = new CheckBox(new Rectangle(5,5,220,15),"Blocking");
 
 		public static GUIManager guiManager;
 
@@ -108,6 +109,7 @@ namespace DND
 
 			tc = new TabControl();
 			tc.Text="Objects";
+			tc.Controls.Add(Blocking);
 			tc.Controls.Add (ObjectList);
 			tSpawnContainer.Controls.Add (tc);
 
@@ -171,7 +173,15 @@ namespace DND
 				lastKeyPress = curTime;
 				int selected=Engine.ObjID(ObjectList.SelectedString);
 				if (selected>-1)
-					Network.SendData (String.Format ("SOBJ{0},{1},{2},{3}", selected, 1, MouseCoords.X, MouseCoords.Y)); //TODO BLOCKING?
+					Network.SendData (String.Format ("SOBJ{0},{1},{2},{3}", selected, Convert.ToInt32(Blocking.Checked), MouseCoords.X, MouseCoords.Y)); 
+				//OBJID,blocking,x,y
+				return;
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.C)) {
+				lastKeyPress = curTime;
+				int selected=Engine.TileID(TileList.SelectedString);
+				if (selected>-1)
+					Network.SendData (String.Format ("TILE{0},{1},{2}", selected, MouseCoords.X, MouseCoords.Y));
 				//OBJID,blocking,x,y
 				return;
 			}

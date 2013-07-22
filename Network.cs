@@ -123,7 +123,7 @@ namespace DND
 						Map.ChangeVisibility(Int32.Parse(args[0]));
 						break;
 					case "SOBJ"://id,x,y
-						Map.Modify(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]));
+						Map.Modify(LayerType.Object,Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]));
 						break;
 					case "DMOK": //dm rights
 						Engine.CurrentState = State.OK;
@@ -138,6 +138,9 @@ namespace DND
 						break;
 					case "MOBS": //mobs list
 						Engine.ParseMobs(args);
+						break;
+					case "CTIL": //change tile
+						Map.Modify(LayerType.Ground,Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]));
 						break;
 					default:
 						Console.WriteLine(data);
