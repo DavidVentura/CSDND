@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml;
+using System;
 
 
 namespace DND
@@ -70,6 +70,15 @@ namespace DND
 			this.id=id;
 			this.name=name;
 			this.type=type;
+		}
+	}
+	public struct Buff {
+		private string desc;
+		public Buff(string desc){
+			this.desc = desc;
+		}
+		public String Desc() {
+			return desc;
 		}
 	}
     static class Engine
@@ -161,8 +170,6 @@ namespace DND
 						return o.id;
 				return -1;
 		}
-
-
 
     }
 }

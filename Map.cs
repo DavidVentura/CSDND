@@ -175,7 +175,21 @@ namespace DND
 				if (p.isLocal) ret.Add (p);
 			return ret;
 		}
-
+		public static void AddBuff (int id, int duration, string desc)
+		{
+			foreach (Player p in Players) {
+				if (p.ID==id) {
+					p.AddBuff (duration, desc);
+				}
+			}
+		}
+		public static int PlayerIDAt(Coord c) {
+			foreach (Player p in Players) {
+				if (p.Position.Equals(c))
+					return p.ID;
+			}
+			return -1;
+		}
         
 	}
 }

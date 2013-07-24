@@ -142,6 +142,9 @@ namespace DND
 					case "CTIL": //change tile
 						Map.Modify(LayerType.Ground,Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]));
 						break;
+					case "BUFF"://add buff: id duration desc
+						Map.AddBuff (Int32.Parse (args [0]), Int32.Parse (args [1]), args [2]);
+						break;
 					default:
 						Console.WriteLine(data);
 						break;
