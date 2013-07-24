@@ -183,12 +183,12 @@ namespace DND
 				}
 			}
 		}
-		public static int PlayerIDAt(Coord c) {
+		public static Player PlayerAt(Coord c) {
 			foreach (Player p in Players) {
 				if (p.Position.Equals(c))
-					return p.ID;
+					return p;
 			}
-			return -1;
+			return null;
 		}
         
 	}

@@ -38,6 +38,7 @@ namespace DND
 
 		public static bool Typing = false;
 		private static int curBuffID = -1;
+		private static Player MouseOverPlayer= null;
 
 		public static void Initialize()
 		{
@@ -58,7 +59,7 @@ namespace DND
 			TabControl tctrl = new TabControl ();
 
 			Button b = new Button (new Rectangle (25, 10, 100, 20), "Toggle chat");
-			b.OnClick += (GUIControl sender) => { ChatWindow.Visible=!ChatWindow.Visible; };
+			b.OnClick += (GUIControl sender) => { ChatWindow.Enabled=!ChatWindow.Enabled; ChatWindow.Visible=!ChatWindow.Visible; };
 			tctrl.Controls.Add (b);
 			b = new Button (new Rectangle (25, 35, 100, 20), "Toggle Visibility");
 			b.OnClick += (GUIControl sender) => { if (Engine.CurPlayer!=null) Network.SendData ("VISI"); };
@@ -161,6 +162,7 @@ namespace DND
 		}
 		public static void Update (GameTime gameTime)
 		{
+			MouseOverPlayer = Map.PlayerAt (MouseCoords);
 			if (!ChatWindow.IsMouseOver){
 				ChatWindow.Transparency = 0.1F;
 				ChatText.Transparency = 0.4F;
@@ -208,7 +210,8 @@ namespace DND
 
 			if (Keyboard.GetState ().IsKeyDown (Keys.B)) {
 				lastKeyPress = curTime;
-				curBuffID = Map.PlayerIDAt (MouseCoords);
+				curBuffID = (MouseOverPlayer==null? -1 : MouseOverPlayer.ID);
+
 				if (curBuffID>-1)
 				BuffWindow.Visible = true;
 				return;
@@ -297,6 +300,7 @@ namespace DND
 		{
 			guiManager.Draw (sb);
 			if ((!ChatWindow.Visible || !ChatWindow.IsMouseOver) && !MainWindow.IsMouseOver && (!BuffWindow.Visible || !BuffWindow.IsMouseOver)) {
+				DrawBuffs(sb);
 				if (MouseCoords.X >= 0 && MouseCoords.Y >= 0) {
 					if (radius > 0) {
 						GetAOETiles ();
@@ -309,10 +313,9 @@ namespace DND
 
 			for(int i =0; i<Engine.Initiatives.Count; i++)
 				if (i==Engine.CurrentTurn)
-				sb.DrawString(TextureManager.Font,Engine.Initiatives[i],new Vector2(0,i*20),Color.Red);
+					sb.DrawString(TextureManager.Font,Engine.Initiatives[i],new Vector2(0,i*20),Color.Red);
 				else
-				sb.DrawString(TextureManager.Font,Engine.Initiatives[i],new Vector2(0,i*20),Color.Yellow);
-
+					sb.DrawString(TextureManager.Font,Engine.Initiatives[i],new Vector2(0,i*20),Color.Yellow);
 		}
 		private static void GetAOETiles ()
 		{
@@ -351,6 +354,17 @@ namespace DND
 			return new Rectangle(MouseCoords.X*Map.TileWidth - Camera.Position.X, MouseCoords.Y*Map.TileHeight-Camera.Position.Y,Map.TileWidth,Map.TileHeight);
 		}
 
+		static void DrawBuffs (SpriteBatch sb)
+		{
+			if (MouseOverPlayer != null) {
+					int curBuff=0;
+					foreach(Buff b in MouseOverPlayer.GetBuffs()) {
+						sb.Draw (TextureManager.getTexture(1000,LayerType.GUI),new Rectangle((1+MouseCoords.X)* Map.TileWidth,MouseCoords.Y * Map.TileHeight+curBuff*25,150,20),Color.CornflowerBlue);
+						sb.DrawString(TextureManager.Font,b.Desc(),new Vector2((1+MouseCoords.X)* Map.TileWidth,MouseCoords.Y * Map.TileHeight+curBuff*25),Color.White);
+						curBuff++;
+					}
+				}
+		}
 		/// <summary>
 		/// Gets the mouse map coordinate.
 		/// </summary>

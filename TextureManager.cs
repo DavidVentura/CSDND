@@ -47,6 +47,7 @@ namespace DND
 		public static void LoadContent (ContentManager content)
 		{
 			c=content;
+			addTexture(1000,LayerType.GUI); //Buff bg
 			addTexture(999,LayerType.GUI); //Mouse
 			addTexture(998,LayerType.GUI); //AOE Indicator
 			font = c.Load<SpriteFont> ("Arial");

@@ -107,12 +107,6 @@ namespace DND
 			sb.DrawString (TextureManager.Font, name, new Vector2(NameOffsetX+DrawRect.X,DrawRect.Y+FrameHeight), nameColor);
 		}
 
-		public void DrawBuffs (SpriteBatch sb,List<Buff> buffs)
-		{
-			foreach (Buff b in buffs) {
-				sb.DrawString (TextureManager.Font, b.Desc (), new Vector2 (50, 50), Color.Red);
-			}
-		}
 	}
 }
 

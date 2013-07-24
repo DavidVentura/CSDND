@@ -55,13 +55,16 @@ namespace DND
 				animation.Draw (sb, Position.X, Position.Y,size,visible);
 			if (TextureManager.Font!=null) 
 				animation.DrawName(sb,name,NameOffsetX,visible);
-			if (Buffs.Count > 0)
-				animation.DrawBuffs (sb,Buffs);
 		}
 
 		public void AddBuff (int duration, string desc)
 		{
 			Buffs.Add (new Buff (desc));
 		}
+		public List<Buff> GetBuffs ()
+		{
+			return Buffs;
+		}
+
     }
 }
