@@ -11,10 +11,9 @@ namespace DND
 		private TextBox RollDescription	= new TextBox (new Rectangle (5, 75, 290, 100));
 		private Button SendRoll 		= new Button (new Rectangle (195, 175, 100, 20), "OK");
 		private Button CancelRoll 		= new Button (new Rectangle (5, 175, 100, 20), "Cancel");
-		private Point lastPos;
 		public EditRoll (Rectangle bounds,string title) : base(bounds,title,"Editroll")
 		{
-			Visible	= false;
+			Hide();
 			SendRoll.OnClick	+= (sender) => { Send(); };
 			CancelRoll.OnClick	+= (sender) => { Hide(); };
 			Controls.Add (RollDescription);
@@ -23,30 +22,19 @@ namespace DND
 			Controls.Add (RollValue);
 			Controls.Add (CancelRoll);
 		}
-
 		private void Send() {
 			if (RollMultiplier.Text.Length==0||RollValue.Text.Length==0||RollDescription.Text.Length==0) return;
+			Engine.TempRoll = new Roll(RollDescription.Text,RollValue.Text,RollMultiplier.Text);
 			Network.SendData("AROL"+RollDescription.Text+","+RollMultiplier.Text+","+RollValue.Text);
 			Hide();
 		}
-
-		public bool GetFocused ()
-		{
-			return (RollMultiplier.Focused || RollMultiplier.Focused || RollDescription.Focused);
-		}
-		public void Show() {
+		public override void Show() {
+			base.Show();
 			RollMultiplier.Text="";
 			RollValue.Text="";
 			RollDescription.Text="";
-			Bounds.Location=lastPos;
-			Enabled=true;
-			Visible=true;
 		}
-		void Hide ()
-		{
-			lastPos=Bounds.Location;
-			Bounds.Location= new Point(-999,-999);
-		}
+
 	}
 }
 

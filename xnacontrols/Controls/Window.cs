@@ -90,6 +90,9 @@ namespace RamGecXNAControls
         private int titleHeight = 24;
         #endregion
 
+		private Point lastPos;
+
+
         #region Constructors
         /// <summary>
         /// Creates Window control
@@ -262,5 +265,27 @@ namespace RamGecXNAControls
             base.Draw(spriteBatch);
         }
         #endregion
+
+		public virtual void Hide ()
+		{
+			lastPos=Bounds.Location;
+			Visible=false;
+			Enabled=false;
+			Bounds.Location= new Point(-9999,-9999);
+		}
+		public virtual void Show() {
+			Bounds.Location=lastPos;
+			Enabled=true;
+			Visible=true;
+		}
+		public virtual bool IsTyping ()
+		{
+			foreach (GUIControl c in Controls) {
+				if (c is TextBox)
+					if (c.Focused) return true;
+			}
+			return false;
+		}
+
     }
 }

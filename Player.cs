@@ -17,8 +17,8 @@ namespace DND
 		public Animation animation=new Animation();
 		public bool visible=true,isLocal=false;
 		double lastAnimation=0;
-		private int texture;
 		private List<Buff> Buffs = new List<Buff>();
+		public List<Roll> Rolls = new List<Roll>();
 
 		public Player (Coord pos, int texture, int id, string Name, int size, int visionRange=0)
 		{
@@ -27,7 +27,6 @@ namespace DND
 			ID = id;
 			name = Name;
 			this.size = size;
-			this.texture=texture;
 			animation.Sprite = TextureManager.getSprites (texture);
 			int sizeOffset = (int)(((float)(size - 1) / 2) * Map.TileWidth);
 			NameOffsetX = (Map.TileWidth / 2) - ((int)TextureManager.Font.MeasureString (name).X) / 2 + sizeOffset;
@@ -64,6 +63,9 @@ namespace DND
 		public List<Buff> GetBuffs ()
 		{
 			return Buffs;
+		}
+		public void AddRoll(Roll r) {
+			Rolls.Add (r);
 		}
 
     }

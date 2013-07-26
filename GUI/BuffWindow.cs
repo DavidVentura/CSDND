@@ -10,8 +10,6 @@ namespace DND
 		private TextBox BuffDuration 	= new TextBox (new Rectangle (5, 25, 290, 20));
 		private Button SendBuff			= new Button (new Rectangle (195, 175, 100, 20), "OK");
 		private Button CancelBuff 		= new Button (new Rectangle (5, 175, 100, 20), "Cancel");
-		private Point lastPos;
-
 
 		public BuffWindow (Rectangle bounds,string title) : base(bounds,title,"Buff")
 		{
@@ -30,22 +28,12 @@ namespace DND
 			Network.SendData (String.Format ("BUFF{0},{1},{2}", GUI.curTargetID, duration, BuffDescription.Text));
 			Visible = false;
 		}
-		public bool GetFocused ()
-		{
-			return (BuffDescription.Focused || BuffDuration.Focused);
-		}
-		public void Show() {
+		public override void Show() {
+			base.Show();
 			BuffDescription.Text="";
 			BuffDuration.Text="";
-			Bounds.Location=lastPos;
-			Enabled=true;
-			Visible=true;
 		}
-		void Hide ()
-		{
-			lastPos=Bounds.Location;//TODO: move to Window
-			Bounds.Location= new Point(-999,-999);
-		}
+
 	}
 }
 

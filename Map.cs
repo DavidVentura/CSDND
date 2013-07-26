@@ -190,6 +190,25 @@ namespace DND
 			}
 			return null;
 		}
+
+		/// <summary>
+		/// Gets the mouse map coordinate.
+		/// </summary>
+		/// <returns>
+		/// The mouse map coordinate. Returns (-1,-1) if the coordinate is outside the map
+		/// </returns>
+		/// <param name='x'>
+		/// X.
+		/// </param>
+		/// <param name='y'>
+		/// Y.
+		/// </param>
+		public static Coord GetMouseMapCoord(int x, int y) {
+			Coord ret = new Coord((x-(x%Map.TileWidth))/Map.TileWidth,(y-(y%Map.TileHeight))/Map.TileHeight);
+			if (!Map.withinBounds(ret) || !Map.withinSight(ret))
+				return new Coord(-1,-1);
+			return ret;
+		}
         
 	}
 }

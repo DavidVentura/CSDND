@@ -17,18 +17,19 @@ namespace DND
 		private static ButtonState lastRButtonState = ButtonState.Released;
 		private static double lastKeyPress;
 
-		private static Window ChatWindow 	= new Window (new Rectangle (300, 0, 220, 410));
-		private static TextArea ChatText 	= new TextArea (new Rectangle (10, 22, 200, 358));
-		private static TextBox ChatTextSend = new TextBox (new Rectangle (10, 382, 200, 22));
 
-		private static Window MainWindow 			= new Window (new Rectangle (400, 0, 280, 400));
-		private static TabsContainer TabContainer 	= new TabsContainer (new Rectangle (5, 25, 270, 360));
-		private static ListBox MobList 				= new ListBox ( new Rectangle(5,5,250,290));
-		private static ListBox TileList 			= new ListBox ( new Rectangle(5,5,250,290));
-		private static ListBox ObjectList 			= new ListBox ( new Rectangle(5,25,250,270));
-		private static CheckBox Blocking 			= new CheckBox(new Rectangle(5,5,240,15),"Blocking");
 
+
+		private static Window MainWindow 			= new Window (new Rectangle (400, 0, 270, 400));
+		private static TabsContainer TabContainer 	= new TabsContainer (new Rectangle (5, 25, 260, 360));
+		private static ListBox MobList 				= new ListBox ( new Rectangle(5,5,240,290));
+		private static ListBox TileList 			= new ListBox ( new Rectangle(5,5,240,290));
+		private static ListBox ObjectList 			= new ListBox ( new Rectangle(5,25,240,270));
+		private static CheckBox Blocking 			= new CheckBox(new Rectangle(5,5,230,15),"Blocking");
+
+		private static ChatWindow ChatWindow;
 		private static BuffWindow BuffWindow;
+		private static RollWindow rollWindow;
 		private static EditRoll AddEditRoll;
 
 
@@ -42,7 +43,10 @@ namespace DND
 		{
 			guiManager.Controls.Clear();
 			BuffWindow 	= new BuffWindow (new Rectangle (200, 100, 300, 200), "(DE)Buff");
-			AddEditRoll = new EditRoll (new Rectangle (100, 200, 300, 200), "Roll");
+			AddEditRoll = new EditRoll (new Rectangle (100, 200, 300, 200), "Add Roll");
+			rollWindow 	= new RollWindow(new Rectangle(150,150,260,300),"Roll");
+			ChatWindow 	= new ChatWindow (new Rectangle (0, 300, 600, 165),"Chat");
+
 			tiles.Add (new Coord (0, 0));
 			tiles.Add (new Coord (0, 1));
 			tiles.Add (new Coord (1, 0));
@@ -51,25 +55,10 @@ namespace DND
 			MainWindow.Movable = true;
 			MainWindow.Title = "Titulo";
 			MainWindow.TitleColor = Color.Black;
-
-			ChatWindow.Controls.Add (ChatText);
-			ChatWindow.Enabled=false;
-			ChatTextSend.OnSubmit+= (GUIControl sender) => { Talk(); } ;
-			ChatWindow.Controls.Add (ChatTextSend);
-			ChatWindow.Visible=false;
-			ChatWindow.ZIndex=0;
-
 			TabControl tctrl = new TabControl ();
 
 			Button b = new Button (new Rectangle (25, 10, 100, 20), "Toggle chat");
-			b.OnClick += (GUIControl sender) => { 
-				ChatWindow.Visible=!ChatWindow.Visible;
-				ChatWindow.Enabled=ChatWindow.Visible;
-				if (ChatWindow.Visible)
-					ChatWindow.ZIndex=95;
-				else
-					ChatWindow.ZIndex=0;
-			};
+			b.OnClick += (GUIControl sender) => { if (ChatWindow.Visible) ChatWindow.Hide(); else ChatWindow.Show(); };
 			tctrl.Controls.Add (b);
 			b = new Button (new Rectangle (25, 35, 100, 20), "Toggle Visibility");
 			b.OnClick += (GUIControl sender) => { if (Engine.CurPlayer!=null) Network.SendData ("VISI"); };
@@ -81,6 +70,10 @@ namespace DND
 			b.OnClick += (GUIControl sender) => { if (Engine.CurPlayer!=null) Network.SendData ("DELA"); };
 			tctrl.Controls.Add (b);
 
+			b = new Button (new Rectangle (25, 200, 100, 20), "Exit");
+			b.OnClick += (GUIControl sender) => { Engine.Unload(); };
+			tctrl.Controls.Add (b);
+
 			tctrl.Text = "Settings";
 			TabContainer.Controls.Add (tctrl);
 
@@ -89,13 +82,14 @@ namespace DND
 			guiManager.Controls.Add (BuffWindow);
 
 			guiManager.Controls.Add (ChatWindow);
+			guiManager.Controls.Add (rollWindow);
 			guiManager.Controls.Add (AddEditRoll);
 		}
 
 		public static void AddDMGUI() {
 			TabControl tDM = new TabControl ();
 			tDM.Text = "DM";
-			TabsContainer tDMContainer = new TabsContainer(new Rectangle(5,5,260,320));
+			TabsContainer tDMContainer = new TabsContainer(new Rectangle(2,5,252,320));
 
 			TabControl tMisc = new TabControl ();
 			tMisc.Text="Misc";
@@ -148,30 +142,16 @@ namespace DND
 			Network.SendData ("DMMD"); //dm mode
 		}
 
-		private static void Talk() {
-			Network.SendData ("TALK" + ChatTextSend.Text);
-			ChatTextSend.Text = "";
-			ChatTextSend.Focused = false;
-		}
+
 
 		public static void Update (GameTime gameTime)
 		{
 			MouseOverPlayer = Map.PlayerAt (MouseCoords);
-			if (!ChatWindow.IsMouseOver) {
-				ChatWindow.Transparency = 0.1F;
-				ChatText.Transparency = 0.4F;
-				ChatTextSend.Transparency = 0.1F;
-			} else {
-				ChatWindow.Transparency = 0.9F;
-				ChatText.Transparency = 0.9F;
-				ChatTextSend.Transparency = 0.9F;
-			}
-
-			Typing = (ChatTextSend.Focused || BuffWindow.GetFocused () || AddEditRoll.GetFocused ());
+			Typing = (ChatWindow.IsTyping() || BuffWindow.IsTyping () || AddEditRoll.IsTyping () || rollWindow.IsTyping() );
 
 			guiManager.Update (gameTime);
 			oldMouse = Mouse.GetState ();
-			MouseCoords = GetMouseMapCoord (oldMouse.X + Camera.Position.X, oldMouse.Y + Camera.Position.Y);
+			MouseCoords = Map.GetMouseMapCoord (oldMouse.X + Camera.Position.X, oldMouse.Y + Camera.Position.Y);
 			double curTime = gameTime.TotalGameTime.TotalMilliseconds;
 			if (curTime - lastKeyPress < Map.MovementTime + 20 || Typing)
 				return;
@@ -213,8 +193,16 @@ namespace DND
 				lastKeyPress = curTime;
 				curTargetID = (MouseOverPlayer == null ? -1 : MouseOverPlayer.ID);
 
-				if (curTargetID > -1)
+				if (curTargetID > -1&& Engine.CurPlayer!=null)
 					AddEditRoll.Show ();
+				return;
+			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.V)) {
+				lastKeyPress = curTime;
+				curTargetID = (MouseOverPlayer == null ? -1 : MouseOverPlayer.ID);
+
+				if (curTargetID > -1 && Engine.CurPlayer!=null )
+					rollWindow.Show();
 				return;
 			}
 			if (!Typing) {
@@ -294,12 +282,13 @@ namespace DND
 			ObjectList.Items.Add(name);
 		}
 		public static void AddText(string s) {
-			ChatText.Text += s+'\n';
+			ChatWindow.AddText(s);
 		}
 		public static void Draw (SpriteBatch sb)
 		{
 			guiManager.Draw (sb);
-			if ((!ChatWindow.Visible || !ChatWindow.IsMouseOver) && !MainWindow.IsMouseOver && (!BuffWindow.Visible || !BuffWindow.IsMouseOver)) {
+			if ((!ChatWindow.Visible || !ChatWindow.IsMouseOver) && !MainWindow.IsMouseOver && (!BuffWindow.Visible || !BuffWindow.IsMouseOver) &&
+			    (!rollWindow.Visible || !rollWindow.IsMouseOver) && (!AddEditRoll.Visible || !AddEditRoll.IsMouseOver)) {
 				DrawBuffs(sb);
 				if (MouseCoords.X >= 0 && MouseCoords.Y >= 0) {
 					if (radius > 0) {
@@ -316,6 +305,23 @@ namespace DND
 					sb.DrawString(TextureManager.Font,Engine.Initiatives[i],new Vector2(0,i*20),Color.Red);
 				else
 					sb.DrawString(TextureManager.Font,Engine.Initiatives[i],new Vector2(0,i*20),Color.Yellow);
+		}
+
+		private static Rectangle GetMouseDrawRect ()
+		{
+			return new Rectangle(MouseCoords.X*Map.TileWidth - Camera.Position.X, MouseCoords.Y*Map.TileHeight-Camera.Position.Y,Map.TileWidth,Map.TileHeight);
+		}
+
+		static void DrawBuffs (SpriteBatch sb)
+		{
+			if (MouseOverPlayer != null) {
+					int curBuff=0;
+					foreach(Buff b in MouseOverPlayer.GetBuffs()) {
+						sb.Draw (TextureManager.getTexture(1000,LayerType.GUI),new Rectangle((1+MouseCoords.X)* Map.TileWidth,MouseCoords.Y * Map.TileHeight+curBuff*25,150,20),Color.CornflowerBlue);
+						sb.DrawString(TextureManager.Font,b.Desc(),new Vector2((1+MouseCoords.X)* Map.TileWidth,MouseCoords.Y * Map.TileHeight+curBuff*25),Color.White);
+						curBuff++;
+					}
+				}
 		}
 		private static void GetAOETiles ()
 		{
@@ -349,40 +355,10 @@ namespace DND
 				}
 			}
 		}
-		private static Rectangle GetMouseDrawRect ()
-		{
-			return new Rectangle(MouseCoords.X*Map.TileWidth - Camera.Position.X, MouseCoords.Y*Map.TileHeight-Camera.Position.Y,Map.TileWidth,Map.TileHeight);
+		public static void SetRoll() {
+			rollWindow.SetRolls(Engine.CurPlayer.Rolls);
 		}
 
-		static void DrawBuffs (SpriteBatch sb)
-		{
-			if (MouseOverPlayer != null) {
-					int curBuff=0;
-					foreach(Buff b in MouseOverPlayer.GetBuffs()) {
-						sb.Draw (TextureManager.getTexture(1000,LayerType.GUI),new Rectangle((1+MouseCoords.X)* Map.TileWidth,MouseCoords.Y * Map.TileHeight+curBuff*25,150,20),Color.CornflowerBlue);
-						sb.DrawString(TextureManager.Font,b.Desc(),new Vector2((1+MouseCoords.X)* Map.TileWidth,MouseCoords.Y * Map.TileHeight+curBuff*25),Color.White);
-						curBuff++;
-					}
-				}
-		}
-		/// <summary>
-		/// Gets the mouse map coordinate.
-		/// </summary>
-		/// <returns>
-		/// The mouse map coordinate. Returns (-1,-1) if the coordinate is outside the map
-		/// </returns>
-		/// <param name='x'>
-		/// X.
-		/// </param>
-		/// <param name='y'>
-		/// Y.
-		/// </param>
-		private static Coord GetMouseMapCoord(int x, int y) {
-			Coord ret = new Coord((x-(x%Map.TileWidth))/Map.TileWidth,(y-(y%Map.TileHeight))/Map.TileHeight);
-			if (!Map.withinBounds(ret) || !Map.withinSight(ret))
-				return new Coord(-1,-1);
-			return ret;
-		}
 	}
 }
 

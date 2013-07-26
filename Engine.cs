@@ -48,7 +48,17 @@ namespace DND
 			this.name=name;
 		}
 	}
-
+	public struct Roll {
+		public string desc;
+		public string val;
+		public string mult;
+		public Roll (string d, string v, string m)
+		{
+			desc=d;
+			val=v;
+			mult=m;
+		}
+	}
 	public struct MapObject {
 		public string name;
 		public int id;
@@ -93,14 +103,20 @@ namespace DND
 		public static List <Mob> Mobs = new List<Mob>();
 		public static List<MapObject> MapObjects = new List<MapObject>();
 
+		public static Roll TempRoll;
 		public static void Unload() {
 			Network.Unload();
+			Environment.Exit(0);
 		}
 
-		public static void SwitchChar(int id) {
+		public static void SwitchChar (int id)
+		{
 			foreach (Player p in Map.GetLocalPlayers())
-				if (id==p.ID)
-					CurPlayer=p;
+				if (id == p.ID) {
+					CurPlayer = p;
+					break;
+				}
+			GUI.SetRoll();
 		}
 
 		public static void ParseXML() {
@@ -170,6 +186,7 @@ namespace DND
 						return o.id;
 				return -1;
 		}
+
 
     }
 }

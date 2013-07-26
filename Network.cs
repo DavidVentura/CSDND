@@ -118,6 +118,7 @@ namespace DND
 						break;
 					case "SWCH": //switch character: args: id of the new current-char
 						Engine.SwitchChar(Int32.Parse(args[0]));
+
 						break;
 					case "VISI": //switch character: args: id of the new current-char
 						Map.ChangeVisibility(Int32.Parse(args[0]));
@@ -144,6 +145,10 @@ namespace DND
 						break;
 					case "BUFF"://add buff: id duration desc
 						Map.AddBuff (Int32.Parse (args [0]), Int32.Parse (args [1]), args [2]);
+						break;
+					case "ROLL"://roll sent was valid
+						Engine.CurPlayer.AddRoll(Engine.TempRoll);
+						GUI.SetRoll();
 						break;
 					default:
 						Console.WriteLine(data);

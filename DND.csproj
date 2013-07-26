@@ -64,6 +64,8 @@
     <Compile Include="MenuScreen.cs" />
     <Compile Include="GUI\EditRoll.cs" />
     <Compile Include="GUI\BuffWindow.cs" />
+    <Compile Include="GUI\RollWindow.cs" />
+    <Compile Include="GUI\ChatWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
