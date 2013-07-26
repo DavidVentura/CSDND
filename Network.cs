@@ -111,6 +111,7 @@ namespace DND
 					case "LOGI"://log in: ID,x,y,texture,name,size,vision range(tiles)
 						Engine.CurrentState = State.OK;
 						Map.AddPlayer(Int32.Parse(args[0]),Int32.Parse(args[1]),Int32.Parse(args[2]),Int32.Parse(args[3]),args[4],Int32.Parse(args[5]),Int32.Parse(args[6]));
+						Engine.SwitchChar(Int32.Parse(args[0]));
 						break;
 					case "ERRO": //error loggin in, disconnect
 						Engine.CurrentState = State.Error;

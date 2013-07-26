@@ -28,8 +28,8 @@ namespace DND
 			_graphics = new GraphicsDeviceManager(this);
 			contentManager = new ContentManager(Services, "Content");
 			g = new Microsoft.Xna.Framework.Graphics.GraphicsDevice();
-			_graphics.PreferredBackBufferWidth=1920;
-			_graphics.PreferredBackBufferHeight=1080;
+			_graphics.PreferredBackBufferWidth=800;
+			_graphics.PreferredBackBufferHeight=600;
 			//_graphics.IsFullScreen=true;
 			_graphics.ApplyChanges();
 
