@@ -17,33 +17,32 @@ namespace DND
 		private static ButtonState lastRButtonState = ButtonState.Released;
 		private static double lastKeyPress;
 
-		private static Window ChatWindow = new Window (new Rectangle (300, 0, 220, 410));
-		private static TextArea ChatText = new TextArea (new Rectangle (10, 22, 200, 358));
+		private static Window ChatWindow 	= new Window (new Rectangle (300, 0, 220, 410));
+		private static TextArea ChatText 	= new TextArea (new Rectangle (10, 22, 200, 358));
 		private static TextBox ChatTextSend = new TextBox (new Rectangle (10, 382, 200, 22));
 
-		private static Window MainWindow = new Window (new Rectangle (520, 0, 280, 400));
-		private static TabsContainer TabContainer = new TabsContainer (new Rectangle (5, 25, 270, 360));
-		private static ListBox MobList = new ListBox ( new Rectangle(5,5,250,290));
-		private static ListBox TileList = new ListBox ( new Rectangle(5,5,250,290));
-		private static ListBox ObjectList = new ListBox ( new Rectangle(5,25,250,270));
-		private static CheckBox Blocking = new CheckBox(new Rectangle(5,5,240,15),"Blocking");
+		private static Window MainWindow 			= new Window (new Rectangle (400, 0, 280, 400));
+		private static TabsContainer TabContainer 	= new TabsContainer (new Rectangle (5, 25, 270, 360));
+		private static ListBox MobList 				= new ListBox ( new Rectangle(5,5,250,290));
+		private static ListBox TileList 			= new ListBox ( new Rectangle(5,5,250,290));
+		private static ListBox ObjectList 			= new ListBox ( new Rectangle(5,25,250,270));
+		private static CheckBox Blocking 			= new CheckBox(new Rectangle(5,5,240,15),"Blocking");
 
-		private static Window BuffWindow = new Window (new Rectangle (100, 100, 300, 200), "(DE)Buff");
-		private static TextBox BuffDescription = new TextBox (new Rectangle (5, 50, 290, 120), "Description");
-		private static TextBox BuffDuration = new TextBox (new Rectangle (5, 25, 290, 20),"0");
-		private static Button SendBuff = new Button (new Rectangle (195, 175, 100, 20), "OK");
-		private static Button CancelBuff = new Button (new Rectangle (5, 175, 100, 20), "Cancel");
+		private static BuffWindow BuffWindow;
+		private static EditRoll AddEditRoll;
+
 
 		public static GUIManager guiManager;
 
 		public static bool Typing = false;
-		private static int curBuffID = -1;
+		public static int curTargetID = -1;
 		private static Player MouseOverPlayer= null;
 
 		public static void Initialize()
 		{
 			guiManager.Controls.Clear();
-
+			BuffWindow 	= new BuffWindow (new Rectangle (200, 100, 300, 200), "(DE)Buff");
+			AddEditRoll = new EditRoll (new Rectangle (100, 200, 300, 200), "Roll");
 			tiles.Add (new Coord (0, 0));
 			tiles.Add (new Coord (0, 1));
 			tiles.Add (new Coord (1, 0));
@@ -54,12 +53,23 @@ namespace DND
 			MainWindow.TitleColor = Color.Black;
 
 			ChatWindow.Controls.Add (ChatText);
+			ChatWindow.Enabled=false;
 			ChatTextSend.OnSubmit+= (GUIControl sender) => { Talk(); } ;
 			ChatWindow.Controls.Add (ChatTextSend);
+			ChatWindow.Visible=false;
+			ChatWindow.ZIndex=0;
+
 			TabControl tctrl = new TabControl ();
 
 			Button b = new Button (new Rectangle (25, 10, 100, 20), "Toggle chat");
-			b.OnClick += (GUIControl sender) => { ChatWindow.Enabled=!ChatWindow.Enabled; ChatWindow.Visible=!ChatWindow.Visible; };
+			b.OnClick += (GUIControl sender) => { 
+				ChatWindow.Visible=!ChatWindow.Visible;
+				ChatWindow.Enabled=ChatWindow.Visible;
+				if (ChatWindow.Visible)
+					ChatWindow.ZIndex=95;
+				else
+					ChatWindow.ZIndex=0;
+			};
 			tctrl.Controls.Add (b);
 			b = new Button (new Rectangle (25, 35, 100, 20), "Toggle Visibility");
 			b.OnClick += (GUIControl sender) => { if (Engine.CurPlayer!=null) Network.SendData ("VISI"); };
@@ -74,21 +84,12 @@ namespace DND
 			tctrl.Text = "Settings";
 			TabContainer.Controls.Add (tctrl);
 
-			BuffWindow.Visible=false;
-			BuffDescription.Enabled=true;
-			BuffDuration.NumbersOnly=true;
-			CancelBuff.OnClick += (GUIControl sender) => { BuffWindow.Visible=false; };
-			SendBuff.OnClick += (GUIControl sender) => { Buff(); } ;
-			BuffWindow.Controls.Add (BuffDescription);
-			BuffWindow.Controls.Add (BuffDuration);
-			BuffWindow.Controls.Add (SendBuff);
-			BuffWindow.Controls.Add (CancelBuff);
-
-
 			MainWindow.Controls.Add (TabContainer);
 			guiManager.Controls.Add (MainWindow);
 			guiManager.Controls.Add (BuffWindow);
+
 			guiManager.Controls.Add (ChatWindow);
+			guiManager.Controls.Add (AddEditRoll);
 		}
 
 		public static void AddDMGUI() {
@@ -152,30 +153,21 @@ namespace DND
 			ChatTextSend.Text = "";
 			ChatTextSend.Focused = false;
 		}
-		private static void Buff() {
 
-			if (curBuffID == -1)
-				return;
-			int duration = Convert.ToInt32(MathHelper.Clamp (Int32.Parse (BuffDuration.Text), 1, 100));
-			Network.SendData (String.Format ("BUFF{0},{1},{2}", curBuffID, duration, BuffDescription.Text));
-			BuffWindow.Visible = false;
-		}
 		public static void Update (GameTime gameTime)
 		{
 			MouseOverPlayer = Map.PlayerAt (MouseCoords);
-			if (!ChatWindow.IsMouseOver){
+			if (!ChatWindow.IsMouseOver) {
 				ChatWindow.Transparency = 0.1F;
 				ChatText.Transparency = 0.4F;
 				ChatTextSend.Transparency = 0.1F;
-			}
-			else
-			{
+			} else {
 				ChatWindow.Transparency = 0.9F;
 				ChatText.Transparency = 0.9F;
 				ChatTextSend.Transparency = 0.9F;
 			}
 
-			Typing = (ChatTextSend.Focused|| BuffDescription.Focused || BuffDuration.Focused) ;
+			Typing = (ChatTextSend.Focused || BuffWindow.GetFocused () || AddEditRoll.GetFocused ());
 
 			guiManager.Update (gameTime);
 			oldMouse = Mouse.GetState ();
@@ -186,23 +178,23 @@ namespace DND
 
 			if (Keyboard.GetState ().IsKeyDown (Keys.Z)) {
 				lastKeyPress = curTime;
-				int selected=Engine.MobID(MobList.SelectedString);
-				if (selected>-1)
-					Network.SendData (String.Format ("SPWN{0},{1},{2}",selected, MouseCoords.X, MouseCoords.Y));
+				int selected = Engine.MobID (MobList.SelectedString);
+				if (selected > -1)
+					Network.SendData (String.Format ("SPWN{0},{1},{2}", selected, MouseCoords.X, MouseCoords.Y));
 				return;
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.X)) {
 				lastKeyPress = curTime;
-				int selected=Engine.ObjID(ObjectList.SelectedString);
-				if (selected>-1)
-					Network.SendData (String.Format ("SOBJ{0},{1},{2},{3}", selected, Convert.ToInt32(Blocking.Checked), MouseCoords.X, MouseCoords.Y)); 
+				int selected = Engine.ObjID (ObjectList.SelectedString);
+				if (selected > -1)
+					Network.SendData (String.Format ("SOBJ{0},{1},{2},{3}", selected, Convert.ToInt32 (Blocking.Checked), MouseCoords.X, MouseCoords.Y)); 
 				//OBJID,blocking,x,y
 				return;
 			}
 			if (Keyboard.GetState ().IsKeyDown (Keys.C)) {
 				lastKeyPress = curTime;
-				int selected=Engine.TileID(TileList.SelectedString);
-				if (selected>-1)
+				int selected = Engine.TileID (TileList.SelectedString);
+				if (selected > -1)
 					Network.SendData (String.Format ("TILE{0},{1},{2}", selected, MouseCoords.X, MouseCoords.Y));
 				//OBJID,blocking,x,y
 				return;
@@ -210,44 +202,52 @@ namespace DND
 
 			if (Keyboard.GetState ().IsKeyDown (Keys.B)) {
 				lastKeyPress = curTime;
-				curBuffID = (MouseOverPlayer==null? -1 : MouseOverPlayer.ID);
+				curTargetID = (MouseOverPlayer == null ? -1 : MouseOverPlayer.ID);
 
-				if (curBuffID>-1)
-				BuffWindow.Visible = true;
+				if (curTargetID > -1) {
+					BuffWindow.Show ();
+				}
 				return;
 			}
+			if (Keyboard.GetState ().IsKeyDown (Keys.R)) {
+				lastKeyPress = curTime;
+				curTargetID = (MouseOverPlayer == null ? -1 : MouseOverPlayer.ID);
 
-
-			//TODO: move to spell list
-			if (Keyboard.GetState ().IsKeyDown (Keys.D1)) {
-				radius=1;
+				if (curTargetID > -1)
+					AddEditRoll.Show ();
 				return;
 			}
-			if (Keyboard.GetState ().IsKeyDown (Keys.D2)) {
-				radius=2;
-				return;
+			if (!Typing) {
+				//TODO: move to spell list
+				if (Keyboard.GetState ().IsKeyDown (Keys.D1)) {
+					radius = 1;
+					return;
+				}
+				if (Keyboard.GetState ().IsKeyDown (Keys.D2)) {
+					radius = 2;
+					return;
+				}
+				if (Keyboard.GetState ().IsKeyDown (Keys.D3)) {
+					radius = 3;
+					return;
+				}
+				if (Keyboard.GetState ().IsKeyDown (Keys.D4)) {
+					radius = 4;
+					return;
+				}
+				if (Keyboard.GetState ().IsKeyDown (Keys.D5)) {
+					radius = 5;
+					return;
+				}
+				if (Keyboard.GetState ().IsKeyDown (Keys.D6)) {
+					radius = 6;
+					return;
+				}
+				if (Keyboard.GetState ().IsKeyDown (Keys.D0)) {
+					radius = 0;
+					return;
+				}
 			}
-			if (Keyboard.GetState ().IsKeyDown (Keys.D3)) {
-				radius=3;
-				return;
-			}
-			if (Keyboard.GetState ().IsKeyDown (Keys.D4)) {
-				radius=4;
-				return;
-			}
-			if (Keyboard.GetState ().IsKeyDown (Keys.D5)) {
-				radius=5;
-				return;
-			}
-			if (Keyboard.GetState ().IsKeyDown (Keys.D6)) {
-				radius=6;
-				return;
-			}
-			if (Keyboard.GetState ().IsKeyDown (Keys.D0)) {
-				radius=0;
-				return;
-			}
-
 			if (Mouse.GetState ().RightButton == ButtonState.Released && lastRButtonState == ButtonState.Pressed) {
 				foreach (Player p in Map.GetLocalPlayers())
 					if (p.Position.Equals(MouseCoords))

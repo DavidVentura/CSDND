@@ -98,7 +98,7 @@ namespace RamGecXNAControls
         /// <param name="title">Window title</param>
         /// <param name="name">Control name</param>
         public Window(Rectangle bounds, string title, string name)
-            : base(bounds)
+            : base(bounds,name)
         {
             Title = title;
             Name = name;
