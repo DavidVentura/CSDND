@@ -116,7 +116,8 @@ namespace DND
 					CurPlayer = p;
 					break;
 				}
-			GUI.SetRoll();
+			if (CurPlayer!=null)
+				GUI.SetRoll();
 		}
 
 		public static void ParseXML() {

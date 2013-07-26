@@ -67,6 +67,12 @@ namespace DND
 		public void AddRoll(Roll r) {
 			Rolls.Add (r);
 		}
-
+		public void AddRoll (string[] s)// { MULT_VAL_DESC, MULT_VAL_DESC.. }
+		{ 
+			foreach (string roll in s) {
+				string [] split = roll.Split('_');
+				AddRoll(new Roll(split[2],split[1],split[0]));
+			}
+		}
     }
 }

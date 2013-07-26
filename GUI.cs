@@ -29,7 +29,7 @@ namespace DND
 
 		private static ChatWindow ChatWindow;
 		private static BuffWindow BuffWindow;
-		private static RollWindow rollWindow;
+		private static RollWindow rollWindow 	= new RollWindow(new Rectangle(150,150,260,300),"Roll");
 		private static EditRoll AddEditRoll;
 
 
@@ -44,7 +44,6 @@ namespace DND
 			guiManager.Controls.Clear();
 			BuffWindow 	= new BuffWindow (new Rectangle (200, 100, 300, 200), "(DE)Buff");
 			AddEditRoll = new EditRoll (new Rectangle (100, 200, 300, 200), "Add Roll");
-			rollWindow 	= new RollWindow(new Rectangle(150,150,260,300),"Roll");
 			ChatWindow 	= new ChatWindow (new Rectangle (0, 300, 600, 165),"Chat");
 
 			tiles.Add (new Coord (0, 0));
@@ -193,7 +192,7 @@ namespace DND
 				lastKeyPress = curTime;
 				curTargetID = (MouseOverPlayer == null ? -1 : MouseOverPlayer.ID);
 
-				if (curTargetID > -1&& Engine.CurPlayer!=null)
+				if (Engine.CurPlayer!=null)
 					AddEditRoll.Show ();
 				return;
 			}
@@ -201,7 +200,7 @@ namespace DND
 				lastKeyPress = curTime;
 				curTargetID = (MouseOverPlayer == null ? -1 : MouseOverPlayer.ID);
 
-				if (curTargetID > -1 && Engine.CurPlayer!=null )
+				if (Engine.CurPlayer!=null )
 					rollWindow.Show();
 				return;
 			}

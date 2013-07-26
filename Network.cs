@@ -150,6 +150,9 @@ namespace DND
 						Engine.CurPlayer.AddRoll(Engine.TempRoll);
 						GUI.SetRoll();
 						break;
+					case "PRES": //preset rolls
+						Engine.CurPlayer.AddRoll(args);
+						break;
 					default:
 						Console.WriteLine(data);
 						break;

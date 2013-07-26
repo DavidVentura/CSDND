@@ -1,7 +1,5 @@
 gtk-interface 
 	spell lists
-	dice-roller
-		presets (custom sets with NdM + static bonif)
 
 camera should follow the player smoothly
 vision range
